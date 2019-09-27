@@ -69,6 +69,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) , 
     // 직접 로그인시 서버에 email과 password를 보내 검증하는 부분.
     fun login() {
         progressDialog?.value = true
+
         WebService.client.create(LoginAPI::class.java).LOGIN(LoginUser(email?.get()!!, password?.get()!!))
             .enqueue(this)
     }
