@@ -70,7 +70,7 @@ public class SignUpViewModel extends BaseObservable {
         this.context = context;
         emailAuth.setValue("인증");
 
-        String imageUri = "drawable://" + R.drawable.p_blank_person;
+        String imageUri = "drawable://" + R.drawable.i_blank_profile_icon;
         photoUpdate.setValue(imageUri);
 
         nickNameLD.setValue("닉네임");
@@ -149,7 +149,7 @@ public class SignUpViewModel extends BaseObservable {
             userSignup = new UserSignup(emailLD.getValue(), returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
 
             //프로필 이미지가 null이거나 초기값 사진 또는 에러 이미지일 때
-            if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.p_blank_person)) {
+            if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_profile_icon)) {
 
                 Log.d(TAG + "이미지", "존재하지 않음");
                 imgBody = null;

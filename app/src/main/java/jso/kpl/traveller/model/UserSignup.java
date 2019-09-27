@@ -70,7 +70,7 @@ public class UserSignup {
     public static void imgLoad(ImageView iv, String imgUri) {
 
         RequestOptions options
-                = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.p_blank_person).circleCrop();
+                = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.i_blank_profile_icon).circleCrop();
 
         Glide.with(iv.getContext())
                 .load(imgUri)
