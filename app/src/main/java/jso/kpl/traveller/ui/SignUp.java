@@ -35,6 +35,8 @@ public class SignUp extends AppCompatActivity {
 
     SignUpViewModel svm;
 
+    String email = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +50,16 @@ public class SignUp extends AppCompatActivity {
         svm = signUpBinding.getSignUpVM();
 
         if(getIntent() != null){
-            String test = (String) getIntent().getStringExtra("email");
-            svm.emailLD.setValue(test);
 
-       //     boolean isValue = (boolean) getIntent().getBooleanExtra("auth", false);
-       //     Log.d(TAG + "TEST", "Testing: " + test + "_" + isValue);
+            svm.isAuth.setValue((boolean) getIntent().getBooleanExtra("auth", false));
+
+            if(svm.isAuth.getValue()){
+                email = (String) getIntent().getStringExtra("email");
+                Log.d(TAG + "API 접근", "아이디: " + email);
+                svm.emailLD.setValue(email);
+            }
+        } else{
+            svm.isAuth.setValue(false);
         }
 
         signUpBinding.getSignUpVM().buttonClickResult.observe(this, new Observer<Integer>() {
@@ -106,6 +113,7 @@ public class SignUp extends AppCompatActivity {
         //저장될 파일의 주소
         File imgFilePath = new File(storageDir, imgName);
 
+        //경로를 따로 또 받는 이유는 갤러리 상에서의 갱신을 위해서이다.
         absolutePath = imgFilePath.getAbsolutePath();
 
         return imgFilePath;

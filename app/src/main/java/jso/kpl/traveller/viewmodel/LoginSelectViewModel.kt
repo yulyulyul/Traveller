@@ -2,7 +2,6 @@ package jso.kpl.traveller.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
@@ -17,31 +16,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.kakao.auth.Session
 import com.kakao.network.ErrorResult
-import com.kakao.usermgmt.StringSet
 import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.UnLinkResponseCallback
 import jso.kpl.traveller.App
 import jso.kpl.traveller.R
-import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.thirdpartyapi.facebook.LoginCallback
 import jso.kpl.traveller.thirdpartyapi.kakao.SessionCallback
 import jso.kpl.traveller.ui.LoginSelect
 import jso.kpl.traveller.ui.LoginSelect.Companion.getInstance
 import jso.kpl.traveller.ui.SignUp
+import jso.kpl.traveller.util.JavaUtil
 import java.util.*
-import jso.kpl.traveller.viewmodel.LoginSelectViewModel.SignUpListener as SignUpListener1
 
-class LoginSelectViewModel(application: Application) : AndroidViewModel(application){
-
-    internal var mSignUpListener: SignUpListener1? = null
-
-    interface SignUpListener {
-        fun goToSignUp(): String
-    }
-
-    fun setSignUpListener(listener: SignUpListener){
-        this.mSignUpListener = listener
-    }
+class LoginSelectViewModel(application: Application) : AndroidViewModel(application) {
 
     // 카카오로 시작하기 버튼을 눌렀을때 view(Login.kt)에 변화를 알려주는 객체
     var iskakaoLogin: MutableLiveData<Boolean>? = null
@@ -131,10 +118,11 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     fun facebookLogin() {
         isFacebookLogin?.value = true
+        JavaUtil.printHashKey(getApplication())
     }
 
     fun facebook_callback() {
-        facebook_session_callback = LoginCallback()
+        facebook_session_callback = LoginCallback(getApplication())
         val loginManager = LoginManager.getInstance()
         loginManager.logInWithReadPermissions(
             getInstance(),
@@ -153,22 +141,14 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
         iskakaoLogin?.value = true
     }
 
+
     fun kakao_callback() {
         if (kakao_session_callback != null) {
             Session.getCurrentSession().removeCallback(kakao_session_callback)
         }
         //카카오로 로그인하여 생기는 결과가 리턴하는 곳.
-        kakao_session_callback = SessionCallback()
+        kakao_session_callback = SessionCallback(getApplication())
         Session.getCurrentSession().addCallback(kakao_session_callback)
-
-       var mHandler : Handler? = Handler();
-
-        mHandler!!.postDelayed({
-
-            val test = kakao_session_callback!!.email
-            goToSignUp(test)
-            Log.d(TAG, kakao_session_callback!!.email)
-        }, 20000)
 
 
     }
@@ -199,6 +179,10 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
+    fun generalSignUp() {
+        goToSignUp(null)
+    }
+
     //ViewModel이 끝날 때 불림.(Activity LifeCycle이랑 생명주기가 다름)
     override fun onCleared() {
         super.onCleared()
@@ -207,16 +191,19 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     fun goToSignUp(email: String?) {
 
-        if (email != null) {
-            var su_intent = Intent(getApplication(), SignUp::class.java)
+        val su_intent = Intent(getApplication(), SignUp::class.java)
 
-            su_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        su_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        if (email != null) {
             su_intent.putExtra("email", email)
             su_intent.putExtra("auth", true)
-            ContextCompat.startActivity(getApplication(), su_intent, null)
         } else {
-            Log.d(TAG, "회원가입으로 이동 실패")
+            su_intent.putExtra("auth", false)
         }
+
+        ContextCompat.startActivity(getApplication(), su_intent, null)
+
     }
 
     companion object {

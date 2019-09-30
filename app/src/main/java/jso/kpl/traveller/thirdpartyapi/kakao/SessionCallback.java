@@ -1,6 +1,8 @@
 package jso.kpl.traveller.thirdpartyapi.kakao;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.kakao.auth.ISessionCallback;
@@ -15,16 +17,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import jso.kpl.traveller.ui.SignUp;
 import jso.kpl.traveller.viewmodel.LoginSelectViewModel;
 
-public class SessionCallback implements ISessionCallback, LoginSelectViewModel.SignUpListener {
+public class SessionCallback implements ISessionCallback {
 
     public String TAG = "Trav.SessionCallback";
 
-    public LoginSelectViewModel.SignUpListener signUpListener;
+    Context context;
 
-
-    public String email;
+    public SessionCallback(Context context) {
+        this.context = context;
+    }
 
     @Override
     public void onSessionOpened() {
@@ -71,25 +75,17 @@ public class SessionCallback implements ISessionCallback, LoginSelectViewModel.S
             @Override
             public void onSuccess(final MeV2Response result) {
 
-                email = result.getKakaoAccount().getEmail();
-                Log.e(TAG, "카카오 아이디: " + email);
+                Log.e(TAG, "카카오 아이디: " + result.getKakaoAccount().getEmail());
 
-//                 signUpListener = new LoginSelectViewModel.SignUpListener() {
-//                    @NotNull
-//                    @Override
-//                    public String goToSignUp() {
-//                        return result.getKakaoAccount().getEmail();
-//                    }
-//                };
+                Intent intent = new Intent(context, SignUp.class);
+                intent.putExtra("email", result.getKakaoAccount().getEmail());
+                intent.putExtra("auth", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
             }
         });
     }
 
-
-    @NotNull
-    @Override
-    public String goToSignUp() {
-        return email;
-    }
 }
 

@@ -28,6 +28,7 @@ import jso.kpl.traveller.model.UserSignup;
 import jso.kpl.traveller.network.SignupAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.util.PermissionCheck;
+import jso.kpl.traveller.util.RegexMethod;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -40,15 +41,18 @@ public class SignUpViewModel extends BaseObservable {
     Context context;
 
     public MutableLiveData<String> emailLD = new MutableLiveData<>();
+    //이메일 인증을 하면 true 값으로 반환, 지금은 이메일 인증을 연결 안해두어서 true 값
+    public MutableLiveData<Boolean> isAuth = new MutableLiveData<>();
+
     public MutableLiveData<String> passwordLD = new MutableLiveData<>();
     public MutableLiveData<String> nickNameLD = new MutableLiveData<>();
-
-    //(예정) 이메일 인증 처리하면 미인증 -> 인증
-    public MutableLiveData<String> emailAuth = new MutableLiveData<>();
 
     public MutableLiveData<Integer> buttonClickResult = new MutableLiveData<>();
 
     public MutableLiveData<String> photoUpdate = new MutableLiveData<>();
+
+    //정규식 함수
+    RegexMethod regexMethod = new RegexMethod();
 
     //레트로핏
      SignupAPI signupAPI = WebService.INSTANCE.getClient().create(SignupAPI.class);
@@ -62,22 +66,16 @@ public class SignUpViewModel extends BaseObservable {
     //회원 데이터 객체
     UserSignup userSignup;
 
-    //이메일 인증을 하면 true 값으로 반환, 지금은 이메일 인증을 연결 안해두어서 true 값
-    public boolean isAuth = true;
+
 
     String TAG = "TAG.SignUp.";
 
     public SignUpViewModel(Context context) {
         this.context = context;
-        emailAuth.setValue("인증");
 
         String imageUri = "drawable://" + R.drawable.i_blank_profile_icon;
         photoUpdate.setValue(imageUri);
 
-
-        nickNameLD.setValue("닉네임");
-        emailLD.setValue("example@naver.com");
-        passwordLD.setValue("1q2w3e4r!");
     }
 
     //디바이스 초기 값, 속성: 유니크, 디바이스 초기화할 때 바뀐다고 함
@@ -91,31 +89,16 @@ public class SignUpViewModel extends BaseObservable {
     }
 
 
-    //이메일 정규식 체크
-    private boolean isEmailValid() {
-        return Patterns.EMAIL_ADDRESS.matcher(emailLD.getValue()).matches();
-    }
-
-    //영소문 숫자 조합 8자 이상 특수문자는 !@#$%^*만 사용 가능
-    private boolean isPasswordValid() {
-
-        return Pattern.matches("^(?=.*\\d)(?=.*[a-z])[a-z\\d!@#$%^&*]{8,}$", passwordLD.getValue());
-    }
-
-    //자음 + 모음 한글, 영어, 숫자 조합
-    private boolean isNickValid() {
-        return Pattern.matches("^[\\w가-힣]{2,20}$", nickNameLD.getValue());
-    }
-
     //이메일 인증 버튼
     public void onEmailAuthClicked() {
         if (TextUtils.isEmpty(emailLD.getValue())) {
             sendToast(context, "이메일 칸이 비었습니다.");
-        } else if (!isEmailValid()) {
+        } else if (!regexMethod.isEmailValid(emailLD.getValue())) {
             sendToast(context, "이메일 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
         } else {
             sendToast(context, "System::Email Clear");
 
+            isAuth.setValue(true);
             //       buttonClickResult.setValue(2);
 
             //(예정) 여기서 이메일 인증 처리
@@ -128,20 +111,17 @@ public class SignUpViewModel extends BaseObservable {
         //각각의 입력 값을 정규식이 맞는지 null이 아닌지 체크
         if (TextUtils.isEmpty(nickNameLD.getValue())) {
             sendToast(context, "닉네임 칸이 비었습니다.");
-        } else if (!isNickValid()) {
-            nickNameLD.setValue("");
+        } else if (!regexMethod.isNickValid(nickNameLD.getValue())) {
             sendToast(context, "닉네임 형식이 틀렸습니다.\n닉네임 형식에 맞추어 작성해주십시오.");
         } else if (TextUtils.isEmpty(emailLD.getValue())) {
             sendToast(context, "이메일 칸이 비었습니다.");
-        } else if (!isEmailValid()) {
-            emailLD.setValue("");
+        } else if (!regexMethod.isEmailValid(emailLD.getValue())) {
             sendToast(context, "이메일 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
         } else if (TextUtils.isEmpty(passwordLD.getValue())) {
             sendToast(context, "패스워드 칸이 비었습니다.");
-        } else if (!isPasswordValid()) {
-            passwordLD.setValue("");
+        } else if (!regexMethod.isPasswordValid( passwordLD.getValue())) {
             sendToast(context, "패스워드 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
-        } else if (!isAuth) {
+        } else if (!isAuth.getValue()) {
             sendToast(context, "이메일 인증이 미실시되었습니다.");
         } else {
             //모든 조건에 만족할 시 실행
