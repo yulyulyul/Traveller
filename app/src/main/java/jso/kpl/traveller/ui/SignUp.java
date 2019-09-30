@@ -14,16 +14,21 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 
+import com.kakao.usermgmt.response.model.User;
+
 import java.io.File;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.ActivitySignUpBinding;
+import jso.kpl.traveller.model.LoginUser;
 import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.SignUpViewModel;
 
 public class SignUp extends AppCompatActivity {
 
     String TAG = "TAG.View.";
+
+    LoginUser lUser;
 
     Uri uriPath;
     String absolutePath;
@@ -34,13 +39,21 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ActivitySignUpBinding signUpBinding = DataBindingUtil.setContentView(this, R.layout.sign_up);
+        final ActivitySignUpBinding signUpBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
 
         signUpBinding.setSignUpVM(new SignUpViewModel(this));
         signUpBinding.setLifecycleOwner(this);
         signUpBinding.executePendingBindings();
 
         svm = signUpBinding.getSignUpVM();
+
+        if(getIntent() != null){
+            String test = (String) getIntent().getStringExtra("email");
+            svm.emailLD.setValue(test);
+
+       //     boolean isValue = (boolean) getIntent().getBooleanExtra("auth", false);
+       //     Log.d(TAG + "TEST", "Testing: " + test + "_" + isValue);
+        }
 
         signUpBinding.getSignUpVM().buttonClickResult.observe(this, new Observer<Integer>() {
             @Override

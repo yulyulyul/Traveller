@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".ui.CustomDialog"></activity>
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -43,9 +44,10 @@
         </activity>
         <activity
             android:name=".ui.Login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <!-- 파일 경로 보안 처리 -->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.SignUp"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="jso.kpl.traveller.file_provider"
@@ -54,9 +56,8 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
-
     </application>
 
 </manifest>

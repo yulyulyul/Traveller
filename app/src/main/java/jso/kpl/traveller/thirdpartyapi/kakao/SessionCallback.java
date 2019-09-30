@@ -1,22 +1,30 @@
 package jso.kpl.traveller.thirdpartyapi.kakao;
 
+import android.app.Application;
 import android.util.Log;
+
 import com.kakao.auth.ISessionCallback;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
-import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.exception.KakaoException;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jso.kpl.traveller.ui.Login;
+import jso.kpl.traveller.viewmodel.LoginSelectViewModel;
 
-public class SessionCallback implements ISessionCallback {
+public class SessionCallback implements ISessionCallback, LoginSelectViewModel.SignUpListener {
 
     public String TAG = "Trav.SessionCallback";
+
+    public LoginSelectViewModel.SignUpListener signUpListener;
+
+
+    public String email;
 
     @Override
     public void onSessionOpened() {
@@ -57,15 +65,31 @@ public class SessionCallback implements ISessionCallback {
                 Log.e(TAG, "requestMe onSessionClosed message : " + errorResult.getErrorMessage());
             }
 
-
             /*
                 여기서 사용자의 정보를 얻을 수 있다.
              */
             @Override
-            public void onSuccess(MeV2Response result) {
-                Log.e(TAG, "requestMe onSuccess message : " + result.getKakaoAccount().getEmail() + " " + result.getId() + " " + result.getNickname());
+            public void onSuccess(final MeV2Response result) {
+
+                email = result.getKakaoAccount().getEmail();
+                Log.e(TAG, "카카오 아이디: " + email);
+
+//                 signUpListener = new LoginSelectViewModel.SignUpListener() {
+//                    @NotNull
+//                    @Override
+//                    public String goToSignUp() {
+//                        return result.getKakaoAccount().getEmail();
+//                    }
+//                };
             }
         });
+    }
+
+
+    @NotNull
+    @Override
+    public String goToSignUp() {
+        return email;
     }
 }
 

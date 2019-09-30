@@ -78,14 +78,14 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:text="구글 로그아웃"
             android:onClick="@{()->viewmodel.googleLogout()}"
             />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:text="카카오 로그아웃"
             android:onClick="@{()->viewmodel.kakaoLogout()}"
             />
@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="페이스북 로그아웃"
-            android:visibility="gone"
+            android:visibility="visible"
             android:onClick="@{()->viewmodel.facebookLogout()}"
             />
 
