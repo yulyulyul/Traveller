@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BaseObservable;
 import androidx.lifecycle.MutableLiveData;
 
@@ -24,9 +26,11 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.interfaces.DialogYNInterface;
 import jso.kpl.traveller.model.UserSignup;
 import jso.kpl.traveller.network.SignupAPI;
 import jso.kpl.traveller.network.WebService;
+import jso.kpl.traveller.ui.CustomDialog;
 import jso.kpl.traveller.util.PermissionCheck;
 import jso.kpl.traveller.util.RegexMethod;
 import okhttp3.MediaType;
@@ -55,7 +59,7 @@ public class SignUpViewModel extends BaseObservable {
     RegexMethod regexMethod = new RegexMethod();
 
     //레트로핏
-     SignupAPI signupAPI = WebService.INSTANCE.getClient().create(SignupAPI.class);
+    SignupAPI signupAPI = WebService.INSTANCE.getClient().create(SignupAPI.class);
 
     //회원가입 Call
     Call<Void> su_call;
@@ -65,7 +69,6 @@ public class SignUpViewModel extends BaseObservable {
 
     //회원 데이터 객체
     UserSignup userSignup;
-
 
 
     String TAG = "TAG.SignUp.";
@@ -98,7 +101,33 @@ public class SignUpViewModel extends BaseObservable {
         } else {
             sendToast(context, "System::Email Clear");
 
-            isAuth.setValue(true);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("title", "(테스트용)이메일 인증하시겠습니까?");
+
+            final CustomDialog customDialog = new CustomDialog();
+
+            customDialog.setArguments(bundle);
+
+            customDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "Dialog_TAG");
+
+            customDialog.setDialogYNInterface(new DialogYNInterface() {
+                @Override
+                public void positiveBtn() {
+                    sendToast(context, "이메일 인증!!!");
+                    isAuth.setValue(true);
+                    customDialog.dismiss();
+                }
+
+                @Override
+                public void negativeBtn() {
+                    sendToast(context, "이메일 실패!!!");
+                    isAuth.setValue(false);
+                    customDialog.dismiss();
+                }
+            });
+
+
             //       buttonClickResult.setValue(2);
 
             //(예정) 여기서 이메일 인증 처리
@@ -119,7 +148,7 @@ public class SignUpViewModel extends BaseObservable {
             sendToast(context, "이메일 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
         } else if (TextUtils.isEmpty(passwordLD.getValue())) {
             sendToast(context, "패스워드 칸이 비었습니다.");
-        } else if (!regexMethod.isPasswordValid( passwordLD.getValue())) {
+        } else if (!regexMethod.isPasswordValid(passwordLD.getValue())) {
             sendToast(context, "패스워드 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
         } else if (!isAuth.getValue()) {
             sendToast(context, "이메일 인증이 미실시되었습니다.");
@@ -252,8 +281,6 @@ public class SignUpViewModel extends BaseObservable {
 
         return SHA;
     }
-
-
 
 
 }
