@@ -1,22 +1,34 @@
 package jso.kpl.traveller.thirdpartyapi.kakao;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+
 import com.kakao.auth.ISessionCallback;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
-import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.exception.KakaoException;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jso.kpl.traveller.ui.Login;
+import jso.kpl.traveller.ui.SignUp;
+import jso.kpl.traveller.viewmodel.LoginSelectViewModel;
 
 public class SessionCallback implements ISessionCallback {
 
     public String TAG = "Trav.SessionCallback";
+
+    Context context;
+
+    public SessionCallback(Context context) {
+        this.context = context;
+    }
 
     @Override
     public void onSessionOpened() {
@@ -57,15 +69,23 @@ public class SessionCallback implements ISessionCallback {
                 Log.e(TAG, "requestMe onSessionClosed message : " + errorResult.getErrorMessage());
             }
 
-
             /*
                 여기서 사용자의 정보를 얻을 수 있다.
              */
             @Override
-            public void onSuccess(MeV2Response result) {
-                Log.e(TAG, "requestMe onSuccess message : " + result.getKakaoAccount().getEmail() + " " + result.getId() + " " + result.getNickname());
+            public void onSuccess(final MeV2Response result) {
+
+                Log.e(TAG, "카카오 아이디: " + result.getKakaoAccount().getEmail());
+
+                Intent intent = new Intent(context, SignUp.class);
+                intent.putExtra("email", result.getKakaoAccount().getEmail());
+                intent.putExtra("auth", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
             }
         });
     }
+
 }
 

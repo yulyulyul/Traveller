@@ -24,29 +24,31 @@ import jso.kpl.traveller.thirdpartyapi.facebook.LoginCallback
 import jso.kpl.traveller.thirdpartyapi.kakao.SessionCallback
 import jso.kpl.traveller.ui.LoginSelect
 import jso.kpl.traveller.ui.LoginSelect.Companion.getInstance
+import jso.kpl.traveller.ui.SignUp
+import jso.kpl.traveller.util.JavaUtil
 import java.util.*
 
-class LoginSelectViewModel (application: Application): AndroidViewModel(application)
-{
+class LoginSelectViewModel(application: Application) : AndroidViewModel(application) {
+
     // 카카오로 시작하기 버튼을 눌렀을때 view(Login.kt)에 변화를 알려주는 객체
-    var iskakaoLogin : MutableLiveData<Boolean>? = null
+    var iskakaoLogin: MutableLiveData<Boolean>? = null
     // 카카오 로그인 callback
-    var kakao_session_callback : SessionCallback? = null
+    var kakao_session_callback: SessionCallback? = null
 
     // 페이스북 callback을 관리해주는 객체
     var FacebookCallbackManager: CallbackManager? = null
     // 페이스북으로 시작하기 버튼을 눌렀을때 view(Login.kt)에 변화를 알려주는 객체
-    var isFacebookLogin : MutableLiveData<Boolean>? = null
+    var isFacebookLogin: MutableLiveData<Boolean>? = null
     // 페이스북 로그인 callback
-    var facebook_session_callback : LoginCallback? = null
+    var facebook_session_callback: LoginCallback? = null
 
     // Firebase 인증 객체 선언
-    var firebaseAuth : FirebaseAuth? = null
+    var firebaseAuth: FirebaseAuth? = null
 
-    init
-    {
+    init {
         //카카오
         iskakaoLogin = MutableLiveData<Boolean>()
+
 
         //페이스북
         isFacebookLogin = MutableLiveData<Boolean>()
@@ -56,8 +58,7 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
         firebaseAuth = FirebaseAuth.getInstance()
     }
 
-    fun gotoLogin()
-    {
+    fun gotoLogin() {
         val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Login::class.java)
         ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         ContextCompat.startActivity(getApplication(), ls_goLogin, null)
@@ -70,16 +71,17 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
             .requestEmail()
             .build()
 
-        var googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(LoginSelect.getInstance(), gso)
+        var googleSignInClient: GoogleSignInClient =
+            GoogleSignIn.getClient(LoginSelect.getInstance(), gso)
 
         val signInIntent = googleSignInClient.signInIntent
         LoginSelect.getInstance().startActivityForResult(signInIntent, LoginSelect.RC_SIGN_IN)
     }
 
-    fun firebaseAuthWithGoogle(acct: GoogleSignInAccount)
-    {
+    //구글 로그인 버튼
+    fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        App.getGoogleAuth().signInWithCredential(credential) .addOnCompleteListener(getInstance())
+        App.getGoogleAuth().signInWithCredential(credential).addOnCompleteListener(getInstance())
         { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
@@ -91,6 +93,7 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
                 Log.d(TAG, "Google Login , providerId : " + user?.providerId)
                 Log.d(TAG, "Google Login , uid : " + user?.uid)
 
+                goToSignUp(user?.email)
 //                successLogin()
             } else {
                 Log.d(TAG, "signInWithCredential:failure", task.exception)
@@ -100,8 +103,7 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
     }
 
     //구글 로그아웃
-    fun googleLogout()
-    {
+    fun googleLogout() {
         Log.d(TAG, "googleLogout..")
         App.getGoogleAuth().signOut()
 
@@ -114,39 +116,41 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
         Log.d(TAG, "Google Login , uid : " + user?.uid)
     }
 
-    fun facebookLogin()
-    {
+    fun facebookLogin() {
         isFacebookLogin?.value = true
+        JavaUtil.printHashKey(getApplication())
     }
 
-    fun facebook_callback()
-    {
-        facebook_session_callback = LoginCallback()
+    fun facebook_callback() {
+        facebook_session_callback = LoginCallback(getApplication())
         val loginManager = LoginManager.getInstance()
-        loginManager.logInWithReadPermissions(getInstance() , Arrays.asList("public_profile", "email", "user_friends"))
+        loginManager.logInWithReadPermissions(
+            getInstance(),
+            Arrays.asList("public_profile", "email", "user_friends")
+        )
         loginManager.registerCallback(FacebookCallbackManager, facebook_session_callback)
+
     }
 
     //페이스북 로그아웃
-    fun facebookLogout()
-    {
+    fun facebookLogout() {
         LoginManager.getInstance().logOut()
     }
 
-    fun kakaoLogin()
-    {
+    fun kakaoLogin() {
         iskakaoLogin?.value = true
     }
 
-    fun kakao_callback()
-    {
-        if(kakao_session_callback != null)
-        {
+
+    fun kakao_callback() {
+        if (kakao_session_callback != null) {
             Session.getCurrentSession().removeCallback(kakao_session_callback)
         }
         //카카오로 로그인하여 생기는 결과가 리턴하는 곳.
-        kakao_session_callback = SessionCallback()
+        kakao_session_callback = SessionCallback(getApplication())
         Session.getCurrentSession().addCallback(kakao_session_callback)
+
+
     }
 
     fun kakaoLogout() {
@@ -166,15 +170,17 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
     }
 
     // 로그인 Callback들을 clear 해주는 함수.
-    fun clearCallback()
-    {
+    fun clearCallback() {
         //kakao callback 해제.
-        if(kakao_session_callback != null)
-        {
+        if (kakao_session_callback != null) {
             Log.d(TAG, "kakao_session_callback를 해제합니다.")
             Session.getCurrentSession().removeCallback(kakao_session_callback)
         }
 
+    }
+
+    fun generalSignUp() {
+        goToSignUp(null)
     }
 
     //ViewModel이 끝날 때 불림.(Activity LifeCycle이랑 생명주기가 다름)
@@ -183,8 +189,24 @@ class LoginSelectViewModel (application: Application): AndroidViewModel(applicat
         clearCallback()
     }
 
-    companion object
-    {
-        val TAG :String = "Trav.LoginSelectVm"
+    fun goToSignUp(email: String?) {
+
+        val su_intent = Intent(getApplication(), SignUp::class.java)
+
+        su_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        if (email != null) {
+            su_intent.putExtra("email", email)
+            su_intent.putExtra("auth", true)
+        } else {
+            su_intent.putExtra("auth", false)
+        }
+
+        ContextCompat.startActivity(getApplication(), su_intent, null)
+
+    }
+
+    companion object {
+        val TAG: String = "Trav.LoginSelectVm"
     }
 }

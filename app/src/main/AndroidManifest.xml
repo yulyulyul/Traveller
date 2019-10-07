@@ -3,7 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="jso.kpl.traveller">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 위치정보활용시 추가 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- WIFI 상태활용시 추가 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".App"
@@ -15,6 +20,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".ui.MyPage"></activity>
+        <activity android:name=".ui.CustomDialog" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -38,8 +45,20 @@
         </activity>
         <activity
             android:name=".ui.Login"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.SignUp"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="jso.kpl.traveller.file_provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource" />
+        </provider>
     </application>
 
 </manifest>

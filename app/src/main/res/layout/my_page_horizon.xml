@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="horizonVM"
+            type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
+
+    </data>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="10dp">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:adjustViewBounds="true"
+                android:paddingHorizontal="10dp"
+                android:scaleType="fitCenter"
+                app:imgLoad="@{horizonVM.horizonLD.get(0)}" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:adjustViewBounds="true"
+                android:paddingHorizontal="10dp"
+                android:scaleType="fitCenter"
+                app:imgLoad="@{horizonVM.horizonLD.get(1)}" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:adjustViewBounds="true"
+                android:paddingHorizontal="10dp"
+                android:scaleType="fitCenter"
+                app:imgLoad="@{horizonVM.horizonLD.get(2)}" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:adjustViewBounds="true"
+                android:paddingHorizontal="10dp"
+                android:scaleType="fitCenter"
+                app:imgLoad="@{horizonVM.horizonLD.get(3)}" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:adjustViewBounds="true"
+                android:paddingHorizontal="10dp"
+                android:scaleType="fitCenter"
+                app:imgLoad="@{horizonVM.horizonLD.get(4)}" />
+
+        </LinearLayout>
+
+
+</layout>

@@ -29,9 +29,9 @@ class LoginSelect : AppCompatActivity() {
     var ls_Binding : LoginSelectBinding? = null
     var ls_viewmodel: LoginSelectViewModel? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         ls_INSTANCE = this
         ls_Binding = DataBindingUtil.setContentView(this, R.layout.login_select)
         ls_viewmodel = ViewModelProviders.of(this).get(LoginSelectViewModel::class.java)
