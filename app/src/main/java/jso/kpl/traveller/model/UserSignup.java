@@ -65,20 +65,17 @@ public class UserSignup {
                 ", us_device='" + us_device + '}';
     }
 
-
     @BindingAdapter({"imgLoad"})
     public static void imgLoad(ImageView iv, String imgUri) {
 
         RequestOptions options
-                = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.i_blank_profile_icon).circleCrop();
+                = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.i_blank_person_icon);
 
         Glide.with(iv.getContext())
                 .load(imgUri)
                 .apply(options)
                 .into(iv);
     }
-
-
 }
 
 

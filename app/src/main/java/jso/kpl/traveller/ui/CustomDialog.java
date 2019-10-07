@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.FragmentCustomDialogBinding;
+import jso.kpl.traveller.databinding.CustomDialogBinding;
 import jso.kpl.traveller.viewmodel.CustomDialogViewModel;
 import jso.kpl.traveller.interfaces.DialogYNInterface;
 
@@ -50,14 +49,14 @@ public class CustomDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return DataBindingUtil.inflate(inflater, R.layout.fragment_custom_dialog, container, false).getRoot();
+        return DataBindingUtil.inflate(inflater, R.layout.custom_dialog, container, false).getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        FragmentCustomDialogBinding binding
+        CustomDialogBinding binding
                 = DataBindingUtil.getBinding(getView());
 
         binding.setCuVm(new CustomDialogViewModel(getActivity()));

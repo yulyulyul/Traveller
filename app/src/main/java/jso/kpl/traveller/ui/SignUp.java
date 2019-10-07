@@ -14,12 +14,10 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 
-import com.kakao.usermgmt.response.model.User;
-
 import java.io.File;
 
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.ActivitySignUpBinding;
+import jso.kpl.traveller.databinding.SignUpBinding;
 import jso.kpl.traveller.model.LoginUser;
 import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.SignUpViewModel;
@@ -41,7 +39,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ActivitySignUpBinding signUpBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
+        final SignUpBinding  signUpBinding = DataBindingUtil.setContentView(this, R.layout.sign_up);
 
         signUpBinding.setSignUpVM(new SignUpViewModel(this));
         signUpBinding.setLifecycleOwner(this);

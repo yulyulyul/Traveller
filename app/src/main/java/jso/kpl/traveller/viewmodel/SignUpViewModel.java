@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +22,6 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.interfaces.DialogYNInterface;
@@ -31,6 +29,7 @@ import jso.kpl.traveller.model.UserSignup;
 import jso.kpl.traveller.network.SignupAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.CustomDialog;
+import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.util.PermissionCheck;
 import jso.kpl.traveller.util.RegexMethod;
 import okhttp3.MediaType;
@@ -76,7 +75,7 @@ public class SignUpViewModel extends BaseObservable {
     public SignUpViewModel(Context context) {
         this.context = context;
 
-        String imageUri = "drawable://" + R.drawable.i_blank_profile_icon;
+        String imageUri = "android.resource://jso.kpl.traveller/drawable/i_blank_person_icon";
         photoUpdate.setValue(imageUri);
 
     }
@@ -94,13 +93,13 @@ public class SignUpViewModel extends BaseObservable {
 
     //이메일 인증 버튼
     public void onEmailAuthClicked() {
+
         if (TextUtils.isEmpty(emailLD.getValue())) {
             sendToast(context, "이메일 칸이 비었습니다.");
         } else if (!regexMethod.isEmailValid(emailLD.getValue())) {
             sendToast(context, "이메일 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
         } else {
             sendToast(context, "System::Email Clear");
-
 
             Bundle bundle = new Bundle();
             bundle.putString("title", "(테스트용)이메일 인증하시겠습니까?");
@@ -116,6 +115,10 @@ public class SignUpViewModel extends BaseObservable {
                 public void positiveBtn() {
                     sendToast(context, "이메일 인증!!!");
                     isAuth.setValue(true);
+
+                    Intent intent = new Intent(context, MyPage.class);
+                    context.startActivity(intent);
+
                     customDialog.dismiss();
                 }
 
@@ -160,7 +163,7 @@ public class SignUpViewModel extends BaseObservable {
             userSignup = new UserSignup(emailLD.getValue(), returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
 
             //프로필 이미지가 null이거나 초기값 사진 또는 에러 이미지일 때
-            if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_profile_icon)) {
+            if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_person_icon)) {
 
                 Log.d(TAG + "이미지", "존재하지 않음");
                 imgBody = null;

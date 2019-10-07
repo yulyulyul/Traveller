@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.CustomDialog"></activity>
+        <activity android:name=".ui.MyPage"></activity>
+        <activity android:name=".ui.CustomDialog" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

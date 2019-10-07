@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="profileVm"
+            type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#f0f0f0"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <!--프로필 이미지-->
+        <RelativeLayout
+            android:id="@+id/profile_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/my_page_profile"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:paddingLeft="20dp"
+                android:scaleType="fitCenter"
+                android:onClick="@{()->profileVm.onProfileClicked()}"
+                app:imgLoad="@{profileVm.mp_profileLD.profileUri}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/my_page_profile"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:text="@{profileVm.mp_profileLD.email}" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="250dp">-->
+
+    <!--        &lt;!&ndash;프로필 이미지&ndash;&gt;-->
+    <!--        <RelativeLayout-->
+    <!--            android:id="@+id/profile_relative"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginLeft="20dp">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="200dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:adjustViewBounds="true"-->
+    <!--                android:scaleType="fitCenter"-->
+    <!--                app:imgLoad="@{profileVm.mp_profileLD.profile}" />-->
+
+
+    <!--        </RelativeLayout>-->
+
+    <!--        &lt;!&ndash;이메일&ndash;&gt;-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_below="@+id/profile_relative"-->
+    <!--            android:layout_marginLeft="20dp">-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="@{profileVm.mp_profileLD.email}" />-->
+
+
+    <!--        </LinearLayout>-->
+
+    <!--    </RelativeLayout>-->
+
+
+</layout>
