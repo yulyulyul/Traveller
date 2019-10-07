@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
-            type="jso.kpl.traveller.viewmodel.LoginSelectViewModel"/>
+            type="jso.kpl.traveller.viewmodel.LoginSelectViewModel" />
     </data>
 
     <LinearLayout
@@ -30,106 +29,100 @@
             android:id="@+id/btnKakaoLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
             android:background="@android:color/white"
-            android:text="카카오톡으로 시작하기"
-            android:layout_gravity="center"
             android:gravity="center"
-            android:padding="10dp"
             android:onClick="@{()->viewmodel.kakaoLogin()}"
-            />
+            android:padding="10dp"
+            android:text="카카오톡으로 시작하기" />
 
         <TextView
             android:id="@+id/btnFacebookLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
             android:background="@android:color/white"
-            android:text="페이스북으로 시작하기"
-            android:layout_gravity="center"
             android:gravity="center"
-            android:padding="10dp"
             android:onClick="@{()->viewmodel.facebookLogin()}"
-            />
+            android:padding="10dp"
+            android:text="페이스북으로 시작하기" />
 
         <TextView
             android:id="@+id/btnGoogleLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
             android:background="@android:color/white"
-            android:text="구글으로 시작하기"
-            android:layout_gravity="center"
             android:gravity="center"
-            android:padding="10dp"
             android:onClick="@{()->viewmodel.googleLogin()}"
-            />
+            android:padding="10dp"
+            android:text="구글으로 시작하기" />
 
         <TextView
             android:id="@+id/btnSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
             android:background="@android:color/white"
-            android:text="직접 가입하기"
-            android:layout_gravity="center"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:text="직접 가입하기" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="구글 로그아웃"
             android:onClick="@{()->viewmodel.googleLogout()}"
-            />
+            android:text="구글 로그아웃"
+            android:visibility="gone" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="카카오 로그아웃"
             android:onClick="@{()->viewmodel.kakaoLogout()}"
-            />
+            android:text="카카오 로그아웃"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/facebook_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="페이스북 로그아웃"
-            android:visibility="gone"
             android:onClick="@{()->viewmodel.facebookLogout()}"
-            />
+            android:text="페이스북 로그아웃"
+            android:visibility="gone" />
 
         <com.kakao.usermgmt.LoginButton
             android:id="@+id/btn_kakao_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:visibility="gone"
             android:layout_marginBottom="15dp"
-            />
+            android:visibility="gone" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/btn_facebook_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:visibility="gone"
-            android:paddingBottom="15dp"
             android:paddingTop="15dp"
-            />
+            android:paddingBottom="15dp"
+            android:visibility="gone" />
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/btn_google_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone"
-            >
-        </com.google.android.gms.common.SignInButton>
+            android:visibility="gone"></com.google.android.gms.common.SignInButton>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginTop="20dp"
+            android:gravity="center"
             android:text=""
             android:textColor="#ccc" />
 
@@ -140,9 +133,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
+            android:onClick="@{()->viewmodel.gotoLogin()}"
             android:text="로그인하러 가기"
             android:textColor="@android:color/white"
-            android:onClick="@{()->viewmodel.gotoLogin()}"
 
             />
     </LinearLayout>
