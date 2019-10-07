@@ -68,14 +68,17 @@
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:background="@android:color/white"
-            android:gravity="center" />
+            android:gravity="center"
+            android:onClick="@{()->viewmodel.generalSignUp()}"
+            android:padding="10dp"
+            android:text="직접 가입하기" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="@{()->viewmodel.googleLogout()}"
             android:text="구글 로그아웃"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
 
         <Button
@@ -83,7 +86,8 @@
             android:layout_height="wrap_content"
             android:onClick="@{()->viewmodel.kakaoLogout()}"
             android:text="카카오 로그아웃"
-            android:visibility="gone" />
+
+            android:visibility="visible" />
 
 
         <Button
@@ -92,8 +96,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{()->viewmodel.facebookLogout()}"
             android:text="페이스북 로그아웃"
-            android:visibility="gone" />
-
+            android:visibility="visible" />
 
         <com.kakao.usermgmt.LoginButton
             android:id="@+id/btn_kakao_login"
