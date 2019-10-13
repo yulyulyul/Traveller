@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:setImgAdapter="@{imageVm.imgAdapter}"
+            app:setDecoration="@{imageVm.decoration}"/>
+
+    </LinearLayout>
+
+    <data>
+
+        <variable
+            name="imageVm"
+            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+    </data>
+</layout>
