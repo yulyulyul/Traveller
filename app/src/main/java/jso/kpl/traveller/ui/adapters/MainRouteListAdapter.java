@@ -11,8 +11,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import jso.kpl.toyroutesearch.view.Fragment.ImageRouteList;
-import jso.kpl.toyroutesearch.view.Fragment.PostRouteList;
+import jso.kpl.traveller.ui.Fragment.ImageRouteList;
+import jso.kpl.traveller.ui.Fragment.PostRouteList;
+
 
 public class MainRouteListAdapter extends FragmentStatePagerAdapter {
 
