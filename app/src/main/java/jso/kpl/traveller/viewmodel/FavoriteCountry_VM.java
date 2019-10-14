@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import jso.kpl.traveller.db.repository.FavoriteCountry_Repository;
 import jso.kpl.traveller.model.FavoriteCountryVO;
 import jso.kpl.traveller.model.FavoriteCountry_m;
 import jso.kpl.traveller.ui.FavoriteCountryInfo;
@@ -24,7 +23,6 @@ public class FavoriteCountry_VM extends BaseObservable {
     public FavoriteCountryItemAdapter adapter = new FavoriteCountryItemAdapter(list);
 
     private jso.kpl.traveller.model.FavoriteCountry_m FavoriteCountry_m;
-    private FavoriteCountry_Repository FCRepository;
 
     public FavoriteCountry_VM(Context context) {
         this.context = context;

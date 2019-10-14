@@ -44,4 +44,13 @@ public class JavaUtil {
             Log.e("TESTTAG", "printHashKey()", e);
         }
     }
+
+    // Glide drawable 이미지 경로 가져오기
+    public static int getImage(Context context, String imageName) {
+        // drawable 이미지 리소스 ID 찾기
+        int drawableResourceId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
+
+        return drawableResourceId;
+    }
+
 }

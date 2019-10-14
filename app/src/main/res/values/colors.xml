@@ -8,6 +8,7 @@
     <color name="colorBlack">#000000</color>
     <color name="loginActivity_textColor">#757575</color>
 
-
+    <!-- jh color -->
+    <color name="border">#838383</color>
 
 </resources>
