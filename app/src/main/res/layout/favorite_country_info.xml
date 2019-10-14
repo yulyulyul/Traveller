@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="FCInfo_VM"
+            type="jso.kpl.traveller.viewmodel.FavoriteCountryInfo_VM" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/relativeParent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/flag"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginEnd="20dp"
+                app:loadImage="@{FCInfo_VM.imageUrl}" />
+
+            <TextView
+                android:id="@+id/country_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeChild"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:text="@string/country_warning"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="18sp"
+                android:onClick="@{()->FCInfo_VM.country_warningClickEvent()}" />
+
+            <Button
+                android:id="@+id/country_add_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/country_warning"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/s_round_btn"
+                android:drawableLeft="@android:drawable/ic_menu_add"
+                android:drawablePadding="4dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="@string/country_add_btn"
+                android:textColor="@android:color/background_light"
+                android:onClick="@{()->FCInfo_VM.country_add_btnClickEvent()}"/>
+
+            <RelativeLayout
+                android:id="@+id/relativeChild"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="false"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_toRightOf="@id/flag">
+
+                <TextView
+                    android:id="@+id/country"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.country}"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/country_eng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_toRightOf="@id/country"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.country_eng}"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/continent_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/country"
+                    android:layout_alignLeft="@id/country"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/continent"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/continent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/continent_txt"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/continent_txt"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.continent}"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/capital_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/continent_txt"
+                    android:layout_alignLeft="@id/country"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/capital"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/capital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/capital_txt"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/capital_txt"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.capital}"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/language_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/capital_txt"
+                    android:layout_alignLeft="@id/country"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/language"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/language_txt"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/language_txt"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.language}"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/currency_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/language_txt"
+                    android:layout_alignLeft="@id/country"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/currency"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/currency_txt"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/currency_txt"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.currency}"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/religion_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/currency_txt"
+                    android:layout_alignLeft="@id/country"
+                    android:text="@string/religion"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/religion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/religion_txt"
+                    android:layout_toRightOf="@id/religion_txt"
+                    android:text="@{FCInfo_VM.favoriteCountryVO.religion}"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/relativeParent">
+
+            <TextView
+                android:id="@+id/TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/recent"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="@{FCInfo_VM.layoutManager.getValue()}"
+                app:spanCount="3"
+                app:setAdapter="@{FCInfo_VM.adapter}" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
