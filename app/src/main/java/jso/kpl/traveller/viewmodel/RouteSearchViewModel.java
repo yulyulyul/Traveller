@@ -8,9 +8,10 @@ import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.ui.MainRouteList;
-import jso.kpl.traveller.util.Money;
+import jso.kpl.traveller.util.CurrencyChange;
 
 public class RouteSearchViewModel extends ViewModel {
 
@@ -40,8 +41,8 @@ public class RouteSearchViewModel extends ViewModel {
         srLD.setValue(new SearchReq("", 10000, 10001));
 
         //각 max min Text 입력
-        seekBarMax.setValue(Money.moneyFormatToWon(srLD.getValue().getSr_max_cost()));
-        seekBarMin.setValue(Money.moneyFormatToWon(srLD.getValue().getSr_min_cost()));
+        seekBarMax.setValue(CurrencyChange.moneyFormatToWon(srLD.getValue().getSr_max_cost()));
+        seekBarMin.setValue(CurrencyChange.moneyFormatToWon(srLD.getValue().getSr_min_cost()));
 
         Log.d(TAG + "Constructor", ": RouteSearchViewModel");
     }
@@ -57,7 +58,8 @@ public class RouteSearchViewModel extends ViewModel {
 
                 //최종 검색 조건을 가지고 이동
                 Intent goToResult = new Intent(context, MainRouteList.class);
-                goToResult.putExtra("search", srLD.getValue());
+
+                goToResult.putExtra("req", new MyPageItem(srLD.getValue(), 0));
                 context.startActivity(goToResult);
 
             }else{

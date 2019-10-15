@@ -27,7 +27,7 @@
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                app:circleImgLoad="@{vpVm.rePost.rp_profile}"/>
+                app:setCircleImg="@{vpVm.rePost.rp_profile}"/>
 
         </RelativeLayout>
 

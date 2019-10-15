@@ -3,7 +3,6 @@ package jso.kpl.traveller.util;
 import android.graphics.Rect;
 import android.view.View;
 
-import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -50,11 +49,6 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             //하단 패딩
             outRect.bottom = spacing; // item bottom
         }
-    }
-
-    @BindingAdapter({"setDecoration"})
-    public static void onBindSetDecoration(RecyclerView recyclerView, GridSpacingItemDecoration decoration){
-        recyclerView.addItemDecoration(decoration);
     }
 }
 

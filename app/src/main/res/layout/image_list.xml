@@ -10,7 +10,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:setImgAdapter="@{imageVm.imgAdapter}"
+            app:setStaggerRvAdapter="@{imageVm.imgAdapter}"
             app:setDecoration="@{imageVm.decoration}"/>
 
     </LinearLayout>

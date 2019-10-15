@@ -12,7 +12,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListen
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.RouteSearchBinding;
-import jso.kpl.traveller.util.Money;
+import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.viewmodel.RouteSearchViewModel;
 
 public class RouteSearch extends AppCompatActivity {
@@ -36,9 +36,9 @@ public class RouteSearch extends AppCompatActivity {
                 Log.d(TAG, "valueChanged: " + maxValue);
 
                 binding.getSearchVm().costRange.setValue(
-                        Money.moneyFormatToWon(Integer.parseInt(minValue.toString()))
+                        CurrencyChange.moneyFormatToWon(Integer.parseInt(minValue.toString()))
                                 + " ~ "
-                                + Money.moneyFormatToWon(Integer.parseInt(maxValue.toString()))
+                                + CurrencyChange.moneyFormatToWon(Integer.parseInt(maxValue.toString()))
                 );
 
             }
@@ -69,13 +69,13 @@ public class RouteSearch extends AppCompatActivity {
                         binding.crystalRangeSeekBar.setMaxValue(Integer.parseInt(s));
 
                         //시크바의 맥스트 코스트 텍스트
-                        binding.getSearchVm().seekBarMax.setValue(Money.moneyFormatToWon(Integer.parseInt(s)));
+                        binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(Integer.parseInt(s)));
                     }else {
                         //시크바의 맥스 코스트에 입력
                         binding.crystalRangeSeekBar.setMaxValue(10001);
 
                         //시크바의 맥스트 코스트 텍스트
-                        binding.getSearchVm().seekBarMax.setValue(Money.moneyFormatToWon(10001));
+                        binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(10001));
                     }
 
                 }

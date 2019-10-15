@@ -21,6 +21,8 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity android:name=".ui.MyPage"></activity>
+        <activity android:name=".ui.RouteSearch"></activity>
+        <activity android:name=".ui.MainRouteList"></activity>
         <activity android:name=".ui.CustomDialog" />
 
         <meta-data

@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="imgVm"
-            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+            name="flagRvVM"
+            type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
     </data>
 
     <LinearLayout
@@ -13,13 +13,12 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:layout_gravity="center"
-            app:imgLoad="@{imgVm.rePost.rp_profile}"
-            android:src="@drawable/i_blank_person_icon"/>
+            app:setCircleImg="@{flagRvVM.mp_flag_item}"/>
 
     </LinearLayout>
 

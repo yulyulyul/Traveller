@@ -25,4 +25,12 @@ public class RePost {
     public void setPost(Post post) {
         this.post = post;
     }
+
+    @Override
+    public String toString() {
+        return "RePost{" +
+                "rp_profile='" + rp_profile + '\'' +
+                ", post=" + post +
+                '}';
+    }
 }

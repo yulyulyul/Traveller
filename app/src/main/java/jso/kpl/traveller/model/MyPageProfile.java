@@ -4,6 +4,9 @@ public class MyPageProfile {
 
     String profileUri;
     String email;
+    String nickname;
+    String password;
+    String device_id;
 
     public MyPageProfile(String profileUri, String email) {
         this.profileUri = profileUri;

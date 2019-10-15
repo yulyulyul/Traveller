@@ -32,7 +32,7 @@
                     android:onClick="@{()->signUpVM.onImageClicked()}"
                     android:padding="45dp"
                     android:scaleType="fitCenter"
-                    app:imgLoad="@{signUpVM.photoUpdate}" />
+                    app:setCircleImg="@{signUpVM.photoUpdate}" />
 
             </LinearLayout>
 

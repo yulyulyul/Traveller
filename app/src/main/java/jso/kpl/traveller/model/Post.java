@@ -55,4 +55,15 @@ public class Post {
     public void setP_country(String p_country) {
         this.p_country = p_country;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "p_id=" + p_id +
+                ", p_title='" + p_title + '\'' +
+                ", p_author='" + p_author + '\'' +
+                ", p_cost='" + p_cost + '\'' +
+                ", p_country='" + p_country + '\'' +
+                '}';
+    }
 }

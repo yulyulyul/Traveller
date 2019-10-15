@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="postVM"
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
@@ -14,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
-        android:weightSum="100"
-        android:onClick="@{()->postVM.onPostClicked()}">
+        android:weightSum="100">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -30,7 +28,7 @@
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                app:imgLoad="@{postVM.postLD.rp_profile}"/>
+                app:setCircleImg="@{postVM.mp_post.rp_profile}"/>
 
 
         </RelativeLayout>
@@ -70,7 +68,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{postVM.postLD.post.p_country}"
+                        android:text="@{postVM.mp_post.post.p_country}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>
@@ -104,7 +102,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{postVM.postLD.post.p_cost}"
+                        android:text="@{postVM.mp_post.post.p_cost}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>

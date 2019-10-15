@@ -4,7 +4,7 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
-public class Money {
+public class CurrencyChange {
 
     public static String moneyFormatToWon(long money) {
         NumberFormat nFormat = NumberFormat.getCurrencyInstance(Locale.KOREA);

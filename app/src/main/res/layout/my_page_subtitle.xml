@@ -2,12 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="subtitleVM"
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
     </data>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,17 +31,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@{subtitleVM.subtitleLD}" />
+                android:text="@{subtitleVM.mp_subtitle.subtitle}" />
 
             <ImageButton
+                android:id="@+id/mp_more_btn"
                 android:layout_width="20dp"
-                android:layout_height="match_parent"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
                 android:background="@drawable/i_plus_icon"
-                android:onClick="@{()->subtitleVM.onMoreClicked()}"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                android:visibility="@{subtitleVM.mp_subtitle.visible ? View.VISIBLE:View.GONE}"/>
 
         </RelativeLayout>
     </LinearLayout>

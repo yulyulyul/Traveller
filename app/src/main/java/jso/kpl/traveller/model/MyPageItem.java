@@ -1,6 +1,8 @@
 package jso.kpl.traveller.model;
 
-public class MyPageItem {
+import java.io.Serializable;
+
+public class MyPageItem implements Serializable {
 
     Object o;
     int type;

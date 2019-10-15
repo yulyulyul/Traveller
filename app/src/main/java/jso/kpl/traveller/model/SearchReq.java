@@ -1,9 +1,5 @@
 package jso.kpl.traveller.model;
 
-import androidx.databinding.BindingAdapter;
-
-import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
-
 import java.io.Serializable;
 
 public class SearchReq implements Serializable {
@@ -50,15 +46,5 @@ public class SearchReq implements Serializable {
                 ", sr_min_cost=" + sr_min_cost +
                 ", sr_max_cost=" + sr_max_cost +
                 '}';
-    }
-
-    @BindingAdapter("setMAX")
-    public static void bindMaxValue(CrystalRangeSeekbar seekbar, int max) {
-        seekbar.setMaxValue(max);
-    }
-
-    @BindingAdapter("setMIN")
-    public static void bindMinValue(CrystalRangeSeekbar seekbar, int min) {
-        seekbar.setMinValue(min);
     }
 }

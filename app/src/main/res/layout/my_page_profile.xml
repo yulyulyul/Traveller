@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable name="email"  type="String"/>
+
         <variable
             name="profileVm"
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
@@ -23,23 +25,22 @@
             android:layout_gravity="center">
 
             <ImageView
-                android:id="@+id/my_page_profile"
+                android:id="@+id/mp_profile_iv"
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:paddingLeft="20dp"
-                android:scaleType="fitCenter"
-                android:onClick="@{()->profileVm.onProfileClicked()}"
-                app:imgLoad="@{profileVm.mp_profileLD.profileUri}" />
+                android:scaleType="fitXY"
+                app:setCircleImg="@{profileVm.mp_profile.profileUri}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/my_page_profile"
+                android:layout_below="@+id/mp_profile_iv"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textSize="20dp"
-                android:text="@{profileVm.mp_profileLD.email}" />
+                android:text="@{profileVm.mp_profile.email}" />
 
         </RelativeLayout>
 
