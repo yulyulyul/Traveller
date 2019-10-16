@@ -21,11 +21,11 @@ public class FavoriteCountry extends AppCompatActivity {
 
         FC_VM = new FavoriteCountry_VM(this);
 
-        binding.setFCVM(FC_VM);
+        binding.setVM(FC_VM);
         binding.setLifecycleOwner(this);
         binding.executePendingBindings();
 
         // viewModel 세팅
-        binding.getFCVM().init();
+        binding.getVM().init();
     }
 }

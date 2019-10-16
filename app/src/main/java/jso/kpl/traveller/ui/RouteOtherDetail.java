@@ -3,30 +3,30 @@ package jso.kpl.traveller.ui;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.databinding.RouteOtherDetailBinding;
+import jso.kpl.traveller.viewmodel.RouteOtherDetail_VM;
 
 
 public class RouteOtherDetail extends AppCompatActivity {
 
-    //private FavoriteCountryBinding binding;
-    //private FavoriteCountry_VM FC_VM;
+    private RouteOtherDetailBinding binding;
+    private RouteOtherDetail_VM VM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.route_other_detail);
+        binding = DataBindingUtil.setContentView(this, R.layout.route_other_detail);
 
+        VM = new RouteOtherDetail_VM(this);
 
-        /*binding = DataBindingUtil.setContentView(this, R.layout.favorite_country);
-
-        FC_VM = new FavoriteCountry_VM(this);
-
-        binding.setFCVM(FC_VM);
+        binding.setVM(VM);
         binding.setLifecycleOwner(this);
         binding.executePendingBindings();
 
         // viewModel 세팅
-        binding.getFCVM().init();*/
+        binding.getVM().init();
     }
 }

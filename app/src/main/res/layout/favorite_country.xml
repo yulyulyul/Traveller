@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="FC_VM"
+            name="VM"
             type="jso.kpl.traveller.viewmodel.FavoriteCountry_VM" />
 
     </data>
@@ -13,6 +13,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:setAdapter="@{FC_VM.adapter}" />
+        app:setAdapter="@{VM.adapter}" />
 
 </layout>

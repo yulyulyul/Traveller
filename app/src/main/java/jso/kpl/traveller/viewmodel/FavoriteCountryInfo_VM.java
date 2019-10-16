@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import jso.kpl.traveller.model.FavoriteCountryInfo_m;
+import jso.kpl.traveller.model.FavoriteCountryInfoVO;
 import jso.kpl.traveller.model.FavoriteCountryVO;
 import jso.kpl.traveller.ui.adapters.FavoriteCountryInfoItemAdapter;
 import jso.kpl.traveller.util.JavaUtil;
@@ -25,7 +25,7 @@ public class FavoriteCountryInfo_VM extends BaseObservable {
     private Intent intent;
 
     public MutableLiveData<GridLayoutManager> layoutManager = new MutableLiveData<>();
-    public MutableLiveData<List<FavoriteCountryInfo_m>> list = new MutableLiveData<>();
+    public MutableLiveData<List<FavoriteCountryInfoVO>> list = new MutableLiveData<>();
     public MutableLiveData<FavoriteCountryVO> favoriteCountryVO = new MutableLiveData<>();
     public FavoriteCountryInfoItemAdapter adapter = new FavoriteCountryInfoItemAdapter(list);
 
@@ -34,7 +34,6 @@ public class FavoriteCountryInfo_VM extends BaseObservable {
     public FavoriteCountryInfo_VM(Context context, Intent intent) {
         this.context = context;
         this.intent = intent;
-        layoutManager.setValue(new GridLayoutManager(context, 3));
         // favoriteCountryVO 초기화
         favoriteCountryVO.setValue(getIntentExtra());
         Log.d("CountryInfoAct", "선택된 국가 : " + favoriteCountryVO.getValue().getCountry());
@@ -65,28 +64,29 @@ public class FavoriteCountryInfo_VM extends BaseObservable {
     }
 
     public void setRecyclerView() {
+        layoutManager.setValue(new GridLayoutManager(context, 3));
         // recyclerView에 표시할 데이터 리스트 생성
-        ArrayList<FavoriteCountryInfo_m> list = new ArrayList<>();
+        ArrayList<FavoriteCountryInfoVO> list = new ArrayList<>();
         // 추후 루트 게시글 리스트로 변경
         for(int i = 0; i < 6; i++){
             switch(i) {
                 case 0:
-                    list.add(new FavoriteCountryInfo_m("dummy_travel_img1"));
+                    list.add(new FavoriteCountryInfoVO("dummy_travel_img1"));
                     break;
                 case 1:
-                    list.add(new FavoriteCountryInfo_m("dummy_travel_img2"));
+                    list.add(new FavoriteCountryInfoVO("dummy_travel_img2"));
                     break;
                 case 2:
-                    list.add(new FavoriteCountryInfo_m("dummy_travel_img3"));
+                    list.add(new FavoriteCountryInfoVO("dummy_travel_img3"));
                     break;
                 case 3:
-                    list.add(new FavoriteCountryInfo_m("dummy_travel_img4"));
+                    list.add(new FavoriteCountryInfoVO("dummy_travel_img4"));
                     break;
                 case 4:
-                    list.add(new FavoriteCountryInfo_m("dummy_travel_img5"));
+                    list.add(new FavoriteCountryInfoVO("dummy_travel_img5"));
                     break;
                 case 5:
-                    list.add(new FavoriteCountryInfo_m("dummy_travel_img6"));
+                    list.add(new FavoriteCountryInfoVO("dummy_travel_img6"));
                     break;
             }
         }

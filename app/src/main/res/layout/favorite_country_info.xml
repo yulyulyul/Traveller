@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
-            name="FCInfo_VM"
+            name="VM"
             type="jso.kpl.traveller.viewmodel.FavoriteCountryInfo_VM" />
 
     </data>
@@ -28,7 +29,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="20dp"
-                app:loadImage="@{FCInfo_VM.imageUrl}" />
+                app:loadImage="@{VM.imageUrl}" />
 
             <TextView
                 android:id="@+id/country_warning"
@@ -38,10 +39,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:clickable="true"
+                android:onClick="@{()->VM.country_warningClickEvent()}"
                 android:text="@string/country_warning"
                 android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp"
-                android:onClick="@{()->FCInfo_VM.country_warningClickEvent()}" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/country_add_btn"
@@ -54,11 +55,11 @@
                 android:background="@drawable/s_round_btn"
                 android:drawableLeft="@android:drawable/ic_menu_add"
                 android:drawablePadding="4dp"
+                android:onClick="@{()->VM.country_add_btnClickEvent()}"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
                 android:text="@string/country_add_btn"
-                android:textColor="@android:color/background_light"
-                android:onClick="@{()->FCInfo_VM.country_add_btnClickEvent()}"/>
+                android:textColor="@android:color/background_light" />
 
             <RelativeLayout
                 android:id="@+id/relativeChild"
@@ -74,9 +75,9 @@
                     android:id="@+id/country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="15dp"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.country}"
+                    android:text="@{VM.favoriteCountryVO.country}"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -86,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_toRightOf="@id/country"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.country_eng}"
+                    android:text="@{VM.favoriteCountryVO.country_eng}"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -96,9 +97,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/country"
                     android:layout_alignLeft="@id/country"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/continent"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/continent"
@@ -107,7 +110,8 @@
                     android:layout_alignTop="@id/continent_txt"
                     android:layout_marginBottom="10dp"
                     android:layout_toRightOf="@id/continent_txt"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.continent}"
+                    android:text="@{VM.favoriteCountryVO.continent}"
+                    android:textColor="@color/colorBlack"
                     android:textSize="16sp" />
 
                 <TextView
@@ -116,9 +120,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/continent_txt"
                     android:layout_alignLeft="@id/country"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/capital"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/capital"
@@ -127,7 +133,8 @@
                     android:layout_alignTop="@id/capital_txt"
                     android:layout_marginBottom="10dp"
                     android:layout_toRightOf="@id/capital_txt"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.capital}"
+                    android:text="@{VM.favoriteCountryVO.capital}"
+                    android:textColor="@color/browser_actions_text_color"
                     android:textSize="16sp" />
 
                 <TextView
@@ -136,9 +143,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/capital_txt"
                     android:layout_alignLeft="@id/country"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/language"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/language"
@@ -147,7 +156,8 @@
                     android:layout_alignTop="@id/language_txt"
                     android:layout_marginBottom="10dp"
                     android:layout_toRightOf="@id/language_txt"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.language}"
+                    android:text="@{VM.favoriteCountryVO.language}"
+                    android:textColor="@color/browser_actions_text_color"
                     android:textSize="16sp" />
 
                 <TextView
@@ -156,9 +166,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/language_txt"
                     android:layout_alignLeft="@id/country"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/currency"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/currency"
@@ -167,7 +179,8 @@
                     android:layout_alignTop="@id/currency_txt"
                     android:layout_marginBottom="10dp"
                     android:layout_toRightOf="@id/currency_txt"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.currency}"
+                    android:text="@{VM.favoriteCountryVO.currency}"
+                    android:textColor="@color/browser_actions_text_color"
                     android:textSize="16sp" />
 
                 <TextView
@@ -176,8 +189,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/currency_txt"
                     android:layout_alignLeft="@id/country"
+                    android:layout_marginRight="10dp"
                     android:text="@string/religion"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/religion"
@@ -185,7 +200,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/religion_txt"
                     android:layout_toRightOf="@id/religion_txt"
-                    android:text="@{FCInfo_VM.favoriteCountryVO.religion}"
+                    android:text="@{VM.favoriteCountryVO.religion}"
+                    android:textColor="@color/browser_actions_text_color"
                     android:textSize="16sp" />
 
             </RelativeLayout>
@@ -215,9 +231,8 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="@{FCInfo_VM.layoutManager.getValue()}"
-                app:spanCount="3"
-                app:setAdapter="@{FCInfo_VM.adapter}" />
+                app:layoutManager="@{VM.layoutManager.getValue()}"
+                app:setAdapter="@{VM.adapter}" />
 
         </LinearLayout>
 

@@ -1,5 +1,6 @@
 package jso.kpl.traveller.ui.adapters;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
 import jso.kpl.traveller.model.RePost;
+import jso.kpl.traveller.ui.FavoriteCountryInfo;
 import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
@@ -52,7 +54,9 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
     //새로운 선호 국가를 추가할 수 있는 화면으로 넘어가는 클릭 이벤트
     @Override
     public void onAddFlagClicked() {
+
         Log.d(TAG, "onAddFlagClicked: ");
+        //Intent intent = new Intent(context, RouteOtherDetail.class);
     }
 
     public void setMyPageClickListener(OnMyPageClickListener myPageClickListener) {

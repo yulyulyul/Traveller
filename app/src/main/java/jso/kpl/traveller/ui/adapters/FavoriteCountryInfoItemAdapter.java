@@ -14,7 +14,7 @@ import java.util.List;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.FavoriteCountryInfoItemBinding;
-import jso.kpl.traveller.model.FavoriteCountryInfo_m;
+import jso.kpl.traveller.model.FavoriteCountryInfoVO;
 import jso.kpl.traveller.util.JavaUtil;
 
 public class FavoriteCountryInfoItemAdapter extends RecyclerView.Adapter<FavoriteCountryInfoItemAdapter.ViewHolder> {
@@ -23,9 +23,9 @@ public class FavoriteCountryInfoItemAdapter extends RecyclerView.Adapter<Favorit
     private ViewDataBinding binding;
     private OnItemClickListener listener;
 
-    public MutableLiveData<List<FavoriteCountryInfo_m>> items;
+    public MutableLiveData<List<FavoriteCountryInfoVO>> items;
 
-    public FavoriteCountryInfoItemAdapter(MutableLiveData<List<FavoriteCountryInfo_m>> list) {
+    public FavoriteCountryInfoItemAdapter(MutableLiveData<List<FavoriteCountryInfoVO>> list) {
         items = list;
     }
 
@@ -43,8 +43,8 @@ public class FavoriteCountryInfoItemAdapter extends RecyclerView.Adapter<Favorit
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        FavoriteCountryInfo_m favoriteCountryInfo_m = items.getValue().get(position);
-        int drawableResourceId = JavaUtil.getImage(holder.itemView.getContext(), favoriteCountryInfo_m.getImg());
+        FavoriteCountryInfoVO favoriteCountryInfo_VO = items.getValue().get(position);
+        int drawableResourceId = JavaUtil.getImage(holder.itemView.getContext(), favoriteCountryInfo_VO.getImg());
         holder.binding.setImageUrl(drawableResourceId);
     }
 
