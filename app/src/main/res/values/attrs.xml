@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RouteLine">
+        <attr name="lineColor" format="color"/>
+        <attr name="lineType" format="integer"/>
+        <attr name="dash" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="RouteNode">
+        <attr name="locationName" format="string"/>
+        <attr name="costVal" format="string"/>
+        <attr name="headlineType" format="integer"/>
+        <attr name="taillineType" format="integer"/>
+        <attr name="headlineVisiblity" format="integer"/>
+        <attr name="taillineVisiblity" format="integer"/>
+    </declare-styleable>
+
+
+</resources>

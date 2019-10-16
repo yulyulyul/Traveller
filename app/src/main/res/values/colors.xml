@@ -11,4 +11,11 @@
     <!-- jh color -->
     <color name="border">#838383</color>
 
+    <!-- jyLee color -->
+    <color name="cline">#CDDC39</color> <!-- RouteLine Color-->
+    <color name="node">#4CAF50</color>  <!-- RouteNode Color-->
+    <color name="selected_node">#C8E6C9</color> <!-- Selected RouteLine Color-->
+
+
+
 </resources>
