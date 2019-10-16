@@ -20,7 +20,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     //Flag 뷰의 클릭 리스너, 국기를 클릭 할 때와 국기 추가를 클릭할 때
     public OnFlagClickListener onFlagClickListener;
 
-    interface OnFlagClickListener{
+    public interface OnFlagClickListener{
         void onFlagClicked();
         void onAddFlagClicked();
     }
@@ -30,6 +30,8 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     }
 
     String TAG = "Trav.FlagRvAdapter.";
+
+    FlagImageBinding binding;
 
     //선호 플래그 4개 + 국기 추가 1개
     List<String> flagList;
@@ -44,7 +46,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
 
         LayoutInflater lif = LayoutInflater.from(parent.getContext());
 
-        FlagImageBinding binding = DataBindingUtil.inflate(lif, R.layout.flag_image, parent, false);
+        binding = DataBindingUtil.inflate(lif, R.layout.flag_image, parent, false);
 
         return new FlagRvAdapter.FlagRvViewHolder(binding);
     }

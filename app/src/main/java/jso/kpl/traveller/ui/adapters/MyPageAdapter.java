@@ -1,6 +1,5 @@
 package jso.kpl.traveller.ui.adapters;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
 import jso.kpl.traveller.model.RePost;
-import jso.kpl.traveller.ui.FavoriteCountryInfo;
 import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
@@ -37,31 +35,17 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
     //My Page의 각 뷰에 대한 클릭 이벤트
     public interface OnMyPageClickListener {
         void onProfileClicked(String email);
-
         void onSearchClicked();
-
         void onPostClicked(RePost rePost);
-
         void onMoreClicked(int type);
-    }
-
-    //선호 플래그를 클릭할 시 루트 리스트 화면으로 넘어가는 클릭 이벤트
-    @Override
-    public void onFlagClicked() {
-        Log.d(TAG, "onFlagClicked");
-    }
-
-    //새로운 선호 국가를 추가할 수 있는 화면으로 넘어가는 클릭 이벤트
-    @Override
-    public void onAddFlagClicked() {
-
-        Log.d(TAG, "onAddFlagClicked: ");
-        //Intent intent = new Intent(context, RouteOtherDetail.class);
+        void onFlagClicked();
+        void onAddFlagClicked();
     }
 
     public void setMyPageClickListener(OnMyPageClickListener myPageClickListener) {
         this.myPageClickListener = myPageClickListener;
     }
+
 
     //My Page의 갹 뷰타입을 지정한 인덱스
     final int HEAD_PROFILE = 0;
@@ -164,7 +148,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
                 });
                 break;
 
-             //선호 국가 국기 0~4개와 선호 국가를 추가할 수 있는 버튼 1개로 구성된 뷰타입
+            //선호 국가 국기 0~4개와 선호 국가를 추가할 수 있는 버튼 1개로 구성된 뷰타입
             case FLAG_ITEM:
 
                 List<String> flagList = (List<String>) itemList.getValue().get(position).getO();
@@ -221,6 +205,19 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             default:
                 return -1;
         }
+    }
+
+    //선호 플래그를 클릭할 시 루트 리스트 화면으로 넘어가는 클릭 이벤트
+    @Override
+    public void onFlagClicked() {
+        myPageClickListener.onFlagClicked();
+    }
+
+    //새로운 선호 국가를 추가할 수 있는 화면으로 넘어가는 클릭 이벤트
+    @Override
+    public void onAddFlagClicked() {
+        myPageClickListener.onAddFlagClicked();
+
     }
 
     class MyPageViewHolder extends RecyclerView.ViewHolder {

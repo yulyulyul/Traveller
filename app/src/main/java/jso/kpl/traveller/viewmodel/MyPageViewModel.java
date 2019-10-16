@@ -15,6 +15,7 @@ import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
+import jso.kpl.traveller.ui.FavoriteCountry;
 import jso.kpl.traveller.ui.MainRouteList;
 import jso.kpl.traveller.ui.RouteSearch;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
@@ -85,6 +86,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
         //[My Page]의 리사이클러 뷰 클릭 리스너 생성자
         myPageAdapter.setMyPageClickListener(this);
+
     }
 
     //[My Page - View Type: Profile]의 반환 값
@@ -177,6 +179,17 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         }
     }
 
+    @Override
+    public void onFlagClicked() {
+        Log.d(TAG, "onFlagClicked: ");
+    }
+
+    @Override
+    public void onAddFlagClicked() {
+        Log.d(TAG, "onAddFlagClicked: ");
+        context.startActivity(new Intent(context, FavoriteCountry.class));
+    }
+
     public void init() {
 
         mp_flag.setValue(new ArrayList<String>());
@@ -206,4 +219,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         itemList.getValue().add(getUserPost(2));
         itemList.getValue().add(getUserPost(2));
     }
+
+
+
 }

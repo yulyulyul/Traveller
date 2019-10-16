@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{()->viewmodel.googleLogout()}"
             android:text="구글 로그아웃"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
         <Button
@@ -87,7 +87,7 @@
             android:onClick="@{()->viewmodel.kakaoLogout()}"
             android:text="카카오 로그아웃"
 
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
         <Button
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{()->viewmodel.facebookLogout()}"
             android:text="페이스북 로그아웃"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <com.kakao.usermgmt.LoginButton
             android:id="@+id/btn_kakao_login"

@@ -59,7 +59,12 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun gotoLogin() {
-        val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Login::class.java)
+        //로그인이 안되는 관계로 My Page로 넘어간다.
+//        val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Login::class.java)
+//        ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//        ContextCompat.startActivity(getApplication(), ls_goLogin, null)
+
+        val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.MyPage::class.java)
         ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         ContextCompat.startActivity(getApplication(), ls_goLogin, null)
 
