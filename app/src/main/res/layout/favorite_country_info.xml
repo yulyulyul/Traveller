@@ -232,9 +232,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layoutManager="@{VM.layoutManager.getValue()}"
-                app:setAdapter="@{VM.adapter}" />
+                app:setGridRvAdapter="@{VM.adapter}" />
 
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

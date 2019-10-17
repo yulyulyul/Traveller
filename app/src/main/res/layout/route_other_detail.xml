@@ -108,7 +108,7 @@
                         android:layout_below="@id/category_txt"
                         android:layout_centerInParent="true"
                         app:layoutManager="@{VM.layoutManager.getValue()}"
-                        app:setAdapter="@{VM.adapter}" />
+                        app:setGridRvAdapter="@{VM.adapter}" />
                 </RelativeLayout>
 
                 <RelativeLayout

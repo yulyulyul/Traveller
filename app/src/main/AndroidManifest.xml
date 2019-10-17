@@ -25,6 +25,7 @@
         <activity android:name=".ui.MainRouteList"></activity>
         <activity android:name=".ui.FavoriteCountry"></activity>
         <activity android:name=".ui.FavoriteCountryInfo"></activity>
+        <activity android:name=".ui.RouteOtherDetail"></activity>
         <activity android:name=".ui.CustomDialog" />
 
         <meta-data

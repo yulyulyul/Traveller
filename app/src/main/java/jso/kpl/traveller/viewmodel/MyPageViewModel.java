@@ -17,6 +17,7 @@ import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.ui.FavoriteCountry;
 import jso.kpl.traveller.ui.MainRouteList;
+import jso.kpl.traveller.ui.RouteOtherDetail;
 import jso.kpl.traveller.ui.RouteSearch;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.ui.adapters.MyPageAdapter;
@@ -153,6 +154,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     @Override
     public void onPostClicked(RePost rePost) {
         Log.d(TAG + "Post", "Post: " + rePost.toString());
+        context.startActivity(new Intent(context, RouteOtherDetail.class));
     }
 
     @Override
