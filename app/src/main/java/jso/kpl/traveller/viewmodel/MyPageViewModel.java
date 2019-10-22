@@ -16,7 +16,7 @@ import jso.kpl.traveller.model.MyPageSubtitle;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.ui.FavoriteCountry;
-import jso.kpl.traveller.ui.MainRouteList;
+import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.RouteOtherDetail;
 import jso.kpl.traveller.ui.RouteSearch;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
@@ -160,7 +160,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     @Override
     public void onMoreClicked(int type) {
 
-        Intent intent = new Intent(context, MainRouteList.class);
+        Intent intent = new Intent(context, RouteList.class);
 
         switch (type) {
             case SUB_COUNTRY:

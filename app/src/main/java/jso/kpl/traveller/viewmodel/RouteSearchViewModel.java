@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.SearchReq;
-import jso.kpl.traveller.ui.MainRouteList;
+import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.util.CurrencyChange;
 
 public class RouteSearchViewModel extends ViewModel {
@@ -57,7 +57,7 @@ public class RouteSearchViewModel extends ViewModel {
                         + "\n가격 범위: " + costRange.getValue() ,Toast.LENGTH_LONG).show();
 
                 //최종 검색 조건을 가지고 이동
-                Intent goToResult = new Intent(context, MainRouteList.class);
+                Intent goToResult = new Intent(context, RouteList.class);
 
                 goToResult.putExtra("req", new MyPageItem(srLD.getValue(), 0));
                 context.startActivity(goToResult);

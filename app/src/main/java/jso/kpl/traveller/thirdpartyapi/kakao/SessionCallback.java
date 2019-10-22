@@ -1,6 +1,5 @@
 package jso.kpl.traveller.thirdpartyapi.kakao;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -12,13 +11,10 @@ import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.exception.KakaoException;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.ui.SignUp;
-import jso.kpl.traveller.viewmodel.LoginSelectViewModel;
 
 public class SessionCallback implements ISessionCallback {
 

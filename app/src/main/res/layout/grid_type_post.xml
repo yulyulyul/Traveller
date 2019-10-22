@@ -10,15 +10,15 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:setStaggerRvAdapter="@{imageVm.imgAdapter}"
-            app:setDecoration="@{imageVm.decoration}"/>
+            app:setStaggerRvAdapter="@{gridVm.gridAdapter}"
+            app:setDecoration="@{gridVm.decoration}"/>
 
     </LinearLayout>
 
     <data>
 
         <variable
-            name="imageVm"
-            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+            name="gridVm"
+            type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
     </data>
 </layout>

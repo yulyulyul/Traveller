@@ -22,7 +22,7 @@
         tools:replace="android:allowBackup">
         <activity android:name=".ui.MyPage"></activity>
         <activity android:name=".ui.RouteSearch"></activity>
-        <activity android:name=".ui.MainRouteList"></activity>
+        <activity android:name=".ui.RouteList"></activity>
         <activity android:name=".ui.FavoriteCountry"></activity>
         <activity android:name=".ui.FavoriteCountryInfo"></activity>
         <activity android:name=".ui.RouteOtherDetail"></activity>
@@ -56,9 +56,7 @@
         <activity
             android:name=".ui.Login"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.SignUp"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
+        <!-- 파일 경로 보안 처리 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="jso.kpl.traveller.file_provider"

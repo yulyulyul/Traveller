@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="imgVm"
-            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+            name="gridItemVm"
+            type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
     </data>
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:layout_gravity="center"
-            app:setImg="@{imgVm.rePost.rp_profile}" />
+            app:setImg="@{gridItemVm.rePost.rp_profile}" />
 
     </LinearLayout>
 

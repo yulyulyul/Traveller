@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="vpVm"
-            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+            name="verticalItemVm"
+            type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
     </data>
 
     <LinearLayout
@@ -27,7 +27,7 @@
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                app:setCircleImg="@{vpVm.rePost.rp_profile}"/>
+                app:setCircleImg="@{verticalItemVm.rePost.rp_profile}"/>
 
         </RelativeLayout>
 
@@ -66,7 +66,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{vpVm.rePost.post.p_country}"
+                        android:text="@{verticalItemVm.rePost.post.p_country}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>
@@ -100,7 +100,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{vpVm.rePost.post.p_cost}"
+                        android:text="@{verticalItemVm.rePost.post.p_cost}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>

@@ -1,8 +1,6 @@
 package jso.kpl.traveller.ui.Fragment;
 
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,31 +9,25 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.ImageListBinding;
-import jso.kpl.traveller.viewmodel.MainRouteListViewModel;
+import jso.kpl.traveller.databinding.VerticalTypePostBinding;
+import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
-public class ImageRouteList extends Fragment {
+public class VerticalTypePost extends Fragment {
 
-    String TAG = "Trav.ImageRouteList.";
 
-    public ImageRouteList() {
+    public VerticalTypePost() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Log.d(TAG+"onCreateView", "시작");
-
-        ImageListBinding binding = DataBindingUtil.inflate(inflater, R.layout.image_list, container,false);
-
-        binding.setImageVm(new MainRouteListViewModel(getActivity(), getActivity().getSupportFragmentManager()));
+        VerticalTypePostBinding binding = DataBindingUtil.inflate(inflater, R.layout.vertical_type_post, container, false);
+        binding.setVerticalVm(new RouteListViewModel());
         binding.setLifecycleOwner(this);
-
-
         return binding.getRoot();
     }
+
 
 
 

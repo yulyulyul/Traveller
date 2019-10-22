@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="postVm"
-            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+            name="verticalVm"
+            type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
     </data>
 
     <LinearLayout
@@ -16,6 +16,6 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:setLinearRvAdapter="@{postVm.postAdapter}"/>
+            app:setLinearRvAdapter="@{verticalVm.verticalAdapter}"/>
     </LinearLayout>
 </layout>

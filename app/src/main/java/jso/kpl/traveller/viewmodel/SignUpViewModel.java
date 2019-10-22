@@ -129,10 +129,6 @@ public class SignUpViewModel extends BaseObservable {
                     customDialog.dismiss();
                 }
             });
-
-
-            //       buttonClickResult.setValue(2);
-
             //(예정) 여기서 이메일 인증 처리
         }
     }
@@ -187,8 +183,6 @@ public class SignUpViewModel extends BaseObservable {
 //              RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imgFile);
 //              imgBody = MultipartBody.Part.createFormData("us_profile_img", imgFile.getName(), requestFile);
             }
-
-
 
             /*
             SignupAPI.java에서 번호와 밑의 번호에 맞춰서 하면 됨

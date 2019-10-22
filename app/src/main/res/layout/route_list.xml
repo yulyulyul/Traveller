@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.widget.FrameLayout"/>
         <variable
             name="mainListVm"
-            type="jso.kpl.traveller.viewmodel.MainRouteListViewModel" />
+            type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
     </data>
 
     <LinearLayout
@@ -17,15 +18,15 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="10"/>
+            android:layout_weight="10"
+            app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
+            app:addOnTabSelected="@{mainListVm.onTestClicked(container)}" />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewPager"
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="90"
-            app:addOnPageChangedListener="@{tabLayout}"
-            app:setVpAdapter="@{mainListVm.mainAdapter}"/>
+            android:layout_weight="90" />
 
     </LinearLayout>
 

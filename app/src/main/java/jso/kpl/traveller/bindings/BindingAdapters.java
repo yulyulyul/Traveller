@@ -1,14 +1,16 @@
 package jso.kpl.traveller.bindings;
 
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -18,14 +20,15 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.ui.adapters.ImageRouteListAdapter;
-import jso.kpl.traveller.ui.adapters.MainRouteListAdapter;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
 
 //RecyclerView에 Adapter 적용
 public class BindingAdapters {
     @BindingAdapter({"setLinearRvAdapter"})
+
     public static void bindRecyclerViewAdapter(@NotNull RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
 
         Log.d("Trav.SetAdapter", "Adapter");
@@ -53,36 +56,23 @@ public class BindingAdapters {
         recyclerView.setAdapter(adapter);
     }
 
-    @BindingAdapter({"setVpAdapter"})
-    public static void onBindSetVpAdapter(ViewPager viewPager, MainRouteListAdapter adapter){
-        viewPager.setAdapter(adapter);
+
+    //탭레이아웃 설정
+    //1st [parameter]는 해당 뷰, 2nd [parameter]는 탭레이아웃의 탭 리스트, 3rd [parameter] 탭 클릭 이벤트 리스너
+    @BindingAdapter({"setTabLayout", "addOnTabSelected"})
+    public static void onBindTabLayout(TabLayout tabLayout, List<TabLayout.Tab> tabs, TabLayout.OnTabSelectedListener listener){
+
+        for(TabLayout.Tab tab : tabs){
+            tabLayout.addTab(tab);
+        }
+
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.addOnTabSelectedListener(listener);
     }
 
-    @BindingAdapter({"addOnPageChangedListener"})
-    public static void onBindAddOnPageChanged(final ViewPager viewPager, TabLayout tabLayout){
-        tabLayout.addTab(tabLayout.newTab().setText("1st"));
-        tabLayout.addTab(tabLayout.newTab().setText("2st"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+    @BindingAdapter({"setFragmentManager","setInitFragment"})
+    public static void onBindFragment(FrameLayout frameLayout, FragmentManager fm, Fragment fragment){
+        fm.beginTransaction().add(frameLayout.getId(), fragment).commit();
     }
 
     //이미지뷰에 이미지를 넣는 바인딩 어댑터, 매개변수는 String 형식으로 받는다.
