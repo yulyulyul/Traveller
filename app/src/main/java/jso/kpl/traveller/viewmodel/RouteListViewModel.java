@@ -225,7 +225,10 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
 
         if(App.INSTANCE != null){
             Toast.makeText(App.INSTANCE, "나라: " + rePost.getPost().getP_country(), Toast.LENGTH_SHORT).show();
-            App.INSTANCE.startActivity(new Intent(App.INSTANCE, RouteOtherDetail.class));
+
+            Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            App.INSTANCE.startActivity(intent);
         }
     }
 }

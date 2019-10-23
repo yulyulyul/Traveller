@@ -1,6 +1,7 @@
 package jso.kpl.traveller.viewmodel
 
 import android.app.Application
+import android.content.Intent
 import android.widget.Toast
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -24,7 +25,9 @@ import jso.kpl.traveller.thirdpartyapi.facebook.LoginCallback
 import jso.kpl.traveller.thirdpartyapi.kakao.SessionCallback
 import com.facebook.login.LoginManager
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import androidx.core.content.ContextCompat
 import com.facebook.login.Login
+import jso.kpl.traveller.ui.MyPage
 import java.util.*
 
 /**
@@ -100,6 +103,10 @@ class LoginViewModel(application: Application): AndroidViewModel(application) , 
             startActivity(getApplication(), nextIntent, null)
              */
             Toast.makeText(getApplication(), "로그인에 성공하였습니다.", Toast.LENGTH_LONG).show()
+            val ls_goLogin = Intent(getApplication(), MyPage::class.java)
+            ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            ContextCompat.startActivity(getApplication(), ls_goLogin, null)
         }
     }
 

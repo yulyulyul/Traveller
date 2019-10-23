@@ -13,6 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 import androidx.lifecycle.MutableLiveData;
 
@@ -29,7 +30,7 @@ import jso.kpl.traveller.model.UserSignup;
 import jso.kpl.traveller.network.SignupAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.CustomDialog;
-import jso.kpl.traveller.ui.MyPage;
+import jso.kpl.traveller.ui.Login;
 import jso.kpl.traveller.util.PermissionCheck;
 import jso.kpl.traveller.util.RegexMethod;
 import okhttp3.MediaType;
@@ -116,9 +117,6 @@ public class SignUpViewModel extends BaseObservable {
                     sendToast(context, "이메일 인증!!!");
                     isAuth.setValue(true);
 
-                    Intent intent = new Intent(context, MyPage.class);
-                    context.startActivity(intent);
-
                     customDialog.dismiss();
                 }
 
@@ -129,6 +127,10 @@ public class SignUpViewModel extends BaseObservable {
                     customDialog.dismiss();
                 }
             });
+
+
+            //       buttonClickResult.setValue(2);
+
             //(예정) 여기서 이메일 인증 처리
         }
     }
@@ -159,7 +161,8 @@ public class SignUpViewModel extends BaseObservable {
             userSignup = new UserSignup(emailLD.getValue(), returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
 
             //프로필 이미지가 null이거나 초기값 사진 또는 에러 이미지일 때
-            if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_person_icon)) {
+            //if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_person_icon)) {
+            if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("android.resource://jso.kpl.traveller/drawable/i_blank_person_icon")) {
 
                 Log.d(TAG + "이미지", "존재하지 않음");
                 imgBody = null;
@@ -167,21 +170,20 @@ public class SignUpViewModel extends BaseObservable {
             } else {
                 //프로필 이미지가 null이거나 초기값 사진 또는 에러 이미지일 때가 아닐때
 
-                File imgFile = new File((Uri.parse(photoUpdate.getValue().toString())).getPath());
+                File imgFile = new File(Uri.parse(photoUpdate.getValue()).getPath());
 
-
-                Log.d(TAG + "이미지", "존재함: " + imgFile.getAbsolutePath());
-
+                Log.d(TAG + "이미지", "존재함: " + Uri.parse(photoUpdate.getValue()).getPath());
 
                 //취사선택
 
                 //******multipart/form-data는 파일 형식의 파싱법
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imgFile);
                 imgBody = MultipartBody.Part.createFormData("us_profile_img", imgFile.getName(), requestFile);
+                System.out.println("뭐로 나옴? " + imgFile.getName());
 
                 //*****이미지 형식의 파싱법(image/*은 모든 이미지 형식이라는 뜻)
-//              RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imgFile);
-//              imgBody = MultipartBody.Part.createFormData("us_profile_img", imgFile.getName(), requestFile);
+                //RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imgFile);
+                //imgBody = MultipartBody.Part.createFormData("us_profile_img", imgFile.getName(), requestFile);
             }
 
             /*
@@ -191,17 +193,21 @@ public class SignUpViewModel extends BaseObservable {
              */
 
             //1. 객체 + 이미지
-//          su_call = con.signupAPI.goSignUp(userSignup, imgBody);
+            // su_call = con.signupAPI.goSignUp(userSignup, imgBody);
 
             //2. 각 변수(이메일, 패스워드(해시) + 닉네임 + 디바이스 번호) + 이미지
-            su_call = signupAPI.goSignUp(userSignup.getUs_email(),
-                    userSignup.getUs_pwd(), userSignup.getUs_nick_name(),
-                    userSignup.getUs_device(), imgBody);
+            // String으로 데이터 보내면 DB에 ""가 포함되어 들어감
+            su_call = signupAPI.goSignUp(RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_email()),
+                    RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_pwd()), RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_device()),
+                    RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_nick_name()), imgBody);
 
             su_call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     Log.d(TAG + "통신 성공", "성공적으로 전송");
+                    Intent intent = new Intent(context, Login.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ContextCompat.startActivity(context, intent, null);
                 }
 
                 @Override
