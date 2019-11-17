@@ -1,6 +1,7 @@
 package jso.kpl.traveller.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +57,17 @@ public class SignUp extends AppCompatActivity {
         } else{
             svm.isAuth.setValue(false);
         }
+
+        svm.isAuth.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    signUpBinding.emailAuthTv.setTextColor(Color.parseColor("#80808080"));
+                } else{
+                    signUpBinding.emailAuthTv.setTextColor(Color.parseColor("#000000"));
+                }
+            }
+        });
 
         signUpBinding.getSignUpVM().buttonClickResult.observe(this, new Observer<Integer>() {
             @Override

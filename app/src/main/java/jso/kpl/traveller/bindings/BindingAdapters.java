@@ -1,8 +1,10 @@
 package jso.kpl.traveller.bindings;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
@@ -22,7 +24,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.ui.EditingPost;
+import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
 
 //RecyclerView에 Adapter 적용
@@ -112,5 +117,26 @@ public class BindingAdapters {
     @BindingAdapter("setMIN")
     public static void bindMinValue(CrystalRangeSeekbar seekbar, int min) {
         seekbar.setMinValue(min);
+    }
+
+    //클릭 리스너 범용
+    @BindingAdapter("OnClickListener")
+    public static void bindOnClickListener(View v, View.OnClickListener listener) {
+        v.setOnClickListener(listener);
+    }
+
+    @BindingAdapter("setInitFocusing")
+    public static void bindSetFocus(View v, boolean b){
+        v.setFocusable(b);
+        v.setFocusableInTouchMode(b);
+        v.requestFocus();
+    }
+
+    //프래그먼트 초기값 설정 바인딩 어댑터
+    @BindingAdapter({"setFragmentManger", "setInitFragment"})
+    public static void bindSetFragment(FrameLayout container, FragmentManager fm, Fragment fragment){
+
+        if(fragment != null)
+            fm.beginTransaction().add(container.getId(), fragment, "post_tag").commit();
     }
 }

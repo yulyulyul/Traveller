@@ -1,35 +1,36 @@
 package jso.kpl.traveller.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Post {
 
-    int p_id;
-    String p_title;
+    String p_id;
     String p_author;
-    String p_cost;
-    String p_country;
+    String p_place;
+    String p_expenses;
+    String p_comment;
+    String p_start_date;
+    String p_end_date;
+    boolean p_is_open;
 
-    public Post(int p_id, String p_title, String p_author, String p_cost, String p_country) {
-        this.p_id = p_id;
-        this.p_title = p_title;
+    List<SmallPost> p_sp_list = new ArrayList<>();
+
+    public Post(String p_author, String p_place, boolean p_is_open) {
+
         this.p_author = p_author;
-        this.p_cost = p_cost;
-        this.p_country = p_country;
+        this.p_place = p_place;
+        this.p_is_open = p_is_open;
     }
 
-    public int getP_id() {
-        return p_id;
-    }
-
-    public void setP_id(int p_id) {
-        this.p_id = p_id;
-    }
-
-    public String getP_title() {
-        return p_title;
-    }
-
-    public void setP_title(String p_title) {
-        this.p_title = p_title;
+    public Post(String p_author, String p_place, String p_expenses, String p_comment, String p_start_date, String p_end_date, boolean p_is_open) {
+        this.p_author = p_author;
+        this.p_place = p_place;
+        this.p_expenses = p_expenses;
+        this.p_comment = p_comment;
+        this.p_start_date = p_start_date;
+        this.p_end_date = p_end_date;
+        this.p_is_open = p_is_open;
     }
 
     public String getP_author() {
@@ -40,30 +41,82 @@ public class Post {
         this.p_author = p_author;
     }
 
-    public String getP_cost() {
-        return p_cost;
+    public String getP_place() {
+        return p_place;
     }
 
-    public void setP_cost(String p_cost) {
-        this.p_cost = p_cost;
+    public void setP_place(String p_place) {
+        this.p_place = p_place;
     }
 
-    public String getP_country() {
-        return p_country;
+    public String getP_expenses() {
+        return p_expenses;
     }
 
-    public void setP_country(String p_country) {
-        this.p_country = p_country;
+    public void setP_expenses(String p_expenses) {
+        this.p_expenses = p_expenses;
+    }
+
+    public String getP_comment() {
+        return p_comment;
+    }
+
+    public void setP_comment(String p_comment) {
+        this.p_comment = p_comment;
+    }
+
+    public String getP_start_date() {
+        return p_start_date;
+    }
+
+    public void setP_start_date(String p_start_date) {
+        this.p_start_date = p_start_date;
+    }
+
+    public String getP_end_date() {
+        return p_end_date;
+    }
+
+    public void setP_end_date(String p_end_date) {
+        this.p_end_date = p_end_date;
+    }
+
+    public boolean isP_is_open() {
+        return p_is_open;
+    }
+
+    public void setP_is_open(boolean p_is_open) {
+        this.p_is_open = p_is_open;
+    }
+
+    public String getP_id() {
+        return p_id;
+    }
+
+    public void setP_id(String p_id) {
+        this.p_id = p_id;
+    }
+
+    public List<SmallPost> getP_sp_list() {
+        return p_sp_list;
+    }
+
+    public void setP_sp_list(List<SmallPost> p_sp_list) {
+        this.p_sp_list = p_sp_list;
     }
 
     @Override
     public String toString() {
         return "Post{" +
-                "p_id=" + p_id +
-                ", p_title='" + p_title + '\'' +
+                "p_id='" + p_id + '\'' +
                 ", p_author='" + p_author + '\'' +
-                ", p_cost='" + p_cost + '\'' +
-                ", p_country='" + p_country + '\'' +
+                ", p_place='" + p_place + '\'' +
+                ", p_expenses='" + p_expenses + '\'' +
+                ", p_comment='" + p_comment + '\'' +
+                ", p_start_date='" + p_start_date + '\'' +
+                ", p_end_date='" + p_end_date + '\'' +
+                ", p_is_open=" + p_is_open +
+                ", p_sp_list=" + p_sp_list +
                 '}';
     }
 }

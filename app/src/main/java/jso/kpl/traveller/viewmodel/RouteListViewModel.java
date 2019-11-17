@@ -174,26 +174,24 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
 
         rePostList.setValue(new ArrayList<RePost>());
 
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트01", "asle1000", "10000", "테스트01")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트02", "asle1000", "10000", "테스트02")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트03", "asle1000", "10000", "테스트03")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트04", "asle1000", "10000", "테스트04")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트05", "asle1000", "10000", "테스트05")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트06", "asle1000", "10000", "테스트06")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트07", "asle1000", "10000", "테스트07")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트08", "asle1000", "10000", "테스트08")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트09", "asle1000", "10000", "테스트09")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트10", "asle1000", "10000", "테스트10")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트11", "asle1000", "10000", "테스트11")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트12", "asle1000", "10000", "테스트12")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트13", "asle1000", "10000", "테스트13")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트14", "asle1000", "10000", "테스트14")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트15", "asle1000", "10000", "테스트15")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트16", "asle1000", "10000", "테스트16")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트17", "asle1000", "10000", "테스트17")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트18", "asle1000", "10000", "테스트18")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트19", "asle1000", "10000", "테스트19")));
-        rePostList.getValue().add(new RePost(imageUri, new Post(0, "테스트20", "asle1000", "10000", "테스트20")));
+        Post post = new Post("테스트01", "asle1000", true);
+        post.setP_expenses("1000000");
+
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
+        rePostList.getValue().add(new RePost(imageUri, post));
 
         return rePostList.getValue();
     }
@@ -211,7 +209,7 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
         Log.d(TAG + "GridClicked", "그리드 클릭 : " + rePost.getPost().toString());
 
         if(App.INSTANCE != null){
-            Toast.makeText(App.INSTANCE, "나라: " + rePost.getPost().getP_country(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(App.INSTANCE, "나라: " + rePost.getPost().getP_place(), Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -224,7 +222,7 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
         Log.d(TAG + "VertiClicked", "버티컬: : " +rePost.getPost().toString());
 
         if(App.INSTANCE != null){
-            Toast.makeText(App.INSTANCE, "나라: " + rePost.getPost().getP_country(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(App.INSTANCE, "나라: " + rePost.getPost().getP_place(), Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

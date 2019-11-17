@@ -66,7 +66,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{verticalItemVm.rePost.post.p_country}"
+                        android:text="@{verticalItemVm.rePost.post.p_place}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>
@@ -100,7 +100,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{verticalItemVm.rePost.post.p_cost}"
+                        android:text="@{verticalItemVm.rePost.post.p_expenses}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>

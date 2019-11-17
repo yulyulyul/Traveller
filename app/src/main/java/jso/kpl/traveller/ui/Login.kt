@@ -30,7 +30,7 @@ class Login : AppCompatActivity() {
     private fun initObservables()
     {
         viewmodel?.muUser?.observe(this, Observer { user ->
-            Toast.makeText(this, "welcome, ${user?.lu_email}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "welcome, ${user?.u_email}", Toast.LENGTH_LONG).show()
         })
     }
 

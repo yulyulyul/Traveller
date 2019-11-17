@@ -161,6 +161,7 @@ public class RouteLine extends View
     public boolean getDash(){
         return dash;
     }
+
     public void setDash(boolean _dash)
     {
         this.dash = _dash;

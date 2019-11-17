@@ -1,8 +1,8 @@
 package jso.kpl.traveller.viewmodel;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,12 +10,17 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import jso.kpl.traveller.App;
+import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.ui.FavoriteCountry;
+import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.RouteOtherDetail;
 import jso.kpl.traveller.ui.RouteSearch;
@@ -26,13 +31,8 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     String TAG = "Trav.MyPageViewModel.";
 
-    Context context;
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
     //----------------------------------------------------------------------------------------------
+    public MutableLiveData<User> user = new MutableLiveData<>();
 
     //[My Page]의 리사이클러 뷰 adapter
     public MyPageAdapter myPageAdapter;
@@ -65,6 +65,12 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     public MutableLiveData<String> mp_flag_item = new MutableLiveData<>();
 
+    public View.OnClickListener onEditingPostClickListener;
+
+    public void setOnEditingPostClickListener(View.OnClickListener onEditingPostClickListener) {
+        this.onEditingPostClickListener = onEditingPostClickListener;
+    }
+
     //My Page의 각 뷰타입
     final int HEAD_PROFILE = 0;
     final int ROUTE_SEARCH = 1;
@@ -76,11 +82,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     final int SUB_FAVORITE = 2;
     final int SUB_ENROLL = 3;
 
-
     public MyPageViewModel() {
-
-        //초기 들어갈 값 - back 파트와 연결 될 시 삭제 또는 변경
-        init();
 
         //[My Page]의 리사이클러 뷰 Adapter - 아이템 리스트를 넘겨준다.
         myPageAdapter = new MyPageAdapter(itemList);
@@ -93,9 +95,11 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     //[My Page - View Type: Profile]의 반환 값
     public MyPageItem getHeadProfile(String imgStr, String email) {
 
+        String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgStr;
+
         //My Page의 리사이클러 뷰의 0번째 순서 프로필
         return new MyPageItem(
-                new MyPageProfile(imgStr, email),
+                new MyPageProfile(path, email),
                 HEAD_PROFILE);
     }
 
@@ -117,22 +121,22 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     //[My Page - View Type: Flag]의 반환 값
     public MyPageItem getUserPost(int type) {
 
+        Post post = new Post("asle1000", "France", true);
+        post.setP_expenses("100000");
+
         switch (type) {
             case 0:
                 //favorites
                 return new MyPageItem(
-                        new RePost(imageUri,
-                                new Post(0, "My Favorites", "asle1221@naver.com", "1,000,000$", "미국(America)")), USER_POST);
+                        new RePost(imageUri, post), USER_POST);
             case 1:
                 //Recent Post
                 return new MyPageItem(
-                        new RePost(imageUri,
-                                new Post(0, "Recent", "asle1221@naver.com", "1,000,000$", "독일(German)")), USER_POST);
+                        new RePost(imageUri, post), USER_POST);
             case 2:
                 //enroll
                 return new MyPageItem(
-                        new RePost(imageUri,
-                                new Post(0, "Enrolled", "asle1221@naver.com", "1,000,000$", "프랑스(France)")), USER_POST);
+                        new RePost(imageUri,post), USER_POST);
             default:
                 return null;
         }
@@ -147,35 +151,43 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     @Override
     public void onSearchClicked() {
         Log.d(TAG, "onSearchClicked");
-        context.startActivity(new Intent(context, RouteSearch.class));
+
+        Intent intent =new Intent(App.INSTANCE, RouteSearch.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        App.INSTANCE.startActivity(intent);
     }
 
     //해당 포스트를 누르면 포스트 상세보기로 넘어가는 클릭 이벤트
     @Override
     public void onPostClicked(RePost rePost) {
         Log.d(TAG + "Post", "Post: " + rePost.toString());
-        context.startActivity(new Intent(context, RouteOtherDetail.class));
+        Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        App.INSTANCE.startActivity(intent);
     }
 
     @Override
     public void onMoreClicked(int type) {
 
-        Intent intent = new Intent(context, RouteList.class);
+        Intent intent = new Intent(App.INSTANCE, RouteList.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (type) {
             case SUB_COUNTRY:
                 intent.putExtra("req", new MyPageItem(null, SUB_COUNTRY));
-                context.startActivity(intent);
+                App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "선호 국가 더 보기");
                 break;
             case SUB_FAVORITE:
                 intent.putExtra("req", new MyPageItem(null, SUB_FAVORITE));
-                context.startActivity(intent);
+                App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "선호 포스트 더 보기");
                 break;
             case SUB_ENROLL:
                 intent.putExtra("req", new MyPageItem(null, SUB_ENROLL));
-                context.startActivity(intent);
+                App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "등록한 포스트 더 보기");
                 break;
         }
@@ -189,10 +201,14 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     @Override
     public void onAddFlagClicked() {
         Log.d(TAG, "onAddFlagClicked: ");
-        context.startActivity(new Intent(context, FavoriteCountry.class));
+
+        Intent intent =new Intent(App.INSTANCE, FavoriteCountry.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        App.INSTANCE.startActivity(intent);
     }
 
-    public void init() {
+    public void init(User user) {
 
         mp_flag.setValue(new ArrayList<String>());
         mp_flag.getValue().add(imageUri);
@@ -203,7 +219,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         //들어가는 순서대로 뷰에 출력
         itemList.setValue(new ArrayList<MyPageItem>());
 
-        itemList.getValue().add(getHeadProfile(imageUri, "asle1221@naver.com"));
+        itemList.getValue().add(getHeadProfile(user.getU_profile_img(), user.getU_email()));
 
         itemList.getValue().add(getRouteSearch());
 
@@ -221,7 +237,6 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         itemList.getValue().add(getUserPost(2));
         itemList.getValue().add(getUserPost(2));
     }
-
 
 
 }

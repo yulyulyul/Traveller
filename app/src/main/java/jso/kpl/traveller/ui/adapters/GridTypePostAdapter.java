@@ -69,7 +69,7 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
         final RePost rePost = rePostList.getValue().get(position);
 
         holder.onBind(rePost);
-        Log.d(TAG, "Grid Item: " + rePost.getPost().getP_country());
+        Log.d(TAG, "Grid Item: " + rePost.getPost().getP_place());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

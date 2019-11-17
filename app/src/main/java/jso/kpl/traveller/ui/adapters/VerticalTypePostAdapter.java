@@ -60,7 +60,7 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
         //RePost(Post + imgStr)의 객체
         final RePost rePost = rePostList.getValue().get(position);
 
-        Log.d(TAG, "ver item: " + rePost.getPost().getP_country());
+        Log.d(TAG, "ver item: " + rePost.getPost().getP_place());
         holder.onBind(rePost);
         holder.binding.executePendingBindings();
         holder.itemView.setOnClickListener(new View.OnClickListener() {

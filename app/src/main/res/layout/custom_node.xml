@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -15,8 +14,7 @@
         android:layout_height="@dimen/node_size"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/style_route_node"
-        />
+        android:background="@drawable/style_route_node" />
 
     <jso.kpl.traveller.ui.RouteView.RouteLine
         android:id="@+id/headLine"
@@ -26,9 +24,7 @@
         android:layout_marginRight="5dp"
         app:lineType="4"
         app:lineColor="@color/cline"
-        app:dash="true"
-        >
-    </jso.kpl.traveller.ui.RouteView.RouteLine>
+        app:dash="true"/>
 
     <jso.kpl.traveller.ui.RouteView.RouteLine
         android:id="@+id/tailLine"
@@ -38,18 +34,14 @@
         android:layout_marginLeft="5dp"
         app:lineType="4"
         app:lineColor="@color/cline"
-        app:dash="true"
-        >
-    </jso.kpl.traveller.ui.RouteView.RouteLine>
-
+        app:dash="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/nodeBtn"
-        android:layout_centerHorizontal="true"
-        >
+        android:layout_centerHorizontal="true">
 
         <LinearLayout
             android:id="@+id/nodeLinear"
@@ -58,8 +50,7 @@
             android:orientation="horizontal"
             android:layout_centerHorizontal="true"
             android:layout_gravity="left"
-            android:layoutDirection="ltr"
-             >
+            android:layoutDirection="ltr">
 
             <ImageView
                 android:layout_alignParentLeft="true"
@@ -68,7 +59,7 @@
                 android:layout_height="10dp"
                 android:layout_marginRight="3dp"
                 android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/placeholder_black"/>
+                app:srcCompat="@drawable/placeholder_black" />
 
             <TextView
                 android:layout_alignParentLeft="true"
@@ -79,8 +70,7 @@
                 android:textSize="10dp"
                 android:text="Sweden"
                 tools:textColor="@color/colorWhite"
-                tools:text="Sweden"
-                />
+                tools:text="Sweden" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,8 +80,7 @@
             android:orientation="horizontal"
             android:layout_centerHorizontal="true"
             android:layout_gravity="left"
-            android:layoutDirection="ltr"
-            >
+            android:layoutDirection="ltr">
 
             <ImageView
                 android:layout_alignParentLeft="true"
@@ -100,7 +89,7 @@
                 android:layout_height="10dp"
                 android:layout_marginRight="3dp"
                 android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/cost_black"/>
+                app:srcCompat="@drawable/cost_black" />
 
             <TextView
                 android:layout_alignParentLeft="true"
@@ -111,8 +100,7 @@
                 android:textSize="10dp"
                 android:text="300만원"
                 tools:textColor="@color/colorWhite"
-                tools:text="300만원"
-                />
+                tools:text="300만원" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

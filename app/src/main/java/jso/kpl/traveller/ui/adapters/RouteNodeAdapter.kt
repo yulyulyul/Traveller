@@ -13,6 +13,7 @@ import androidx.core.view.size
 import jso.kpl.traveller.App
 import jso.kpl.traveller.R
 import jso.kpl.traveller.model.Route
+import jso.kpl.traveller.model.SmallPost
 import jso.kpl.traveller.model.ViewTag
 import jso.kpl.traveller.ui.TestPage
 import kotlinx.android.synthetic.main.custom_node.view.*
@@ -21,7 +22,15 @@ import kotlin.collections.HashMap
 
 class RouteNodeAdapter
 {
-    private var itemList : ArrayList<Route> // 전체적으로 item을 추가하면 증가되는 리스트
+
+    //노드 클릭 시 해당 노드의 데이터를 전송
+    lateinit var onNodeClickListener: OnNodeClickListener
+
+    interface OnNodeClickListener {
+        fun onNodeClicked(sp: SmallPost, pos: Int)
+    }
+
+    private var itemList : ArrayList<SmallPost> // 전체적으로 item을 추가하면 증가되는 리스트
     private var ctx: Context // 해당 화면의 context
     private var RootLinear:LinearLayout // customNode가 추가될 공간의 RootLinear
     private val MaxColumnCnt:Int = 3 // 한 줄의 최대 3개의 아이템이 들어감.
@@ -32,7 +41,7 @@ class RouteNodeAdapter
 
     constructor(_ctx : Context, rootLinear : LinearLayout)
     {
-        this.itemList = ArrayList<Route>()
+        this.itemList = ArrayList<SmallPost>()
         this.ctx = _ctx
         this.RootLinear = rootLinear
         this.tag_view = HashMap<Any, View>()
@@ -42,10 +51,10 @@ class RouteNodeAdapter
         this.LinearParams = LinearLayout.LayoutParams(0, dpToPx(80f))
         this.LinearParams.weight = 1f
         // QuestionMarkNode를 그려준다.
-        drawQuestionMarkNode()
+    //   drawQuestionMarkNode()
     }
 
-    constructor(itemList: ArrayList<Route>, _ctx: Context ,rootLinear : LinearLayout)
+    constructor(itemList: ArrayList<SmallPost>, _ctx: Context ,rootLinear : LinearLayout)
     {
         this.itemList = itemList
         this.ctx = _ctx
@@ -57,7 +66,8 @@ class RouteNodeAdapter
         this.LinearParams = LinearLayout.LayoutParams(0, dpToPx(80f))
         this.LinearParams.weight = 1f
         // QuestionMarkNode를 그려준다.
-        drawQuestionMarkNode()
+        //초기 값
+   //     drawQuestionMarkNode()
     }
 
     fun getItemSize() : Int
@@ -121,18 +131,52 @@ class RouteNodeAdapter
      *  6. lastidx가 3으로 나눠떨어지는 경우 새롭게 LinearLayout을 동적으로 생성된 경우기 때문에 RootLinear에서 지워준다.
      *  7. Linear가 생성되어 개행된 경우 CurrentColumn가 증가했으므로 -1을 해준다.
      */
-    fun putItem(_route:Route)
+    fun putItem(_route:SmallPost)
     {
-        removeQestionMarkNode()
+//        if(itemList.size > 0)
+//            removeQestionMarkNode()
+
         itemList.add(_route)
         var idx:Int = itemList.indexOf(_route)
         drawView(idx)
-        drawQuestionMarkNode()
+  //      drawQuestionMarkNode()
+
+        Log.d(TAG, "줄: " + CurrentColumn)
+    }
+
+    fun updateNode(sp: SmallPost, pos: Int) {
+        itemList[pos] = sp
+
+        var node: View =
+            (RootLinear.findViewWithTag<LinearLayout>(idx_viewTag.get(pos)?.parent_view_Tag)).findViewWithTag<View>(
+                idx_viewTag.get(pos)?.node_tag
+            )
+        Log.d("Test.update", "업데이트 번호: " + pos + ", 내용" + itemList[pos])
+
+        idx_viewTag[pos]
+        if (sp.sp_place.isEmpty() || sp.sp_place.isBlank()) {
+            //  node.locationText.setText("Blank")
+        } else {
+            node.locationText.setText(sp.sp_place)
+        }
+
+        if (sp.sp_place.isEmpty() || sp.sp_place.isBlank()) {
+            //  node.costtv.setText("Blank")
+        } else {
+            node.costtv.setText(sp.sp_expenses)
+        }
+    }
+
+    fun returnList():List<SmallPost>{
+
+   //    itemList.remove(itemList.last())
+
+        return itemList
     }
 
     private fun drawQuestionMarkNode()
     {
-        var qnode : Route = Route("?","?")
+        var qnode : SmallPost = SmallPost("?","?")
         itemList.add(qnode)
         var idx : Int = itemList.indexOf(qnode)
         Log.d(TAG, "drawQuestionMarkNode, idx = " + idx)
@@ -163,8 +207,8 @@ class RouteNodeAdapter
             node.tailLine.visibility = View.INVISIBLE
 
             //node의 지역, 비용을 설정해준다.
-            node.locationText.text = itemList.get(index).location
-            node.costtv.text = itemList.get(index).cost
+            node.locationText.text = itemList.get(index).sp_place
+            node.costtv.text = itemList.get(index).sp_expenses
 
             /*
                 Tag를 통해서 내가 원하는 뷰를 추적할 수 있기 때문에 자신의 tag와 자기가 속하는 Linear의 tag를
@@ -223,8 +267,8 @@ class RouteNodeAdapter
             node.headLine.visibility = View.INVISIBLE
 
             //node의 지역, 비용을 설정해준다.
-            node.locationText.text = itemList.get(index).location
-            node.costtv.text = itemList.get(index).cost
+            node.locationText.text = itemList.get(index).sp_place
+            node.costtv.text = itemList.get(index).sp_expenses
 
             /*
                 Tag를 통해서 내가 원하는 뷰를 추적할 수 있기 때문에 자신의 tag와 자기가 속하는 Linear의 tag를
@@ -259,39 +303,24 @@ class RouteNodeAdapter
     // RootLinear의 마지막 view에 추가한다.
     private fun addNode(_node :View, _idx:Int)
     {
-        /*
-            ?노드를 눌렀을때 노드가 추가/삭제 되는지 확인하기 위한 코드
-            추가 : 실제 코드에서는 putItem으로 추가하면됨.
-         */
-        if(_node.costtv.text.equals("?"))
-        {
-            Log.d(TAG, "add Listener to qnode")
-            _node.setOnClickListener(View.OnClickListener
-            {
-                // QuestionMark Node일 경우 해당 리스너 부여
-                if(!(TestPage.dlistidx == TestPage.dataList.size))
-                {
-                    putItem(TestPage.dataList.get(TestPage.dlistidx))
-                    TestPage.dlistidx+=1
-                }
-            })
-        }
-        else
-        {
-            _node.setOnClickListener(View.OnClickListener {
-                Toast.makeText(ctx, "node location : " + _node.locationText.text + " cost val : " + _node.costtv.text, Toast.LENGTH_SHORT).show()
-            })
-            _node.setOnLongClickListener(View.OnLongClickListener{
-                Toast.makeText(ctx, "해당 노드를 삭제합니다.", Toast.LENGTH_SHORT).show()
-                Log.d(TAG, "삭제 노드`s idx = " + _idx)
-                Log.d(TAG, "삭제 노드`s location = " + _node.locationText.text)
-                Log.d(TAG, "삭제 노드`s cost = " + _node.costtv.text)
+        _node.nodeBtn.setOnClickListener(View.OnClickListener {
+            //    Toast.makeText(ctx, "node location : " + _node.locationText.text + " cost val : " + _node.costtv.text, Toast.LENGTH_SHORT).show()
 
-                removeItem(_idx)
+            //노드 클릭시 해당 노드가 가지고 있는 SmallPost의 데이터와 노드 인덱스를 전송
+            onNodeClickListener.onNodeClicked(itemList[_idx], _idx)
 
-                true
-            })
-        }
+
+        })
+        _node.nodeBtn.setOnLongClickListener(View.OnLongClickListener{
+            Toast.makeText(ctx, "해당 노드를 삭제합니다.", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "삭제 노드`s idx = " + _idx)
+            Log.d(TAG, "삭제 노드`s location = " + _node.locationText.text)
+            Log.d(TAG, "삭제 노드`s cost = " + _node.costtv.text)
+
+            removeItem(_idx)
+
+            true
+        })
         // ========== 여기까지 테스트 코드 =============
         (RootLinear.get(RootLinear.size-1) as LinearLayout).addView(_node)
     }
@@ -316,10 +345,10 @@ class RouteNodeAdapter
         Log.d(TAG, "print map start")
         printMap(idx_viewTag)
 
-        removeQestionMarkNode()
+   //     removeQestionMarkNode()
 
         //QestionMark 데이터를 추가해준다.
-        itemList.add(Route("?","?"))
+        itemList.add(SmallPost("?","?"))
 
         itemList.removeAt(index)
         printItemList()
@@ -338,9 +367,9 @@ class RouteNodeAdapter
 
             var node : View = (RootLinear.findViewWithTag<LinearLayout>(idx_viewTag.get(i)?.parent_view_Tag)).findViewWithTag<View>(idx_viewTag.get(i)?.node_tag)
 
-            Log.d(TAG, "[i] = " + i + " // item = " + itemList.get(i).location)
-            node.locationText.text = itemList.get(i).location
-            node.costtv.text = itemList.get(i).cost
+            Log.d(TAG, "[i] = " + i + " // item = " + itemList.get(i).sp_place)
+            node.locationText.text = itemList.get(i).sp_place
+            node.costtv.text = itemList.get(i).sp_expenses
 
             // 리스너 초기화
             node.setOnClickListener(null)
@@ -356,8 +385,40 @@ class RouteNodeAdapter
                     true
                 })
             //====== 여기까지 테스트 코드 ========
+
+            var lastIndex:Int = itemList.size - 1;
+            // 한줄에 들어가는 노드(3개) 중 제일 첫번째로 들어가는 노드(우측 노드)
+          if(CurrentColumn % 2 == 1){
+
+              Log.d(TAG, "홀수 선택값: " + index + ", " + "마지막: " + lastIndex )
+              if(index == lastIndex + 1){
+                  (RootLinear.findViewWithTag<LinearLayout>(idx_viewTag.get(index)?.parent_view_Tag)).findViewWithTag<View>(idx_viewTag.get(index)?.node_tag).tailLine.visibility = View.INVISIBLE
+              } else{
+                  (RootLinear.findViewWithTag<LinearLayout>(idx_viewTag.get(lastIndex)?.parent_view_Tag)).findViewWithTag<View>(idx_viewTag.get(lastIndex)?.node_tag).tailLine.visibility = View.INVISIBLE
+              }
+
+          } else{
+              Log.d(TAG, "짝수 선택값: " + index + ", " + "마지막: " + lastIndex )
+              if(index == lastIndex + 1){
+                  (RootLinear.findViewWithTag<LinearLayout>(idx_viewTag.get(index)?.parent_view_Tag)).findViewWithTag<View>(idx_viewTag.get(index)?.node_tag).headLine.visibility = View.INVISIBLE
+              } else{
+                  (RootLinear.findViewWithTag<LinearLayout>(idx_viewTag.get(lastIndex)?.parent_view_Tag)).findViewWithTag<View>(idx_viewTag.get(lastIndex)?.node_tag).headLine.visibility = View.INVISIBLE
+              }
+
+          }
+
+
         }
-        drawQuestionMarkNode()
+
+  //      drawQuestionMarkNode()
+
+
+
+
+
+        Log.d(TAG, "갯수: "+ getItemSize());
+
+        printItemList()
     }
     /*
        홀수행의 노드들은 새로 추가할때 이전 노드의 tailLine의 visibility를 Invisible에서 Visible로 바꿔줘야한다.
@@ -396,7 +457,7 @@ class RouteNodeAdapter
 
         for( route in itemList)
         {
-            Log.d(TAG, "[${itemList.indexOf(route)}] , location : " + route.location + "    cost : "+ route.cost)
+            Log.d(TAG, "[${itemList.indexOf(route)}] , location : " + route.sp_place + "    cost : "+ route.sp_expenses)
         }
     }
 

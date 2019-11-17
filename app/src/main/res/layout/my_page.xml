@@ -9,7 +9,7 @@
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,6 +19,18 @@
             android:layout_height="wrap_content"
             app:setLinearRvAdapter="@{myPageVm.myPageAdapter}"/>
 
-    </LinearLayout>
+        <!--Write Post 화면으로 넘어가는 버튼-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#ffffff"
+            app:backgroundTint="#80808080"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp"
+            android:src="@drawable/i_edit_post_icon"
+            app:OnClickListener="@{myPageVm.onEditingPostClickListener}"/>
+
+    </RelativeLayout>
 
 </layout>

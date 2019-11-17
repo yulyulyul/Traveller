@@ -20,13 +20,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.MyPage"></activity>
-        <activity android:name=".ui.SignUp"></activity>
-        <activity android:name=".ui.RouteSearch"></activity>
-        <activity android:name=".ui.RouteList"></activity>
-        <activity android:name=".ui.FavoriteCountry"></activity>
-        <activity android:name=".ui.FavoriteCountryInfo"></activity>
-        <activity android:name=".ui.RouteOtherDetail"></activity>
+        <activity android:name=".ui.EnlargeImage"></activity>
+        <activity
+            android:name=".ui.EditingPost"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.MyPage" />
+        <activity android:name=".ui.SignUp" />
+        <activity android:name=".ui.RouteSearch" />
+        <activity android:name=".ui.RouteList" />
+        <activity android:name=".ui.FavoriteCountry" />
+        <activity android:name=".ui.FavoriteCountryInfo" />
+        <activity android:name=".ui.RouteOtherDetail" />
         <activity android:name=".ui.CustomDialog" />
 
         <meta-data
@@ -39,11 +43,9 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_key" />
 
-        <activity android:name=".ui.TestPage"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-
+        <activity
+            android:name=".ui.TestPage"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.LoginSelect"
             android:theme="@style/AppTheme.NoActionBar"
@@ -57,12 +59,15 @@
         <activity
             android:name=".ui.Login"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!-- 파일 경로 보안 처리 -->
+        <activity
+            android:name="com.yongbeom.aircalendar.AirCalendarDatePickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="jso.kpl.traveller.file_provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"

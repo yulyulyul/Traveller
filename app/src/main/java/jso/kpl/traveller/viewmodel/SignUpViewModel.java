@@ -23,10 +23,13 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.interfaces.DialogYNInterface;
-import jso.kpl.traveller.model.UserSignup;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.SignupAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.CustomDialog;
@@ -40,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpViewModel extends BaseObservable {
+public class SignUpViewModel extends BaseObservable implements Callback {
 
     Context context;
 
@@ -62,13 +65,14 @@ public class SignUpViewModel extends BaseObservable {
     SignupAPI signupAPI = WebService.INSTANCE.getClient().create(SignupAPI.class);
 
     //회원가입 Call
-    Call<Void> su_call;
+    Call<ResponseResult<User>> su_call;
+    Call<ResponseResult<Integer>> auth_call;
 
     //프로필 이미지 업로드RequestBody
     MultipartBody.Part imgBody;
 
     //회원 데이터 객체
-    UserSignup userSignup;
+    User user;
 
 
     String TAG = "TAG.SignUp.";
@@ -78,7 +82,6 @@ public class SignUpViewModel extends BaseObservable {
 
         String imageUri = "android.resource://jso.kpl.traveller/drawable/i_blank_person_icon";
         photoUpdate.setValue(imageUri);
-
     }
 
     //디바이스 초기 값, 속성: 유니크, 디바이스 초기화할 때 바뀐다고 함
@@ -91,7 +94,6 @@ public class SignUpViewModel extends BaseObservable {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
-
     //이메일 인증 버튼
     public void onEmailAuthClicked() {
 
@@ -100,10 +102,9 @@ public class SignUpViewModel extends BaseObservable {
         } else if (!regexMethod.isEmailValid(emailLD.getValue())) {
             sendToast(context, "이메일 형식이 틀렸습니다.\n형식에 맞추어 작성부탁드립니다.");
         } else {
-            sendToast(context, "System::Email Clear");
 
             Bundle bundle = new Bundle();
-            bundle.putString("title", "(테스트용)이메일 인증하시겠습니까?");
+            bundle.putString("title", "이메일 인증하시겠습니까?");
 
             final CustomDialog customDialog = new CustomDialog();
 
@@ -114,8 +115,30 @@ public class SignUpViewModel extends BaseObservable {
             customDialog.setDialogYNInterface(new DialogYNInterface() {
                 @Override
                 public void positiveBtn() {
-                    sendToast(context, "이메일 인증!!!");
-                    isAuth.setValue(true);
+
+                    auth_call = signupAPI.authEmail(emailLD.getValue());
+
+                    auth_call.enqueue(new Callback<ResponseResult<Integer>>() {
+                        @Override
+                        public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
+
+                            ResponseResult<Integer> responseResult = response.body();
+
+                            if(responseResult.getRes_obj() == 0){
+                                sendToast(context, "중복된 이메일이 있습니다.");
+                            }else if(responseResult.getRes_obj() == 1){
+                                sendToast(context, "이메일 인증!!!");
+                                isAuth.setValue(true);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
+                            t.printStackTrace();
+                            sendToast(App.INSTANCE, "서버 에러");
+                            isAuth.setValue(false);
+                        }
+                    });
 
                     customDialog.dismiss();
                 }
@@ -154,11 +177,9 @@ public class SignUpViewModel extends BaseObservable {
         } else if (!isAuth.getValue()) {
             sendToast(context, "이메일 인증이 미실시되었습니다.");
         } else {
-            //모든 조건에 만족할 시 실행
-            sendToast(context, "System::All Clear");
 
             //이메일, 닉네임, 패스워드를 담은 객체
-            userSignup = new UserSignup(emailLD.getValue(), returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
+            user = new User(emailLD.getValue(), returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
 
             //프로필 이미지가 null이거나 초기값 사진 또는 에러 이미지일 때
             //if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_person_icon)) {
@@ -178,8 +199,8 @@ public class SignUpViewModel extends BaseObservable {
 
                 //******multipart/form-data는 파일 형식의 파싱법
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imgFile);
-                imgBody = MultipartBody.Part.createFormData("us_profile_img", imgFile.getName(), requestFile);
-                System.out.println("뭐로 나옴? " + imgFile.getName());
+                imgBody = MultipartBody.Part.createFormData("u_profile_img", imgFile.getName(), requestFile);
+                System.out.println("이미지 파일명 :  " + imgFile.getName());
 
                 //*****이미지 형식의 파싱법(image/*은 모든 이미지 형식이라는 뜻)
                 //RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), imgFile);
@@ -193,13 +214,19 @@ public class SignUpViewModel extends BaseObservable {
              */
 
             //1. 객체 + 이미지
-            // su_call = con.signupAPI.goSignUp(userSignup, imgBody);
+            // su_call = con.signupAPI.goSignUp(user, imgBody);
 
             //2. 각 변수(이메일, 패스워드(해시) + 닉네임 + 디바이스 번호) + 이미지
             // String으로 데이터 보내면 DB에 ""가 포함되어 들어감
-            su_call = signupAPI.goSignUp(RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_email()),
-                    RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_pwd()), RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_device()),
-                    RequestBody.create(MediaType.parse("text/plain"), userSignup.getUs_nick_name()), imgBody);
+
+
+            su_call = signupAPI.goSignUp(user, imgBody);
+
+            su_call.enqueue(this);
+
+            /*su_call = signupAPI.goSignUp(RequestBody.create(MediaType.parse("text/plain"), user.getUs_email()),
+                    RequestBody.create(MediaType.parse("text/plain"), user.getUs_pwd()), RequestBody.create(MediaType.parse("text/plain"), user.getUs_device()),
+                    RequestBody.create(MediaType.parse("text/plain"), user.getUs_nick_name()), imgBody);
 
             su_call.enqueue(new Callback<Void>() {
                 @Override
@@ -216,7 +243,7 @@ public class SignUpViewModel extends BaseObservable {
                     Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
                     t.printStackTrace();
                 }
-            });
+            });*/
         }
     }
 
@@ -250,7 +277,7 @@ public class SignUpViewModel extends BaseObservable {
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
 
             }
         });
@@ -285,5 +312,37 @@ public class SignUpViewModel extends BaseObservable {
         return SHA;
     }
 
+    @Override
+    public void onResponse(Call call, Response response) {
+        Log.d(TAG + "통신 성공","성공적으로 전송");
 
+        ResponseResult<User> reUser = ((ResponseResult<User>) response.body());
+
+        if(reUser.getRes_type() == -1){
+
+        }else if(reUser.getRes_type() == 0){
+
+        }else{
+            User user = ((ResponseResult<User>) response.body()).getRes_obj();
+
+            System.out.println(user.toString());
+            if(user.getU_email() != null) {
+                Log.d(TAG + "회원가입","성공");
+                sendToast(context, "회원가입에 성공하였습니다.");
+                Intent intent = new Intent(context, Login.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ContextCompat.startActivity(context, intent, null);
+            } else {
+                Log.d(TAG + "회원가입","실패");
+                sendToast(context, "이미 존재하는 이메일입니다.");
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(Call call, Throwable t) {
+        sendToast(context, "통신 불량" + t.getMessage());
+        Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+        t.printStackTrace();
+    }
 }

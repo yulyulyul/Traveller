@@ -72,6 +72,7 @@
                     android:orientation="horizontal">
 
                     <EditText
+                        android:id="@+id/emailAuthTv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="10dp"
@@ -79,6 +80,7 @@
                         android:background="@drawable/s_border_square"
                         android:focusableInTouchMode="@{!signUpVM.isAuth}"
                         android:hint="이메일"
+                        android:focusable="@{!signUpVM.isAuth}"
                         android:inputType="textEmailAddress"
                         android:padding="10dp"
                         android:singleLine="true"
