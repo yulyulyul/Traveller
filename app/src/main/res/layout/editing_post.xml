@@ -7,6 +7,7 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="jso.kpl.traveller.R" />
 
         <variable
             name="editingPostVm"
@@ -139,7 +140,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
-                                    android:text="* 국가" />
+                                    android:text="* 국가"
+                                    android:textColor="@{(editingPostVm.inputPlace.getValue().length() > 0)? R.color.non_clicked:R.color.clicked}"/>
 
                                 <EditText
                                     android:layout_width="match_parent"

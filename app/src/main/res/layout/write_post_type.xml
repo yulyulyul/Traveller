@@ -7,6 +7,8 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="jso.kpl.traveller.R" />
+
 
         <variable
             name="v"
@@ -61,7 +63,6 @@
                     android:onClick="@{postTypeVm.onSaveSpClickListener}"
                     android:text="완료"
                     android:textSize="20dp"
-                    android:textColor="#80808080"
                     android:textStyle="bold" />
             </RelativeLayout>
 
@@ -76,7 +77,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
-                    android:text="* 장소" />
+                    android:text="* 장소"
+                    android:textColor="@{(postTypeVm.inputPlace.getValue().length() > 0)? R.color.non_clicked:R.color.clicked}"/>
 
                 <EditText
                     android:layout_width="match_parent"

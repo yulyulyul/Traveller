@@ -64,7 +64,11 @@ public class WritePostType extends Fragment {
     public WritePostTypeBinding binding;
     EditingPostViewModel editingPostVm;
 
+    boolean isInit = true;
+
     public Fragment newInstance(SmallPost sp, int pos) {
+
+        isInit = true;
 
         WritePostType writePostType = new WritePostType();
         Bundle args = new Bundle();
@@ -78,7 +82,6 @@ public class WritePostType extends Fragment {
 
     public WritePostType() {
         // Required empty public constructor
-
     }
 
     @Override
@@ -88,6 +91,7 @@ public class WritePostType extends Fragment {
         if (getActivity() != null && getActivity() instanceof OnDetachFragmentClickListener) {
             onDetachFragmentClickListener = (OnDetachFragmentClickListener) getActivity();
         }
+
     }
 
     SmallPost sp;
@@ -98,6 +102,9 @@ public class WritePostType extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
+
+            isInit = false;
+
             sp = (SmallPost) getArguments().getSerializable("smallpost");
             pos = getArguments().getInt("position");
         }
@@ -151,6 +158,7 @@ public class WritePostType extends Fragment {
         binding.setLifecycleOwner(this);
 
         binding.getPostTypeVm().fm.setValue(getActivity().getSupportFragmentManager());
+
         init();
 
         //Small Post 저장 버튼 활성화-----------------------------------------------------------------
@@ -179,7 +187,6 @@ public class WritePostType extends Fragment {
             public void onClick(View v) {
 
                 if (binding.getPostTypeVm().photoList.getValue() != null) {
-
                     showGallery();
                 }
             }
@@ -193,11 +200,19 @@ public class WritePostType extends Fragment {
         };
 
         // 각 추가 뷰를 눌렀을 때 이벤트---------------------------------------------------------------
+
+
+
         binding.getPostTypeVm().isPhoto.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    showGallery();
+                    if(isInit){
+                        showGallery();
+                    }else{
+                        isInit = true;
+                    }
+
                 }
             }
         });
@@ -205,8 +220,12 @@ public class WritePostType extends Fragment {
         binding.getPostTypeVm().isCalendar.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    startActivityForResult(binding.getPostTypeVm().onCalendar(binding.getPostTypeVm().travelPeriod.getValue()), 33);
+                if (aBoolean) {
+                    if(isInit){
+                        startActivityForResult(binding.getPostTypeVm().onCalendar(binding.getPostTypeVm().travelPeriod.getValue()), 33);
+                    }else{
+                        isInit = true;
+                    }
                 }
             }
         });
@@ -216,10 +235,17 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    showCategoryList();
+                    if(isInit){
+                        showCategoryList();
+                    }else{
+                        Log.d(TAG, "onChanged1: " + isInit);
+                        isInit = true;
+                        Log.d(TAG, "onChanged2: " + isInit);
+                    }
                 }
             }
         });
+
 
         //------------------------------------------------------------------------------------------
 
@@ -252,7 +278,7 @@ public class WritePostType extends Fragment {
     }
 
     // 갤러리에서 이미지 가져오기 ---------------------------------------------------------------------
-    public void showGallery(){
+    public void showGallery() {
         TedImagePicker.with(getActivity())
                 .showCameraTile(false)
                 .max(3 - binding.getPostTypeVm().photoList.getValue().size(), (3 - binding.getPostTypeVm().photoList.getValue().size()) + "장의 사진을 선택가능합니다.")
@@ -262,7 +288,7 @@ public class WritePostType extends Fragment {
 
                         List<Uri> uris = (List<Uri>) uriList;
 
-                        if(binding.getPostTypeVm().photoList.getValue() != null)
+                        if (binding.getPostTypeVm().photoList.getValue() != null)
                             binding.getPostTypeVm().photoList.getValue().addAll(uris);
                         else
                             binding.getPostTypeVm().photoList.setValue(uris);
@@ -487,7 +513,7 @@ public class WritePostType extends Fragment {
             }
         }
     }
-   //-----------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -515,4 +541,10 @@ public class WritePostType extends Fragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        isInit = false;
+    }
 }

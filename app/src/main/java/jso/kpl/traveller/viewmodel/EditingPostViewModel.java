@@ -74,6 +74,8 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public MutableLiveData<String> inputComment = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> isClick = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> isInit = new MutableLiveData<>();
     //----------------------------------------------------------------------------------------------
     //하단바-----------------------------------------------------------------------------------------
     //포스트 공개 비공개 여부
@@ -102,6 +104,8 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public MutableLiveData<Boolean> isTag = new MutableLiveData<>();
 
     public EditingPostViewModel() {
+
+        isInit.setValue(false);
 
         isClick.setValue(true);
 
