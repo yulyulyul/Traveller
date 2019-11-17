@@ -24,6 +24,7 @@ import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.SmallPost;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
+import jso.kpl.traveller.util.CurrencyChange;
 
 public class EditingPostViewModel extends ViewModel implements View.OnClickListener {
 
@@ -52,7 +53,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     //작성 폼----------------------------------------------------------------------------------------
     public MutableLiveData<FragmentManager> fm = new MutableLiveData<>();
     public MutableLiveData<Fragment> fragment = new MutableLiveData<>();
-
+    public MutableLiveData<Boolean> isSmallPost = new MutableLiveData<>();
     //국가 또는 장소 입력
     public MutableLiveData<String> inputPlace = new MutableLiveData<>();
 
@@ -103,6 +104,8 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public EditingPostViewModel() {
 
         isClick.setValue(true);
+
+        isSmallPost.setValue(true);
 
         //Default:비공개
         isOpen.setValue(true);
@@ -185,7 +188,14 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         SmallPost smallPost = new SmallPost();
 
         if (inputExpenses.getValue() != null && !inputExpenses.getValue().equals("")) {
-            smallPost.setSp_expenses(inputExpenses.getValue());
+
+            if(inputExpenses.getValue().contains("₩"))
+                smallPost.setSp_expenses(inputExpenses.getValue());
+            else
+                smallPost.setSp_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(inputExpenses.getValue())));
+
+        }else{
+            smallPost.setSp_expenses(CurrencyChange.moneyFormatToWon(0));
         }
 
         if (inputComment.getValue() != null && !inputComment.getValue().equals("")) {

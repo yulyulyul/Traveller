@@ -28,6 +28,7 @@ class RouteNodeAdapter
 
     interface OnNodeClickListener {
         fun onNodeClicked(sp: SmallPost, pos: Int)
+        fun onNodeLongClicked()
     }
 
     private var itemList : ArrayList<SmallPost> // 전체적으로 item을 추가하면 증가되는 리스트
@@ -317,6 +318,8 @@ class RouteNodeAdapter
             Log.d(TAG, "삭제 노드`s location = " + _node.locationText.text)
             Log.d(TAG, "삭제 노드`s cost = " + _node.costtv.text)
 
+            onNodeClickListener.onNodeLongClicked()
+
             removeItem(_idx)
 
             true
@@ -382,6 +385,9 @@ class RouteNodeAdapter
             node.setOnLongClickListener(
                 {
                     removeItem(i)
+
+                    onNodeClickListener.onNodeLongClicked()
+
                     true
                 })
             //====== 여기까지 테스트 코드 ========

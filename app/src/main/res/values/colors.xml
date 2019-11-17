@@ -16,6 +16,11 @@
     <color name="node">#4CAF50</color>  <!-- RouteNode Color-->
     <color name="selected_node">#C8E6C9</color> <!-- Selected RouteLine Color-->
 
+    <!-- kh color -->
+    <color name="clicked">#03A9F4</color>  <!-- 버튼 활성화 색-->
+    <color name="non_clicked">#80808080</color> <!-- 버튼 비활성화 색-->
+    <color name="simple_white">#f2f2f2</color> <!-- 흰색 대신 쓸 바탕 색-->
+
 
 
 </resources>

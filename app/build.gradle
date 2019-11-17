@@ -23,6 +23,7 @@ android {
     dataBinding {
         enabled = true
     }
+
 }
 
 dependencies {
@@ -109,6 +110,6 @@ dependencies {
     implementation 'net.danlew:android.joda:2.9.9.3'
 
     //이미지 멀티 피커
-    implementation 'gun0912.ted:tedimagepicker:1.0.5'
+    implementation 'gun0912.ted:tedimagepicker:1.0.7'
 }
 apply plugin: 'com.google.gms.google-services'

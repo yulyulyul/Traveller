@@ -2,7 +2,6 @@ package jso.kpl.traveller.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +33,7 @@ import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
+import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.viewmodel.EditingPostViewModel;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -75,7 +75,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
         binding.getEditingPostVm().fm.setValue(getSupportFragmentManager());
 
         binding.getEditingPostVm().setRouteNodeAdapter(new RouteNodeAdapter(this, binding.routeNodeLayout));
-
         binding.getEditingPostVm().routeNodeAdapter.setOnNodeClickListener(this);
 
         //Editing Post 뒤로 가기 버튼 클릭 이벤트
@@ -97,8 +96,16 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                     Post post = new Post("test", binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
 
-                    if (binding.getEditingPostVm().inputExpenses.getValue() != null)
-                        post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue());
+                    if (binding.getEditingPostVm().inputExpenses.getValue() != null){
+
+                        if(binding.getEditingPostVm().inputExpenses.getValue().contains("₩"))
+                            post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue());
+                        else
+                            post.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(binding.getEditingPostVm().inputExpenses.getValue())));
+
+                    } else{
+                       post.setP_expenses(CurrencyChange.moneyFormatToWon(0));
+                    }
 
                     if (binding.getEditingPostVm().inputComment.getValue() != null)
                         post.setP_comment(binding.getEditingPostVm().inputComment.getValue());
@@ -118,7 +125,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                     for (int i = 0; i < post.getP_sp_list().size(); i++) {
 
-                        if(post.getP_sp_list().get(i).getSp_imgs() != null){
+                        if (post.getP_sp_list().get(i).getSp_imgs() != null) {
                             for (int j = 0; j < post.getP_sp_list().get(i).getSp_imgs().size(); j++) {
 
                                 File f = new File(Uri.parse(post.getP_sp_list().get(i).getSp_imgs().get(j)).getPath());
@@ -133,7 +140,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                                 imgs.add(imgBody);
                             }
-                        } else{
+                        } else {
                             imgs.add(null);
                         }
 
@@ -198,9 +205,9 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             public void onChanged(String s) {
 
                 if (s.length() > 0 && binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
-                    binding.postSave.setTextColor(Color.parseColor("#000000"));
+                    binding.postSave.setTextColor(getColor(R.color.clicked));
                 } else {
-                    binding.postSave.setTextColor(Color.parseColor("#80808080"));
+                    binding.postSave.setTextColor(getColor(R.color.non_clicked));
                 }
 
             }
@@ -210,16 +217,15 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             @Override
             public void onChanged(Fragment fragment) {
                 if (fragment != null) {
-                    binding.postSave.setVisibility(View.GONE);
                     Log.d(TAG, "Small Post 작성 중...");
+                    binding.getEditingPostVm().isSmallPost.setValue(false);
                 } else {
-                    binding.postSave.setVisibility(View.VISIBLE);
-
+                    binding.getEditingPostVm().isSmallPost.setValue(true);
                     if (binding.getEditingPostVm().inputPlace.getValue() != null
                             && binding.getEditingPostVm().inputPlace.getValue().length() > 0) {
-                        binding.postSave.setTextColor(Color.parseColor("#000000"));
+                        binding.postSave.setTextColor(getColor(R.color.clicked));
                     } else {
-                        binding.postSave.setTextColor(Color.parseColor("#80808080"));
+                        binding.postSave.setTextColor(getColor(R.color.non_clicked));
                     }
                     Log.d(TAG, "Post 작성 중...");
                 }
@@ -255,6 +261,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
     public void onDetachFragmentClicked() {
 
         binding.getEditingPostVm().fm.getValue().beginTransaction()
+                .setCustomAnimations(R.anim.enter_to_top, R.anim.exit_to_down)
                 .remove(binding.getEditingPostVm().fragment.getValue())
                 .detach(binding.getEditingPostVm().fragment.getValue())
                 .addToBackStack(null).commit();
@@ -286,34 +293,44 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
         binding.getEditingPostVm().fragment.setValue(new WritePostType().newInstance(sp, pos));
 
-
         isClick = true;
         this.pos = pos;
     }
 
     @Override
+    public void onNodeLongClicked() {
+        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() == 1) {
+            binding.getEditingPostVm().isClick.setValue(true);
+            binding.postSave.setTextColor(getColor(R.color.non_clicked));
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setMessage("저장하지 않고 나가시겠습니까?")
-                .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            setResult(EDITING_POST);
-                            finish();
-                        } catch (Exception e) {
-                            setResult(EDITING_POST);
-                            finish();
+        if(binding.getEditingPostVm().fragment.getValue() != null){
+            onDetachFragmentClicked();
+        } else{
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+            alert.setMessage("저장하지 않고 나가시겠습니까?")
+                    .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                setResult(EDITING_POST);
+                                finish();
+                            } catch (Exception e) {
+                                setResult(EDITING_POST);
+                                finish();
+                            }
                         }
-                    }
-                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                    }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-            }
-        }).show();
-
-
+                }
+            }).show();
+        }
     }
 }

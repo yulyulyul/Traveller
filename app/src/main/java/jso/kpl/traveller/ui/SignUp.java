@@ -87,7 +87,7 @@ public class SignUp extends AppCompatActivity {
 
                         if (Build.VERSION.SDK_INT >= 24) {
                             Uri providerPath = FileProvider.getUriForFile
-                                    (getApplicationContext(), getPackageName() + ".file_provider", pFile);
+                                    (getApplicationContext(), getPackageName() + ".provider", pFile);
                             uriPath = providerPath;
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriPath);
                             startActivityForResult(cameraIntent, 1);

@@ -64,13 +64,13 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="jso.kpl.traveller.file_provider"
+            android:authorities="${applicationId}.file_provider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"
+                android:resource="@xml/provider"
                 tools:replace="android:resource" />
         </provider>
     </application>

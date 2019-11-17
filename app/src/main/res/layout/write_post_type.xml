@@ -45,86 +45,127 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Small Post"
+                    android:text="여행 장소"
                     android:textSize="20dp"
-                    android:textStyle="bold"
+                    android:textStyle="bold|italic"
+                    android:textColor="#808080"
                     android:layout_centerInParent="true" />
 
-                <ImageView
+                <TextView
                     android:id="@+id/save"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/i_gray_save_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginHorizontal="10dp"
-                    android:onClick="@{postTypeVm.onSaveSpClickListener}" />
+                    android:layout_marginRight="10dp"
+                    android:onClick="@{postTypeVm.onSaveSpClickListener}"
+                    android:text="완료"
+                    android:textSize="20dp"
+                    android:textColor="#80808080"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginVertical="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:focusable="auto"
-                        android:focusableInTouchMode="true"
-                        android:hint="장소 입력"
-                        android:nextFocusDown="@id/edit_expenses"
-                        android:padding="5dp"
-                        android:singleLine="true"
-                        android:text="@={postTypeVm.inputPlace}"
-                        android:textSize="20dp"
-                        app:setInitFocusing="@{true}" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#80808080"
-                android:layout_marginVertical="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginVertical="10dp">
+                android:layout_marginTop="10dp">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="* 장소" />
+
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp">
+                    android:background="@android:color/transparent"
+                    android:focusable="auto"
+                    android:focusableInTouchMode="true"
+                    android:hint="장소 입력"
+                    android:nextFocusDown="@id/edit_expenses"
+                    android:padding="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:singleLine="true"
+                    android:text="@={postTypeVm.inputPlace}"
+                    android:textSize="20dp"
+                    app:setInitFocusing="@{true}" />
 
-                    <EditText
-                        android:id="@+id/edit_expenses"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="여행 경비 입력"
-                        android:background="@android:color/transparent"
-                        android:text="@={postTypeVm.inputExpenses}"
-                        android:textSize="20dp"
-                        android:inputType="number"
-                        android:padding="5dp"
-                        android:focusable="true"
-                        android:singleLine="true"
-                        android:nextFocusDown="@id/edit_comment" />
-
-                </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#80808080"
+                    android:layout_marginVertical="5dp" />
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginVertical="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="경비"
+                    android:layout_marginHorizontal="10dp" />
+
+                <EditText
+                    android:id="@+id/edit_expenses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="여행 경비 입력"
+                    android:background="@android:color/transparent"
+                    android:text="@={postTypeVm.inputExpenses}"
+                    android:textSize="20dp"
+                    android:inputType="number"
+                    android:padding="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:focusable="true"
+                    android:singleLine="true"
+                    android:maxLength="15"
+                    android:nextFocusDown="@id/edit_comment"
+                    app:onChangeMoney="@{null}"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#80808080"
+                    android:layout_marginVertical="5dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginVertical="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내용"
+                    android:layout_marginHorizontal="10dp" />
+
+                <EditText
+                    android:id="@+id/edit_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="내용을 입력해주세요. (200자 제한)"
+                    android:background="@android:color/transparent"
+                    android:text="@={postTypeVm.inputComment}"
+                    android:textSize="20dp"
+                    android:padding="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:focusable="true"
+                    android:maxLength="200"
+                    app:setDontEnter="@{null}"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -136,45 +177,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginVertical="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp">
-
-                    <EditText
-                        android:id="@+id/edit_comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="내용 입력"
-                        android:background="@android:color/transparent"
-                        android:text="@={postTypeVm.inputComment}"
-                        android:textSize="20dp"
-                        android:padding="5dp"
-                        android:focusable="true"
-                        android:singleLine="true"
-                        android:nextFocusDown="@id/edit_comment" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
                 android:layout_marginVertical="5dp"
-                android:background="#80808080" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
                 android:orientation="vertical"
                 android:visibility="@{postTypeVm.isCalendar?View.VISIBLE:View.GONE}">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="기간"
+                    android:layout_marginHorizontal="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -188,7 +199,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:focusable="true"
-                        android:hint="여행 총 기간"
+                        android:hint="여행 기간을 설정해주세요."
                         android:nextFocusDown="@id/edit_comment"
                         android:padding="5dp"
                         android:singleLine="true"
@@ -217,8 +228,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:layout_marginHorizontal="10dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -253,13 +263,11 @@
 
                 </HorizontalScrollView>
 
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="5dp"
                     android:background="#80808080" />
-
 
             </LinearLayout>
 
@@ -268,14 +276,13 @@
                 android:id="@+id/writeImg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:layout_marginVertical="5dp"
                 android:orientation="vertical"
                 android:visibility="@{postTypeVm.isPhoto?View.VISIBLE:View.GONE}">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
                     android:orientation="vertical"
                     android:gravity="center_vertical">
 
@@ -298,16 +305,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginHorizontal="10dp">
 
                         <Button
                             android:id="@+id/addPhoto"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:background="@drawable/i_circle_plus_icon"
-                            android:layout_marginHorizontal="10dp" />
+                            android:background="@drawable/i_circle_plus_icon" />
 
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="10dp"
+                        android:background="#80808080" />
 
                 </LinearLayout>
 

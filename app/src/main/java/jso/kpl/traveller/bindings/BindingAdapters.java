@@ -1,10 +1,14 @@
 package jso.kpl.traveller.bindings;
 
+import android.text.InputFilter;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
@@ -21,13 +25,13 @@ import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.ui.EditingPost;
-import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
+import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
 
 //RecyclerView에 Adapter 적용
@@ -65,9 +69,9 @@ public class BindingAdapters {
     //탭레이아웃 설정
     //1st [parameter]는 해당 뷰, 2nd [parameter]는 탭레이아웃의 탭 리스트, 3rd [parameter] 탭 클릭 이벤트 리스너
     @BindingAdapter({"setTabLayout", "addOnTabSelected"})
-    public static void onBindTabLayout(TabLayout tabLayout, List<TabLayout.Tab> tabs, TabLayout.OnTabSelectedListener listener){
+    public static void onBindTabLayout(TabLayout tabLayout, List<TabLayout.Tab> tabs, TabLayout.OnTabSelectedListener listener) {
 
-        for(TabLayout.Tab tab : tabs){
+        for (TabLayout.Tab tab : tabs) {
             tabLayout.addTab(tab);
         }
 
@@ -75,8 +79,8 @@ public class BindingAdapters {
         tabLayout.addOnTabSelectedListener(listener);
     }
 
-    @BindingAdapter({"setFragmentManager","setInitFragment"})
-    public static void onBindFragment(FrameLayout frameLayout, FragmentManager fm, Fragment fragment){
+    @BindingAdapter({"setFragmentManager", "setInitFragment"})
+    public static void onBindFragment(FrameLayout frameLayout, FragmentManager fm, Fragment fragment) {
         fm.beginTransaction().add(frameLayout.getId(), fragment).commit();
     }
 
@@ -104,7 +108,7 @@ public class BindingAdapters {
     }
 
     @BindingAdapter({"setDecoration"})
-    public static void onBindSetDecoration(RecyclerView recyclerView, GridSpacingItemDecoration decoration){
+    public static void onBindSetDecoration(RecyclerView recyclerView, GridSpacingItemDecoration decoration) {
         recyclerView.addItemDecoration(decoration);
     }
 
@@ -125,18 +129,91 @@ public class BindingAdapters {
         v.setOnClickListener(listener);
     }
 
+    // 화면 상 첫 포커싱
     @BindingAdapter("setInitFocusing")
-    public static void bindSetFocus(View v, boolean b){
+    public static void bindSetFocus(View v, boolean b) {
         v.setFocusable(b);
         v.setFocusableInTouchMode(b);
         v.requestFocus();
     }
 
+    @BindingAdapter("setDontEnter")
+    public static void bindDontEnter(View v, String a){
+        //엔터입력시 없으면 입력 하지 않음.
+        v.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+    }
     //프래그먼트 초기값 설정 바인딩 어댑터
     @BindingAdapter({"setFragmentManger", "setInitFragment"})
-    public static void bindSetFragment(FrameLayout container, FragmentManager fm, Fragment fragment){
+    public static void bindSetFragment(FrameLayout container, FragmentManager fm, Fragment fragment) {
 
-        if(fragment != null)
-            fm.beginTransaction().add(container.getId(), fragment, "post_tag").commit();
+        if (fragment != null)
+            fm.beginTransaction().setCustomAnimations(R.anim.enter_to_top, R.anim.exit_to_down).add(container.getId(), fragment, "post_tag").commit();
+    }
+
+    //금액 EditText를 통화 단위로 변경, 누르면 일반 숫자로 나열
+    //최대 입력 길이는 10
+    @BindingAdapter("onChangeMoney")
+    public static void bindChangeMoney(EditText et, @Nullable String money) {
+
+        final int len = 10;
+
+        et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (hasFocus) {
+                    Log.d("TAG", "bindChangeMoney: focus on");
+
+                    if (!((EditText) v).getText().equals("")) {
+                        String a = ((EditText) v).getText().toString().replace("₩", "");
+                        a = a.replace(",", "");
+
+                        ((EditText) v).setText(a);
+
+                        ((EditText) v).setFilters(new InputFilter[]{
+                                new InputFilter.LengthFilter(len)
+                        });
+
+                    }
+                } else {
+
+                    try {
+                        if (((EditText) v).getText().toString().equals("")) {
+                            Log.d("TAG", "onFocusChange: off");
+                            ((EditText) v).setText("0");
+                        }
+
+                        int len = ((EditText) v).length();
+
+                        int change_length = (10 + len / 3 + 1);
+
+                        ((EditText) v).setFilters(new InputFilter[]{
+                                new InputFilter.LengthFilter(change_length)});
+
+                        Long lngMoney = Long.parseLong(((EditText) v).getText().toString());
+                        String cc = CurrencyChange.moneyFormatToWon(lngMoney);
+
+                        ((EditText) v).setText(cc);
+
+                        Log.d("TAG", "bindChangeMoney: focus off" + lngMoney);
+                    } catch (Exception e) {
+                        Toast.makeText(App.INSTANCE, "너무 많다..", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+            }
+        });
     }
 }

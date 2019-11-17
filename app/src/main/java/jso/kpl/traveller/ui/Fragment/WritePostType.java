@@ -56,8 +56,8 @@ public class WritePostType extends Fragment {
         this.onDetachFragmentClickListener = onDetachFragmentClickListener;
     }
 
-    List<ImageView> ivList = new ArrayList<>();
-    List<HashMap<ImageView, Uri>> ivHmList = new ArrayList<>();
+    List<ImageView> ivList;
+    List<HashMap<ImageView, Uri>> ivHmList;
 
     List<TextView> tagTvList = new ArrayList<>();
 
@@ -158,9 +158,9 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(String s) {
                 if (s.length() > 0)
-                    binding.save.setBackgroundResource(R.drawable.i_black_save_icon);
+                    binding.save.setTextColor(getActivity().getColor(R.color.clicked));
                 else
-                    binding.save.setBackgroundResource(R.drawable.i_gray_save_icon);
+                    binding.save.setTextColor(getActivity().getColor(R.color.non_clicked));
 
             }
         });
@@ -177,21 +177,10 @@ public class WritePostType extends Fragment {
         binding.addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (binding.getPostTypeVm().photoList.getValue() != null) {
 
-                    TedImagePicker.with(getActivity())
-                            .max(3 - binding.getPostTypeVm().photoList.getValue().size(), (3 - binding.getPostTypeVm().photoList.getValue().size()) + "장의 사진을 선택가능합니다.")
-                            .startMultiImage(new OnMultiSelectedListener() {
-                                @Override
-                                public void onSelected(@NotNull List<? extends Uri> uriList) {
-
-                                    List<Uri> uris = (List<Uri>) uriList;
-
-                                    binding.getPostTypeVm().photoList.setValue(uris);
-
-                                    addPhotoLayout(binding.photoLayout, binding.getPostTypeVm().photoList.getValue());
-                                }
-                            });
+                    showGallery();
                 }
             }
         });
@@ -203,23 +192,56 @@ public class WritePostType extends Fragment {
             }
         };
 
+        // 각 추가 뷰를 눌렀을 때 이벤트---------------------------------------------------------------
+        binding.getPostTypeVm().isPhoto.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    showGallery();
+                }
+            }
+        });
+
+        binding.getPostTypeVm().isCalendar.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    startActivityForResult(binding.getPostTypeVm().onCalendar(binding.getPostTypeVm().travelPeriod.getValue()), 33);
+                }
+            }
+        });
+
+        //카테고리 추가
+        binding.getPostTypeVm().isTag.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    showCategoryList();
+                }
+            }
+        });
+
+        //------------------------------------------------------------------------------------------
+
         binding.getPostTypeVm().onAddCategoryClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCategoryList();
             }
         };
-
+        //------------------------------------------------------------------------------------------
         binding.getPostTypeVm().onSaveSpClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(binding.getPostTypeVm().inputPlace.getValue() != null && !binding.getPostTypeVm().inputPlace.getValue().equals("")){
+                binding.save.requestFocus();
+
+                if (binding.getPostTypeVm().inputPlace.getValue() != null && !binding.getPostTypeVm().inputPlace.getValue().equals("")) {
 
                     onDetachFragmentClickListener.onSaveSmallPostClicked(binding.getPostTypeVm().saveSmallPostData());
                     onDetachFragmentClickListener.onDetachFragmentClicked();
 
-                }else{
+                } else {
                     Toast.makeText(App.INSTANCE, "장소는 필수적으로 기입해주셔야합니다.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -229,8 +251,104 @@ public class WritePostType extends Fragment {
         return binding.getRoot();
     }
 
+    // 갤러리에서 이미지 가져오기 ---------------------------------------------------------------------
+    public void showGallery(){
+        TedImagePicker.with(getActivity())
+                .showCameraTile(false)
+                .max(3 - binding.getPostTypeVm().photoList.getValue().size(), (3 - binding.getPostTypeVm().photoList.getValue().size()) + "장의 사진을 선택가능합니다.")
+                .startMultiImage(new OnMultiSelectedListener() {
+                    @Override
+                    public void onSelected(@NotNull List<? extends Uri> uriList) {
 
-    //카테고리 선택 다이얼로그 출력
+                        List<Uri> uris = (List<Uri>) uriList;
+
+                        if(binding.getPostTypeVm().photoList.getValue() != null)
+                            binding.getPostTypeVm().photoList.getValue().addAll(uris);
+                        else
+                            binding.getPostTypeVm().photoList.setValue(uris);
+
+                        addPhotoLayout(binding.photoLayout, binding.getPostTypeVm().photoList.getValue());
+                    }
+                });
+    }
+
+    //포토 이미지 레이아웃 추가 함수
+    public void addPhotoLayout(final LinearLayout linearLayout, final List<Uri> uriList) {
+        //선택한 이미지를 감쌀 리니어 레이아웃 생성
+
+        if (ivList != null) {
+            for (ImageView iv : ivList) {
+                linearLayout.removeView(iv);
+            }
+        }
+
+        ivList = new ArrayList<>();
+        ivHmList = new ArrayList<>();
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(metrics.widthPixels / 5, metrics.heightPixels / 7);
+        params.rightMargin = 10;
+
+        //선택한 이미지의 수에 따라 이미지 뷰 생성
+        for (int i = 0; i < uriList.size(); i++) {
+
+            ImageView imageView = new ImageView(getActivity());
+            imageView.setLayoutParams(params);
+
+            imageView.setImageURI(uriList.get(i));
+
+            //포토 뷰를 넣어주는 곳
+            linearLayout.addView(imageView, ivList.size());
+
+            //이미지 뷰만 가지고 있는 리스트
+            ivList.add(imageView);
+
+
+            HashMap<ImageView, Uri> map = new HashMap<>();
+            map.put(imageView, uriList.get(i));
+
+            //이미지뷰 + Uri
+            ivHmList.add(map);
+
+        }
+
+        for (final ImageView iv : ivList) {
+
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    linearLayout.removeView(iv);
+
+                    HashMap<ImageView, Uri> remove = new HashMap<>();
+
+                    for (HashMap<ImageView, Uri> hm : ivHmList) {
+
+                        ivList.remove(iv);
+                        remove = hm;
+
+                        binding.getPostTypeVm().photoList.getValue().remove(hm.get(iv));
+                    }
+
+                    ivHmList.remove(remove);
+
+                    Log.d(TAG, "ivList Size: " + ivList.size());
+                    Log.d(TAG, "ivHmList Size: " + ivHmList.size());
+                    Log.d(TAG, "binding Size: " + binding.getPostTypeVm().photoList.getValue().size());
+
+                }
+            });
+
+        }
+
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //카테고리 선택 다이얼로그 출력--------------------------------------------------------------------
     public void showCategoryList() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -270,7 +388,7 @@ public class WritePostType extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int pos) {
 
-                if(binding.categoryLayout.getChildCount() > 0){
+                if (binding.categoryLayout.getChildCount() > 0) {
                     binding.categoryLayout.removeAllViews();
                 }
 
@@ -369,72 +487,7 @@ public class WritePostType extends Fragment {
             }
         }
     }
-
-    //포토 이미지 레이아웃 추가 함수
-    public void addPhotoLayout(final LinearLayout linearLayout, final List<Uri> uriList) {
-        //선택한 이미지를 감쌀 리니어 레이아웃 생성
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getActivity()
-                .getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(metrics.widthPixels / 5, metrics.heightPixels / 7);
-        params.rightMargin = 10;
-
-        //선택한 이미지의 수에 따라 이미지 뷰 생성
-        for (int i = 0; i < uriList.size(); i++) {
-
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setLayoutParams(params);
-
-            imageView.setImageURI(uriList.get(i));
-
-            //포토 뷰를 넣어주는 곳
-            linearLayout.addView(imageView, ivList.size());
-
-            //이미지 뷰만 가지고 있는 리스트
-            ivList.add(imageView);
-
-
-            HashMap<ImageView, Uri> map = new HashMap<>();
-            map.put(imageView, uriList.get(i));
-
-            //이미지뷰 + Uri
-            ivHmList.add(map);
-
-        }
-
-        for(final ImageView iv: ivList){
-
-            iv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    linearLayout.removeView(iv);
-
-                    HashMap<ImageView, Uri> remove= new HashMap<>();
-
-                    for(HashMap<ImageView, Uri> hm: ivHmList){
-
-                        ivList.remove(iv);
-                        remove = hm;
-
-                        binding.getPostTypeVm().photoList.getValue().remove(hm.get(iv));
-                    }
-
-                    ivHmList.remove(remove);
-
-                    Log.d(TAG, "ivList Size: " + ivList.size());
-                    Log.d(TAG, "ivHmList Size: " + ivHmList.size());
-                    Log.d(TAG, "binding Size: " + binding.getPostTypeVm().photoList.getValue().size());
-
-                }
-            });
-
-        }
-
-    }
+   //-----------------------------------------------------------------------------------------------
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

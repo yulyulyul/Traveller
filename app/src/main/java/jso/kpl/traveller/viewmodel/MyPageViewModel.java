@@ -219,7 +219,10 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         //들어가는 순서대로 뷰에 출력
         itemList.setValue(new ArrayList<MyPageItem>());
 
-        itemList.getValue().add(getHeadProfile(user.getU_profile_img(), user.getU_email()));
+        if(user != null)
+            itemList.getValue().add(getHeadProfile(user.getU_profile_img(), user.getU_email()));
+        else
+            itemList.getValue().add(getHeadProfile(imageUri, "Test@gmail.com"));
 
         itemList.getValue().add(getRouteSearch());
 
