@@ -69,13 +69,13 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
     //여행 기간 [0]: Start / [1]: End / [2]: Start ~ End
     public MutableLiveData<String[]> travelPeriod = new MutableLiveData<>();
+    public MutableLiveData<String> travelResult = new MutableLiveData<>();
 
     //커맨트 입력
     public MutableLiveData<String> inputComment = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> isClick = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> isInit = new MutableLiveData<>();
     //----------------------------------------------------------------------------------------------
     //하단바-----------------------------------------------------------------------------------------
     //포스트 공개 비공개 여부
@@ -104,8 +104,6 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public MutableLiveData<Boolean> isTag = new MutableLiveData<>();
 
     public EditingPostViewModel() {
-
-        isInit.setValue(false);
 
         isClick.setValue(true);
 
@@ -150,7 +148,6 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
         if (strings != null && !strings[0].isEmpty() && !strings[1].isEmpty()) {
 
-            Log.d(TAG, "onCalendar: " + strings[0]);
             String[] startParse = strings[0].split("-");
 
             int s_year = Integer.parseInt(startParse[0]);

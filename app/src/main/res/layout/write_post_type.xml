@@ -9,7 +9,6 @@
         <import type="android.view.View" />
         <import type="jso.kpl.traveller.R" />
 
-
         <variable
             name="v"
             type="View" />
@@ -205,7 +204,7 @@
                         android:nextFocusDown="@id/edit_comment"
                         android:padding="5dp"
                         android:singleLine="true"
-                        android:text="@{postTypeVm.travelPeriod[2]}"
+                        android:text="@={postTypeVm.travelResult}"
                         android:textSize="20dp" />
 
                 </LinearLayout>
@@ -334,19 +333,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right|center_vertical"
-            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
             android:layout_weight="1"
-            android:layout_alignParentBottom="true">
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/isPhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_margin="5dp"
-                android:onClick="@{()->postTypeVm.onClick(isPhoto)}">
+                android:gravity="center"
+                android:onClick="@{()->postTypeVm.onClick(isPhoto)}"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="30dp"
@@ -364,10 +363,10 @@
                 android:id="@+id/isCalendar"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_margin="5dp"
-                android:onClick="@{()->postTypeVm.onClick(isCalendar)}">
+                android:gravity="center"
+                android:onClick="@{()->postTypeVm.onClick(isCalendar)}"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="30dp"
@@ -385,10 +384,10 @@
                 android:id="@+id/isTag"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_margin="5dp"
-                android:onClick="@{()->postTypeVm.onClick(isTag)}">
+                android:gravity="center"
+                android:onClick="@{()->postTypeVm.onClick(isTag)}"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="30dp"

@@ -81,16 +81,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:background="@color/simple_white"
+                    android:gravity="center"
                     android:minHeight="100dp"
-                    android:orientation="vertical"
                     android:onClick="@{()->editingPostVm.onAddSmallPostClicked()}"
-                    android:gravity="center">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@drawable/i_circle_plus_icon"
-                        android:visibility="@{editingPostVm.isClick?View.VISIBLE:View.GONE}"/>
+                        android:visibility="@{editingPostVm.isClick?View.VISIBLE:View.GONE}" />
 
                 </LinearLayout>
 
@@ -124,9 +124,9 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="여행 일정"
+                                    android:textColor="#808080"
                                     android:textSize="20dp"
-                                    android:textStyle="bold|italic"
-                                    android:textColor="#808080" />
+                                    android:textStyle="bold|italic" />
 
                             </RelativeLayout>
 
@@ -141,20 +141,20 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
                                     android:text="* 국가"
-                                    android:textColor="@{(editingPostVm.inputPlace.getValue().length() > 0)? R.color.non_clicked:R.color.clicked}"/>
+                                    android:textColor="@{(editingPostVm.inputPlace.getValue().length() > 0)? R.color.non_clicked:R.color.clicked}" />
 
                                 <EditText
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
                                     android:background="@android:color/transparent"
                                     android:focusable="true"
                                     android:hint="여행 국가를 입력해주세요."
-                                    android:text="@={editingPostVm.inputPlace}"
+                                    android:maxLength="85"
                                     android:nextFocusDown="@id/edit_expenses"
                                     android:padding="5dp"
-                                    android:layout_marginHorizontal="10dp"
                                     android:singleLine="true"
-                                    android:maxLength="85"
+                                    android:text="@={editingPostVm.inputPlace}"
                                     android:textSize="20dp" />
 
                             </LinearLayout>
@@ -188,13 +188,13 @@
                                 android:focusable="true"
                                 android:hint="여행 총 경비를 입력해주세요."
                                 android:inputType="number"
+                                android:maxLength="15"
                                 android:nextFocusDown="@id/edit_comment"
                                 android:padding="5dp"
                                 android:singleLine="true"
                                 android:text="@={editingPostVm.inputExpenses}"
-                                app:onChangeMoney="@{null}"
                                 android:textSize="20dp"
-                                android:maxLength="15"/>
+                                app:onChangeMoney="@{null}" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -233,7 +233,7 @@
                                     android:nextFocusDown="@id/edit_comment"
                                     android:padding="5dp"
                                     android:singleLine="true"
-                                    android:text="@{editingPostVm.travelPeriod[2]}"
+                                    android:text="@={editingPostVm.travelResult}"
                                     android:textSize="20dp" />
 
                             </LinearLayout>
@@ -262,6 +262,7 @@
                                 android:id="@+id/edit_comment"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="10dp"
                                 android:background="@android:color/transparent"
                                 android:focusable="true"
                                 android:hint="내용을 입력해주세요. (200자 제한)"
@@ -269,8 +270,7 @@
                                 android:padding="5dp"
                                 android:text="@={editingPostVm.inputComment}"
                                 android:textSize="20dp"
-                                android:layout_marginHorizontal="10dp"
-                                app:setDontEnter="@{null}"/>
+                                app:setDontEnter="@{null}" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -313,6 +313,7 @@
                 android:text="공개" />
 
         </RelativeLayout>
+
 
     </LinearLayout>
 

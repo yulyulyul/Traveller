@@ -7,14 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +32,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import gun0912.tedimagepicker.builder.TedImagePicker;
 import gun0912.tedimagepicker.builder.listener.OnMultiSelectedListener;
@@ -38,6 +42,7 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.WritePostTypeBinding;
 import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.EditingPostViewModel;
 
 public class WritePostType extends Fragment {
@@ -56,10 +61,9 @@ public class WritePostType extends Fragment {
         this.onDetachFragmentClickListener = onDetachFragmentClickListener;
     }
 
-    List<ImageView> ivList;
-    List<HashMap<ImageView, Uri>> ivHmList;
+    List<HashMap<RelativeLayout, Uri>> photoLayoutList = new ArrayList<>();
 
-    List<TextView> tagTvList = new ArrayList<>();
+    List<LinearLayout> tagLayoutList = new ArrayList<>();
 
     public WritePostTypeBinding binding;
     EditingPostViewModel editingPostVm;
@@ -141,7 +145,8 @@ public class WritePostType extends Fragment {
 
             if (sp.getSp_start_date() != null) {
                 binding.getPostTypeVm().isCalendar.setValue(true);
-                binding.getPostTypeVm().travelPeriod.setValue(new String[]{sp.getSp_start_date(), sp.getSp_end_date(), sp.getSp_start_date() + " ~ " + sp.getSp_end_date()});
+                binding.getPostTypeVm().travelPeriod.setValue(new String[]{sp.getSp_start_date(), sp.getSp_end_date()});
+                binding.getPostTypeVm().travelResult.setValue( sp.getSp_start_date() + " ~ " + sp.getSp_end_date());
             }
 
         }
@@ -202,15 +207,12 @@ public class WritePostType extends Fragment {
         // 각 추가 뷰를 눌렀을 때 이벤트---------------------------------------------------------------
 
 
-
         binding.getPostTypeVm().isPhoto.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    if(isInit){
+                    if (isInit) {
                         showGallery();
-                    }else{
-                        isInit = true;
                     }
 
                 }
@@ -221,10 +223,8 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    if(isInit){
+                    if (isInit) {
                         startActivityForResult(binding.getPostTypeVm().onCalendar(binding.getPostTypeVm().travelPeriod.getValue()), 33);
-                    }else{
-                        isInit = true;
                     }
                 }
             }
@@ -235,17 +235,12 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    if(isInit){
+                    if (isInit) {
                         showCategoryList();
-                    }else{
-                        Log.d(TAG, "onChanged1: " + isInit);
-                        isInit = true;
-                        Log.d(TAG, "onChanged2: " + isInit);
                     }
                 }
             }
         });
-
 
         //------------------------------------------------------------------------------------------
 
@@ -298,77 +293,89 @@ public class WritePostType extends Fragment {
                 });
     }
 
+    public RelativeLayout addPhotoItem(Uri uri) {
+
+        RelativeLayout.LayoutParams reParams = new RelativeLayout.LayoutParams(JavaUtil.dpToPx(100), ViewGroup.LayoutParams.WRAP_CONTENT);
+        reParams.setMargins(0, 0, 10, 0);
+
+        RelativeLayout relativeLayout = new RelativeLayout(getActivity());
+        relativeLayout.setLayoutParams(reParams);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(JavaUtil.dpToPx(100), ViewGroup.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+
+        RelativeLayout.LayoutParams btnReParams = new RelativeLayout.LayoutParams(JavaUtil.dpToPx(20), JavaUtil.dpToPx(20));
+
+        btnReParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        btnReParams.setMargins(JavaUtil.dpToPx(5), JavaUtil.dpToPx(5), JavaUtil.dpToPx(5), JavaUtil.dpToPx(5));
+
+        ImageView imageView = new ImageView(getActivity());
+        imageView.setAdjustViewBounds(true);
+        imageView.setLayoutParams(params);
+
+        imageView.setImageURI(uri);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        Button btn = new Button(getActivity());
+        btn.setLayoutParams(btnReParams);
+        btn.setBackgroundResource(R.drawable.i_circle_clear_icon);
+
+        relativeLayout.addView(imageView);
+        relativeLayout.addView(btn);
+
+        return relativeLayout;
+    }
+
     //포토 이미지 레이아웃 추가 함수
     public void addPhotoLayout(final LinearLayout linearLayout, final List<Uri> uriList) {
         //선택한 이미지를 감쌀 리니어 레이아웃 생성
 
-        if (ivList != null) {
-            for (ImageView iv : ivList) {
-                linearLayout.removeView(iv);
+        if (photoLayoutList != null) {
+            for (HashMap<RelativeLayout, Uri> map: photoLayoutList) {
+
+                Set key = map.keySet();
+                Iterator iterator = key.iterator();
+
+                final RelativeLayout select= (RelativeLayout) iterator.next();
+                linearLayout.removeView(select);
             }
         }
-
-        ivList = new ArrayList<>();
-        ivHmList = new ArrayList<>();
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getActivity()
-                .getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(metrics.widthPixels / 5, metrics.heightPixels / 7);
-        params.rightMargin = 10;
 
         //선택한 이미지의 수에 따라 이미지 뷰 생성
         for (int i = 0; i < uriList.size(); i++) {
 
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setLayoutParams(params);
+            final RelativeLayout inputRe = addPhotoItem(uriList.get(i));
 
-            imageView.setImageURI(uriList.get(i));
+            linearLayout.addView(inputRe, i);
 
-            //포토 뷰를 넣어주는 곳
-            linearLayout.addView(imageView, ivList.size());
+            HashMap<RelativeLayout, Uri> map = new HashMap<>();
+            map.put(inputRe, uriList.get(i));
 
-            //이미지 뷰만 가지고 있는 리스트
-            ivList.add(imageView);
-
-
-            HashMap<ImageView, Uri> map = new HashMap<>();
-            map.put(imageView, uriList.get(i));
-
-            //이미지뷰 + Uri
-            ivHmList.add(map);
-
+            photoLayoutList.add(map);
         }
 
-        for (final ImageView iv : ivList) {
-
-            iv.setOnClickListener(new View.OnClickListener() {
+        for(final HashMap<RelativeLayout, Uri> map : photoLayoutList){
+            Set key = map.keySet();
+            Iterator iterator = key.iterator();
+            
+            final RelativeLayout select= (RelativeLayout) iterator.next();
+            
+            select.setClickable(true);
+            ((Button) select.getChildAt(1)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    linearLayout.removeView(iv);
+                    binding.photoLayout.removeView(select);
+                    binding.getPostTypeVm().photoList.getValue().remove(map.get(select));
+                    photoLayoutList.remove(map);
 
-                    HashMap<ImageView, Uri> remove = new HashMap<>();
-
-                    for (HashMap<ImageView, Uri> hm : ivHmList) {
-
-                        ivList.remove(iv);
-                        remove = hm;
-
-                        binding.getPostTypeVm().photoList.getValue().remove(hm.get(iv));
-                    }
-
-                    ivHmList.remove(remove);
-
-                    Log.d(TAG, "ivList Size: " + ivList.size());
-                    Log.d(TAG, "ivHmList Size: " + ivHmList.size());
-                    Log.d(TAG, "binding Size: " + binding.getPostTypeVm().photoList.getValue().size());
+                    Log.d(TAG, "onClick: " + binding.getPostTypeVm().photoList.getValue().size());
+                    Log.d(TAG, "onClick 레이아웃: " + photoLayoutList.size());
 
                 }
             });
-
         }
 
     }
@@ -428,62 +435,49 @@ public class WritePostType extends Fragment {
     }
 
     //태그를 추가할 때 TextView(태그값)를 동적으로 생성하는 함수
-    public TextView addCategoryItem(String tag) {
+    public LinearLayout addCategoryItem(String tag) {
+
+        //버튼 있는 버전 - 현재 실패
+        LinearLayout categoryItem = new LinearLayout(getActivity());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         params.rightMargin = 5;
         params.leftMargin = 5;
+        params.gravity = Gravity.CENTER_VERTICAL;
+
+        categoryItem.setLayoutParams(params);
+        categoryItem.setPadding(10, 10, 10, 10);
+        categoryItem.setBackgroundResource(R.drawable.s_border_round_square);
+        categoryItem.setOrientation(LinearLayout.HORIZONTAL);
+        categoryItem.setVerticalGravity(Gravity.CENTER_VERTICAL);
 
         TextView tv = new TextView(getActivity());
-        tv.setLayoutParams(params);
-        tv.setPadding(10, 5, 10, 5);
-        tv.setBackgroundResource(R.drawable.s_border_round_square);
+        tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        tv.setPadding(5, 0, 5, 0);
         tv.setTextColor(getActivity().getColor(R.color.colorWhite));
         tv.setText(tag);
-        tv.setTextSize(20);
 
-        //버튼 있는 버전 - 현재 실패
-//        LinearLayout categoryItem = new LinearLayout(getActivity());
-//
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//
-//        params.rightMargin = 5;
-//        params.leftMargin = 5;
-//        params.gravity = Gravity.CENTER_VERTICAL;
-//
-//        categoryItem.setLayoutParams(params);
-//        categoryItem.setBackgroundResource(R.drawable.s_border_round_square);
-//        categoryItem.setOrientation(LinearLayout.HORIZONTAL);
-//        categoryItem.setVerticalGravity(Gravity.CENTER_VERTICAL);
-//
-//        TextView tv = new TextView(getActivity());
-//        tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        tv.setPadding(5, 5, 5, 5);
-//        tv.setTextColor(getActivity().getColor(R.color.colorWhite));
-//        tv.setText(tag);
-//
-//        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(15, 15);
-//        btnParams.rightMargin = 5;
-//        btnParams.leftMargin = 5;
-//
-//        Button btn = new Button(getActivity());
-//        btn.setLayoutParams(btnParams);
-//        btn.setBackgroundResource(R.drawable.i_clear_icon);
-//
-//        HashMap<Button, TextView> map = new HashMap<>();
-//        map.put(btn, tv);
-//
-//        categoryItem.addView(tv);
-//        categoryItem.addView(btn);
-//
-//        tv.setClickable(true);
-//        btn.setClickable(true);
-//        categoryItem.setClickable(true);
-//
-//        return categoryItem;
+        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(25, 25);
 
-        return tv;
+        params.leftMargin = 15;
+        params.rightMargin = 10;
+        Button btn = new Button(getActivity());
+        btn.setLayoutParams(btnParams);
+        btn.setBackgroundResource(R.drawable.i_circle_clear_icon);
+        btn.setPadding(10, 0, 10, 0);
+
+        categoryItem.addView(tv);
+        categoryItem.addView(btn);
+
+        tv.setClickable(false);
+        btn.setClickable(true);
+        categoryItem.setClickable(false);
+
+        tagLayoutList.add(categoryItem);
+
+        return categoryItem;
+
     }
 
     //카테고리 레이아웃 추가 함수
@@ -494,23 +488,35 @@ public class WritePostType extends Fragment {
 
             Log.d(TAG, "전시된 태그: " + list.get(i));
 
-            final TextView tv = addCategoryItem(list.get(i));
+            final LinearLayout tv = addCategoryItem(list.get(i));
 
-            tagTvList.add(tv);
             binding.categoryLayout.addView(tv);
 
+            for (final LinearLayout layout : tagLayoutList) {
 
-            for (int j = 0; j < tagTvList.size(); j++) {
-                tagTvList.get(j).setOnClickListener(new View.OnClickListener() {
+                ((Button) layout.getChildAt(1)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        binding.categoryLayout.removeView(v);
-                        binding.getPostTypeVm().tagList.getValue().remove(((TextView) v).getText());
 
-                        tagTvList.remove(v);
+                        Log.d(TAG, "onClick:  클릭" + ((TextView) layout.getChildAt(0)).getText());
+
+                        binding.categoryLayout.removeView(layout);
+                        tagLayoutList.remove(layout);
+                        binding.getPostTypeVm().tagList.getValue().remove(((TextView) layout.getChildAt(0)).getText().toString());
+
+                        for (String a : binding.getPostTypeVm().tagList.getValue()) {
+                            Log.d(TAG, "리스트: " + a);
+                        }
                     }
                 });
+
+
             }
+
+        }
+
+        for (String a : binding.getPostTypeVm().tagList.getValue()) {
+            Log.d(TAG, "리스트: " + a);
         }
     }
     //-----------------------------------------------------------------------------------------------
@@ -525,20 +531,39 @@ public class WritePostType extends Fragment {
         if (requestCode == 33) {
             if (data != null) {
 
-                binding.getPostTypeVm().travelPeriod.setValue(new String[]{
-                        data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE),
-                        data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE),
-                        data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE) + " ~ " + data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE)
-                });
+                String startDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE);
+                String endDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE);
 
-                if (binding.getPostTypeVm().travelPeriod.getValue()[2].equals("~")) {
-                    binding.getPostTypeVm().travelPeriod.getValue()[2] = null;
-                } else {
-                    Log.d(TAG, "onActivityResult: " + binding.getPostTypeVm().travelPeriod.getValue()[2]);
+                if(binding.getPostTypeVm().travelPeriod.getValue() != null){
+                    Log.d(TAG, "onActivityResult: 낫널");
+
+                    if(!startDate.equals("") && !startDate.equals(binding.getPostTypeVm().travelPeriod.getValue()[0])){
+                        binding.getPostTypeVm().travelPeriod.getValue()[0] = startDate;
+
+                        binding.getPostTypeVm().travelResult.setValue(startDate + " ~ " + endDate);
+                    }
+
+                    if(!endDate.equals("") && !endDate.equals(binding.getPostTypeVm().travelPeriod.getValue()[1])){
+                        binding.getPostTypeVm().travelPeriod.getValue()[1] = endDate;
+
+                        binding.getPostTypeVm().travelResult.setValue(startDate + " ~ " + endDate);
+                    }
+
+
+
+                }else {
+                    binding.getPostTypeVm().travelPeriod.setValue(new String[]{startDate, endDate});
+                    binding.getPostTypeVm().travelResult.setValue(startDate + " ~ " + endDate);
                 }
 
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInit = true;
     }
 
     @Override

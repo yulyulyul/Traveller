@@ -7,7 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,14 +20,18 @@ import androidx.lifecycle.Observer;
 
 import java.io.File;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.SignUpBinding;
 import jso.kpl.traveller.util.JavaUtil;
+import jso.kpl.traveller.util.RegexMethod;
 import jso.kpl.traveller.viewmodel.SignUpViewModel;
 
 public class SignUp extends AppCompatActivity {
 
     String TAG = "TAG.View.";
+
+    SignUpBinding signUpBinding;
 
     Uri uriPath;
     String absolutePath;
@@ -37,7 +44,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final SignUpBinding signUpBinding = DataBindingUtil.setContentView(this, R.layout.sign_up);
+         signUpBinding = DataBindingUtil.setContentView(this, R.layout.sign_up);
 
         signUpBinding.setSignUpVM(new SignUpViewModel(this));
         signUpBinding.setLifecycleOwner(this);
@@ -58,12 +65,16 @@ public class SignUp extends AppCompatActivity {
             svm.isAuth.setValue(false);
         }
 
+        checkRegex();
+
         svm.isAuth.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
+                    signUpBinding.emailAuthBtn.setTextColor(Color.parseColor("#80808080"));
                     signUpBinding.emailAuthTv.setTextColor(Color.parseColor("#80808080"));
                 } else{
+                    signUpBinding.emailAuthBtn.setTextColor(Color.parseColor("#ffffff"));
                     signUpBinding.emailAuthTv.setTextColor(Color.parseColor("#000000"));
                 }
             }
@@ -100,6 +111,41 @@ public class SignUp extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+    }
+
+    public void checkRegex(){
+        signUpBinding.emailAuthTv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(signUpBinding.getSignUpVM().emailLD.getValue() == null || !RegexMethod.isEmailValid(signUpBinding.getSignUpVM().emailLD.getValue())){
+                        Toast.makeText(App.INSTANCE, "이메일 형식에 맞추어 작성해주세요.\n(example@naver.com)", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        signUpBinding.emailEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(TextUtils.isEmpty(signUpBinding.getSignUpVM().nickNameLD.getValue()) || !RegexMethod.isNickValid(signUpBinding.getSignUpVM().nickNameLD.getValue())){
+                        Toast.makeText(App.INSTANCE, "닉네임 형식에 맞추어 작성해주세요.\n(자음 + 모음 한글, 영어, 숫자 조합)", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        signUpBinding.passwordEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(TextUtils.isEmpty(signUpBinding.getSignUpVM().passwordLD.getValue()) || !RegexMethod.isPasswordValid(signUpBinding.getSignUpVM().passwordLD.getValue())){
+                        Toast.makeText(App.INSTANCE, "패스워드 형식에 맞추어 작성해주세요.\n(영소문 숫자 조합 8자 이상 특수문자는 !@#$%^*만 사용 가능)", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }

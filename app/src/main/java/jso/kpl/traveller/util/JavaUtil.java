@@ -9,10 +9,13 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import jso.kpl.traveller.App;
 
 public class JavaUtil {
 
@@ -43,6 +46,11 @@ public class JavaUtil {
         } catch (Exception e) {
             Log.e("TESTTAG", "printHashKey()", e);
         }
+    }
+
+    public static int dpToPx(float dp){
+        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, App.INSTANCE.getResources().getDisplayMetrics());
+        return px;
     }
 
     // Glide drawable 이미지 경로 가져오기

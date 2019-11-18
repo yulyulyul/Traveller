@@ -44,6 +44,7 @@ import retrofit2.Response;
 
 public class EditingPost extends AppCompatActivity implements WritePostType.OnDetachFragmentClickListener, RouteNodeAdapter.OnNodeClickListener {
 
+
     String TAG = "Trav.EditingPost.";
 
     List<SmallPost> smallList = new ArrayList<>();
@@ -146,30 +147,15 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                     }
 
-//                    for (int i = 0; i < post.getP_sp_list().size(); i++) {
-//
-//                        imgs = new ArrayList<>();
-//
-//                        for (int j = 0; j < post.getP_sp_list().get(i).getSp_imgs().size(); j++) {
-//
-//                            File f = new File(Uri.parse(post.getP_sp_list().get(i).getSp_imgs().get(j)).getPath());
-//
-//                            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
-//                            MultipartBody.Part imgBody = MultipartBody.Part.createFormData("sp_img", f.getName(), requestFile);
-//
-//                            imgs.add(imgBody);
-//                        }
-//
-//                        post.getP_sp_list().get(i).setSp_img_body(imgs);
-//                        imgList.add(imgs);
-//                    }
-
                     Call<ResponseResult<Integer>> call = postAPI.editingPost(post, imgs);
 
                     call.enqueue(new Callback<ResponseResult<Integer>>() {
                         @Override
                         public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
 
+                            Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록했습니다.", Toast.LENGTH_LONG).show();
+                            setResult(EDITING_POST);
+                            finish();
                         }
 
                         @Override
@@ -244,15 +230,32 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
         if (requestCode == SELECT_POST_PERIOD) {
             if (data != null) {
-                String[] cals = new String[3];
 
-                cals[0] = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE);
-                cals[1] = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE);
-                cals[2] = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE) + " ~ " + data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE);
+                String startDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE);
+                String endDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE);
 
-                binding.getEditingPostVm().travelPeriod.setValue(cals);
+                if(binding.getEditingPostVm().travelPeriod.getValue() != null){
+                    Log.d(TAG, "onActivityResult: 낫널");
 
-                Log.d(TAG, "onActivityResult: " + binding.getEditingPostVm().travelPeriod.getValue()[2]);
+                    if(!startDate.equals("") && !startDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[0])){
+                        binding.getEditingPostVm().travelPeriod.getValue()[0] = startDate;
+
+                        binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
+
+                    }
+
+                    if(!endDate.equals("") && !endDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[1])){
+                        binding.getEditingPostVm().travelPeriod.getValue()[1] = endDate;
+
+                        binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
+
+                    }
+
+
+                }else {
+                    binding.getEditingPostVm().travelPeriod.setValue(new String[]{startDate, endDate});
+                    binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
+                }
             }
         }
     }
