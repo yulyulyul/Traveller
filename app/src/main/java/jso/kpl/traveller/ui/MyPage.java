@@ -36,7 +36,8 @@ public class MyPage extends AppCompatActivity {
 
             user = ((User)getIntent().getSerializableExtra("user"));
 
-//            Log.d(TAG, "onCreate: " + user.toString());
+            App.Companion.setUserid(user.getU_userid());
+            App.Companion.setUserNickname(user.getU_nick_name());
         }
 
         //Editing Post로 이동 후 결과를 반환하는 클릭 이벤트 버튼

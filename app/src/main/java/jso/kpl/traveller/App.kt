@@ -29,7 +29,8 @@ class App : Application()
 
         var TAG :String = "Trav.App"
 
-        public var userid:Int = 0
+        var userid:Int = 0
+        var userNickname = ""
 
         fun getGoogleAuth() : FirebaseAuth
         {

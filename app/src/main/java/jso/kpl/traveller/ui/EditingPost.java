@@ -95,7 +95,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         !binding.getEditingPostVm().inputPlace.getValue().equals("") &&
                         binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
 
-                    Post post = new Post("test", binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
+                    Post post = new Post(App.Companion.getUserNickname(), binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
 
                     if (binding.getEditingPostVm().inputExpenses.getValue() != null){
 
