@@ -118,6 +118,7 @@ public class WritePostType extends Fragment {
         if (sp != null) {
 
             binding.getPostTypeVm().inputPlace.setValue(sp.getSp_place());
+
             binding.getPostTypeVm().inputExpenses.setValue(sp.getSp_expenses());
 
             if (sp.getSp_comment() != null)

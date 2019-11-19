@@ -175,7 +175,7 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
         rePostList.setValue(new ArrayList<RePost>());
 
         Post post = new Post("테스트01", "asle1000", true);
-        post.setP_expenses("1000000");
+        post.setP_expenses(1000000 + "");
 
         rePostList.getValue().add(new RePost(imageUri, post));
         rePostList.getValue().add(new RePost(imageUri, post));

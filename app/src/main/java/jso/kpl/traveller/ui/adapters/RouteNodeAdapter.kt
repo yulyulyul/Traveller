@@ -175,14 +175,14 @@ class RouteNodeAdapter
         return itemList
     }
 
-    private fun drawQuestionMarkNode()
-    {
-        var qnode : SmallPost = SmallPost("?","?")
-        itemList.add(qnode)
-        var idx : Int = itemList.indexOf(qnode)
-        Log.d(TAG, "drawQuestionMarkNode, idx = " + idx)
-        drawView(itemList.indexOf(qnode))
-    }
+//    private fun drawQuestionMarkNode()
+//    {
+//        var qnode : SmallPost = SmallPost("?","?")
+//        itemList.add(qnode)
+//        var idx : Int = itemList.indexOf(qnode)
+//        Log.d(TAG, "drawQuestionMarkNode, idx = " + idx)
+//        drawView(itemList.indexOf(qnode))
+//    }
 
     private fun drawView(index:Int)
     {
@@ -209,7 +209,7 @@ class RouteNodeAdapter
 
             //node의 지역, 비용을 설정해준다.
             node.locationText.text = itemList.get(index).sp_place
-            node.costtv.text = itemList.get(index).sp_expenses
+            node.costtv.text = itemList.get(index).sp_expenses.toString()
 
             /*
                 Tag를 통해서 내가 원하는 뷰를 추적할 수 있기 때문에 자신의 tag와 자기가 속하는 Linear의 tag를
@@ -269,7 +269,7 @@ class RouteNodeAdapter
 
             //node의 지역, 비용을 설정해준다.
             node.locationText.text = itemList.get(index).sp_place
-            node.costtv.text = itemList.get(index).sp_expenses
+            node.costtv.text = itemList.get(index).sp_expenses.toString()
 
             /*
                 Tag를 통해서 내가 원하는 뷰를 추적할 수 있기 때문에 자신의 tag와 자기가 속하는 Linear의 tag를
@@ -372,7 +372,7 @@ class RouteNodeAdapter
 
             Log.d(TAG, "[i] = " + i + " // item = " + itemList.get(i).sp_place)
             node.locationText.text = itemList.get(i).sp_place
-            node.costtv.text = itemList.get(i).sp_expenses
+            node.costtv.text = itemList.get(i).sp_expenses.toString()
 
             // 리스너 초기화
             node.setOnClickListener(null)

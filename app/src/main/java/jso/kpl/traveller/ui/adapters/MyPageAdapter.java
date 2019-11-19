@@ -234,7 +234,6 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             this.profileBinding = binding;
 
             binding.setLifecycleOwner(new MyPage());
-            binding.executePendingBindings();
 
         }
 
@@ -244,7 +243,6 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             this.searchBinding = binding;
 
             binding.setLifecycleOwner(new MyPage());
-            binding.executePendingBindings();
         }
 
         public MyPageViewHolder(@NonNull MyPageSubtitleBinding binding) {
@@ -253,7 +251,6 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             this.subtitleBinding = binding;
 
             binding.setLifecycleOwner(new MyPage());
-            binding.executePendingBindings();
         }
 
         public MyPageViewHolder(@NonNull MyPagePostBinding binding) {
@@ -262,7 +259,6 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             this.postBinding = binding;
 
             binding.setLifecycleOwner(new MyPage());
-            binding.executePendingBindings();
         }
 
         public MyPageViewHolder(@NonNull MyPageFlagBinding binding) {
@@ -271,7 +267,6 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             this.flagBinding = binding;
 
             binding.setLifecycleOwner(new MyPage());
-            binding.executePendingBindings();
         }
     }
 

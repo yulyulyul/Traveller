@@ -100,12 +100,12 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                     if (binding.getEditingPostVm().inputExpenses.getValue() != null){
 
                         if(binding.getEditingPostVm().inputExpenses.getValue().contains("₩"))
-                            post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue());
+                            post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue().replace("₩", "").replace(",",""));
                         else
-                            post.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(binding.getEditingPostVm().inputExpenses.getValue())));
+                            post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue());
 
                     } else{
-                       post.setP_expenses(CurrencyChange.moneyFormatToWon(0));
+                       post.setP_expenses(0 + "");
                     }
 
                     if (binding.getEditingPostVm().inputComment.getValue() != null)
@@ -116,11 +116,20 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         post.setP_end_date(binding.getEditingPostVm().travelPeriod.getValue()[1]);
                     }
 
-                    post.setP_sp_list(binding.getEditingPostVm().routeNodeAdapter.returnList());
+                    List<SmallPost> spList = binding.getEditingPostVm().routeNodeAdapter.returnList();
+
+                    for(int i = 0; i < spList.size(); i++){
+                        if(spList.get(i).getSp_expenses() != null && spList.get(i).getSp_expenses().contains("₩")){
+
+                            String removeS = spList.get(i).getSp_expenses().replace("₩", "").replace(",", "");
+
+                            spList.get(i).setSp_expenses(removeS);
+                        }
+                    }
+
+                    post.setP_sp_list(spList);
 
                     PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);
-
-                    ArrayList<ArrayList<MultipartBody.Part>> imgList = new ArrayList<>();
 
                     ArrayList<MultipartBody.Part> imgs = new ArrayList<>();
 

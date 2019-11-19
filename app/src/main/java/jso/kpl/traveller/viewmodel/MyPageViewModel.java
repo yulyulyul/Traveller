@@ -122,7 +122,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     public MyPageItem getUserPost(int type) {
 
         Post post = new Post("asle1000", "France", true);
-        post.setP_expenses("100000");
+        post.setP_expenses(1000000 + "");
 
         switch (type) {
             case 0:

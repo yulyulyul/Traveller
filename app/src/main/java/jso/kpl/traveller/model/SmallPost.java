@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.Serializable;
@@ -29,13 +30,13 @@ public class SmallPost implements Serializable {
     public SmallPost() {
     }
 
-    public SmallPost(@NotNull String sp_place, @NotNull String sp_expenses) {
+    public SmallPost(@NotNull String sp_place, @Nullable String sp_expenses) {
         this.sp_place = sp_place;
         this.sp_expenses = sp_expenses;
     }
 
 
-    public SmallPost(@NotNull String sp_comment, @NotNull String sp_place, @NotNull String sp_expenses, @NotNull String sp_start_date, @NotNull String sp_end_date, @NotNull List<String> sp_category, @NotNull List<String> sp_imgs) {
+    public SmallPost(@Nullable String sp_comment, @Nullable String sp_place, @Nullable String sp_expenses, @Nullable String sp_start_date, @Nullable String sp_end_date, @Nullable List<String> sp_category, @Nullable List<String> sp_imgs) {
         this.sp_comment = sp_comment;
         this.sp_place = sp_place;
         this.sp_expenses = sp_expenses;
