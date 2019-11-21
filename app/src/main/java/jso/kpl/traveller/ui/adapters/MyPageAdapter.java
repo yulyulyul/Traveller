@@ -19,6 +19,7 @@ import jso.kpl.traveller.databinding.MyPagePostBinding;
 import jso.kpl.traveller.databinding.MyPageProfileBinding;
 import jso.kpl.traveller.databinding.MyPageSearchBinding;
 import jso.kpl.traveller.databinding.MyPageSubtitleBinding;
+import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
@@ -36,7 +37,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
     public interface OnMyPageClickListener {
         void onProfileClicked(String email);
         void onSearchClicked();
-        void onPostClicked(RePost rePost);
+        void onPostClicked(ListItem listItem);
         void onMoreClicked(int type);
         void onFlagClicked();
         void onAddFlagClicked();
@@ -165,17 +166,20 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             //포스트의 뷰타입
             case USER_POST:
 
-                final RePost rePost = (RePost) itemList.getValue().get(position).getO();
+                //final RePost rePost = (RePost) itemList.getValue().get(position).getO();
+                final ListItem listItem = (ListItem) itemList.getValue().get(position).getO();
                 holder.postBinding.setPostVM(new MyPageViewModel());
-                holder.postBinding.getPostVM().mp_post.setValue(rePost);
+                holder.postBinding.getPostVM().mp_post.setValue(listItem);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        myPageClickListener.onPostClicked(rePost);
-                        Log.d(TAG, "adapter - 포스트 클릭: " + rePost.toString());
+                        myPageClickListener.onPostClicked(listItem);
+                        Log.d(TAG, "adapter - 포스트 클릭: " + listItem.toString());
                     }
                 });
+
+
                 break;
             default:
         }

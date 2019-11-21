@@ -15,7 +15,6 @@ public class ResponseResult<T> {
         this.res_code = res_code;
     }
 
-
     public int getRes_type() {
         return res_type;
     }

@@ -39,6 +39,8 @@ public class RouteOtherDetail_VM extends BaseObservable {
         // RecyclerView 세팅
         like.setValue(false);
         setRecyclerView();
+
+        //getRouteNodeAdapter().putItem();
     }
 
     public void setModel() {

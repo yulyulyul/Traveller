@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Post {
 
-    String p_id;
+    int p_id;
     String p_author;
     String p_place;
     String p_expenses;
@@ -89,11 +89,11 @@ public class Post {
         this.p_is_open = p_is_open;
     }
 
-    public String getP_id() {
+    public int getP_id() {
         return p_id;
     }
 
-    public void setP_id(String p_id) {
+    public void setP_id(int p_id) {
         this.p_id = p_id;
     }
 

@@ -3,6 +3,7 @@ package jso.kpl.traveller.viewmodel;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
@@ -19,20 +21,29 @@ import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.network.MyPageAPI;
+import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.FavoriteCountry;
-import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.RouteOtherDetail;
 import jso.kpl.traveller.ui.RouteSearch;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.ui.adapters.MyPageAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPageClickListener {
+public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPageClickListener, Callback {
 
     String TAG = "Trav.MyPageViewModel.";
 
+    //레트로핏
+    MyPageAPI myPageAPI = WebService.INSTANCE.getClient().create(MyPageAPI.class);
+
     //----------------------------------------------------------------------------------------------
     public MutableLiveData<User> user = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> isEnroll = new MutableLiveData<>();
 
     //[My Page]의 리사이클러 뷰 adapter
     public MyPageAdapter myPageAdapter;
@@ -57,7 +68,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     //[My Page - View Type: Post]의 아이템
     // -> RePost 데이터 객체
-    public MutableLiveData<RePost> mp_post = new MutableLiveData<>();
+    public MutableLiveData<ListItem> mp_post = new MutableLiveData<>();
 
     //[My Page - View Type: Flag]의 아이템
     // -> Flag 뷰타입의 리사이클러 뷰의 아이템 리스트 - Object로 받는다. 1) 국기 2) post
@@ -128,11 +139,11 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
             case 0:
                 //favorites
                 return new MyPageItem(
-                        new RePost(imageUri, post), USER_POST);
+                        new ListItem(2, "t_profile_1573822678472.jpg", 8, "미국", "99999"), USER_POST);
             case 1:
                 //Recent Post
                 return new MyPageItem(
-                        new RePost(imageUri, post), USER_POST);
+                        new ListItem(2, "t_profile_1573822678472.jpg", 7, "독일", "777777"), USER_POST);
             case 2:
                 //enroll
                 return new MyPageItem(
@@ -147,7 +158,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         Log.d(TAG, "Success: " + email);
     }
 
-    //route search로 넘어가는 클ㄺ 이벤트
+    //route search로 넘어가는 클릭 이벤트
     @Override
     public void onSearchClicked() {
         Log.d(TAG, "onSearchClicked");
@@ -160,8 +171,8 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     //해당 포스트를 누르면 포스트 상세보기로 넘어가는 클릭 이벤트
     @Override
-    public void onPostClicked(RePost rePost) {
-        Log.d(TAG + "Post", "Post: " + rePost.toString());
+    public void onPostClicked(ListItem listItem) {
+        Log.d(TAG + "Post", "Post: " + listItem.toString());
         Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         App.INSTANCE.startActivity(intent);
@@ -221,8 +232,6 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
         if(user != null)
             itemList.getValue().add(getHeadProfile(user.getU_profile_img(), user.getU_email()));
-        else
-            itemList.getValue().add(getHeadProfile(imageUri, "Test@gmail.com"));
 
         itemList.getValue().add(getRouteSearch());
 
@@ -237,9 +246,35 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         itemList.getValue().add(getUserPost(1));
 
         itemList.getValue().add(getSubtitle(3, "Enrolled Post", true));
-        itemList.getValue().add(getUserPost(2));
-        itemList.getValue().add(getUserPost(2));
+        myPageAPI.myPageEnroll(App.Companion.getUserid()).enqueue(this);
+
+
     }
 
+    @Override
+    public void onResponse(Call call, Response response) {
+        Log.d(TAG + "통신 성공","성공적으로 전송");
+
+        ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
+        List<ListItem> listItem = res.getRes_obj();
+        if (listItem != null) {
+            isEnroll.setValue(true);
+            for (ListItem item : listItem) {
+                String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
+                item.setU_profile_img(imgPath);
+                itemList.getValue().add(new MyPageItem(
+                        item, USER_POST));
+            }
+        } else {
+            isEnroll.setValue(false);
+        }
+    }
+
+    @Override
+    public void onFailure(Call call, Throwable t) {
+        Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
+        Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+        t.printStackTrace();
+    }
 
 }

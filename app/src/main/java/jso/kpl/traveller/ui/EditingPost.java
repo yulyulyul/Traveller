@@ -156,6 +156,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                     }
 
+                    binding.postSave.setClickable(false);
+
                     Call<ResponseResult<Integer>> call = postAPI.editingPost(post, imgs);
 
                     call.enqueue(new Callback<ResponseResult<Integer>>() {
@@ -163,7 +165,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
 
                             Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록했습니다.", Toast.LENGTH_LONG).show();
-                            setResult(EDITING_POST);
+                            //setResult(EDITING_POST);
+                            setResult(1);
                             finish();
                         }
 
@@ -171,7 +174,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
                             Log.d(TAG, "onFailure: " + t.getMessage());
                             t.printStackTrace();
-
+                            binding.postSave.setClickable(true);
 
                         }
                     });
@@ -330,10 +333,12 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                setResult(EDITING_POST);
+                                //setResult(EDITING_POST);
+                                setResult(0);
                                 finish();
                             } catch (Exception e) {
-                                setResult(EDITING_POST);
+                                //setResult(EDITING_POST);
+                                setResult(0);
                                 finish();
                             }
                         }
