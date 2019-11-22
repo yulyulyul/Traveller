@@ -154,7 +154,8 @@ public class RouteOtherDetail_VM extends BaseObservable implements Callback {
         // img list에 표시할 데이터 리스트 생성
         if (smallPost.getSp_imgs().size() != 0) {
             String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/";
-            for (String img : smallPost.getSp_imgs().get(0).split(", ")) {
+
+            for (String img : smallPost.getSp_imgs()) {
                 sp_imgList.getValue().add(imgPath + img);
                 Log.d(TAG + "이미지인데..", imgPath + img);
             }
