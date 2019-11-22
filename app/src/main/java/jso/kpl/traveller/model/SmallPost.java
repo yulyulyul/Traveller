@@ -22,8 +22,8 @@ public class SmallPost implements Serializable {
     String sp_expenses;
     String sp_start_date;
     String sp_end_date;
-    List<String> sp_category;
     List<String> sp_imgs;
+    List<String> sp_category;
 
 //    ArrayList<MultipartBody.Part> sp_img_body = new ArrayList<>();
 
@@ -35,6 +35,11 @@ public class SmallPost implements Serializable {
         this.sp_expenses = sp_expenses;
     }
 
+    public SmallPost(@NotNull int sp_id, @NotNull String sp_place, @Nullable String sp_expenses) {
+        this.sp_id = sp_id;
+        this.sp_place = sp_place;
+        this.sp_expenses = sp_expenses;
+    }
 
     public SmallPost(@Nullable String sp_comment, @Nullable String sp_place, @Nullable String sp_expenses, @Nullable String sp_start_date, @Nullable String sp_end_date, @Nullable List<String> sp_category, @Nullable List<String> sp_imgs) {
         this.sp_comment = sp_comment;
@@ -121,7 +126,8 @@ public class SmallPost implements Serializable {
     @Override
     public String toString() {
         return "SmallPost{" +
-                "sp_comment='" + sp_comment + '\'' +
+                "sp_id=" + sp_id +
+                ", sp_comment='" + sp_comment + '\'' +
                 ", sp_place='" + sp_place + '\'' +
                 ", sp_expenses='" + sp_expenses + '\'' +
                 ", sp_start_date='" + sp_start_date + '\'' +

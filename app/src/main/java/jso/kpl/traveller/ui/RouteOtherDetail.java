@@ -23,7 +23,7 @@ public class RouteOtherDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.route_other_detail);
 
-        VM = new RouteOtherDetail_VM();
+        VM = new RouteOtherDetail_VM(getIntent(), this);
 
         binding.setVM(VM);
         binding.setLifecycleOwner(this);
@@ -32,7 +32,5 @@ public class RouteOtherDetail extends AppCompatActivity {
 
         // viewModel 세팅
         binding.getVM().init();
-
-
     }
 }

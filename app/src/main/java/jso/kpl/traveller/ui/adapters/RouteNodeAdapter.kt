@@ -177,7 +177,7 @@ class RouteNodeAdapter
 
 //    private fun drawQuestionMarkNode()
 //    {
-//        var qnode : SmallPost = SmallPost("?","?")
+//        var qnode : SmallPostDialog = SmallPostDialog("?","?")
 //        itemList.add(qnode)
 //        var idx : Int = itemList.indexOf(qnode)
 //        Log.d(TAG, "drawQuestionMarkNode, idx = " + idx)

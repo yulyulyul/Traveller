@@ -43,8 +43,6 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     //----------------------------------------------------------------------------------------------
     public MutableLiveData<User> user = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> isEnroll = new MutableLiveData<>();
-
     //[My Page]의 리사이클러 뷰 adapter
     public MyPageAdapter myPageAdapter;
 
@@ -175,6 +173,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         Log.d(TAG + "Post", "Post: " + listItem.toString());
         Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("p_id", listItem.getP_id());
         App.INSTANCE.startActivity(intent);
     }
 
@@ -258,7 +257,6 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
         List<ListItem> listItem = res.getRes_obj();
         if (listItem != null) {
-            isEnroll.setValue(true);
             for (ListItem item : listItem) {
                 String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
                 item.setU_profile_img(imgPath);
@@ -266,7 +264,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
                         item, USER_POST));
             }
         } else {
-            isEnroll.setValue(false);
+
         }
     }
 

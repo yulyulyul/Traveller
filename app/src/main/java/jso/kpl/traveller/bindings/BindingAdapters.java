@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.material.tabs.TabLayout;
@@ -37,12 +38,20 @@ import jso.kpl.traveller.util.GridSpacingItemDecoration;
 //RecyclerView에 Adapter 적용
 public class BindingAdapters {
     @BindingAdapter({"setLinearRvAdapter"})
-
     public static void bindRecyclerViewAdapter(@NotNull RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
 
         Log.d("Trav.SetAdapter", "Adapter");
 
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"setLinearHorRvAdapter"})
+    public static void bindRecyclerViewHorAdapter(@NotNull RecyclerView recyclerView, RecyclerView.Adapter<?> adapter) {
+
+        Log.d("Trav.SetAdapter", "Adapter");
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(App.INSTANCE, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
     }
 
@@ -100,6 +109,18 @@ public class BindingAdapters {
 
         RequestOptions options
                 = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.i_blank_person_icon);
+
+        Glide.with(iv.getContext())
+                .load(imgUri)
+                .apply(options)
+                .into(iv);
+    }
+
+    @BindingAdapter({"setFitCenterImg"})
+    public static void onBindFitCenterImage(ImageView iv, String imgUri) {
+
+        RequestOptions options
+                = RequestOptions.bitmapTransform(new FitCenter()).error(R.drawable.i_blank_person_icon);
 
         Glide.with(iv.getContext())
                 .load(imgUri)

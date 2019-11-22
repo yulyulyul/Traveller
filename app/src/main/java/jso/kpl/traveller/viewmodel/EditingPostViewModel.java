@@ -173,7 +173,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         return intent;
     }
 
-    //Add SmallPost
+    //Add SmallPostDialog
     public void onAddSmallPostClicked() {
 
         if (fragment.getValue() != null) {

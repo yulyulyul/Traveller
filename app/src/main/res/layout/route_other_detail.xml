@@ -45,7 +45,7 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="24sp" />
 
-                    <Button
+                    <!--<Button
                         android:id="@+id/my_post_btn"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="40dp"
@@ -54,7 +54,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/i_home_btn"
-                        android:onClick="@{()->VM.my_post_btnClickEvent()}" />
+                        android:onClick="@{()->VM.my_post_btnClickEvent()}" />-->
                 </RelativeLayout>
 
                 <LinearLayout
@@ -99,8 +99,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/category_txt"
                         android:layout_centerInParent="true"
-                        app:layoutManager="@{VM.layoutManager.getValue()}"
-                        app:setGridRvAdapter="@{VM.adapter}" />
+                        app:setLinearHorRvAdapter="@{VM.adapter}" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -130,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/period_txt"
                         android:layout_centerHorizontal="true"
-                        android:text="2019년 10월 11일 ~ 2019년 10월 18일"
+                        android:text="@{VM.period}"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp" />
                 </RelativeLayout>
@@ -162,7 +161,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/cost_txt"
                         android:layout_centerHorizontal="true"
-                        android:text="100,000 $"
+                        android:text="@{VM.postItem.p_expenses}"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp" />
                 </RelativeLayout>
@@ -204,7 +203,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="5dp"
-                        android:text="UserId"
+                        android:text="@{VM.postItem.p_author}"
                         android:textColor="@color/browser_actions_text_color"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -217,7 +216,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_toRightOf="@id/userId"
-                        android:text="user_comments"
+                        android:text="@{VM.postItem.p_comment}"
                         android:textColor="@color/colorBlack"
                         android:textSize="16sp" />
 
@@ -227,7 +226,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/userId"
                         android:layout_alignStart="@id/like_btn"
-                        android:text="@string/comments_count"
+                        android:text=""
                         android:textSize="15sp" />
                 </RelativeLayout>
 
@@ -235,7 +234,7 @@
 
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -248,6 +247,6 @@
             android:elevation="30dp"
             android:src="@drawable/i_plus_btn"
             android:onClick="@{()->VM.post_add_btnClickEvent()}"
-            app:backgroundTint="#45A1F5" />
+            app:backgroundTint="#45A1F5" />-->
     </FrameLayout>
 </layout>

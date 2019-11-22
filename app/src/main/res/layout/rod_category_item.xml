@@ -6,10 +6,6 @@
             name="category"
             type="String" />
 
-        <variable
-            name="onVisible"
-            type="String" />
-
     </data>
 
     <LinearLayout

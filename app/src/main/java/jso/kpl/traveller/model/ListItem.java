@@ -1,9 +1,10 @@
 package jso.kpl.traveller.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListItem {
+public class ListItem implements Serializable {
 
     int u_userid;
     String u_profile_img;

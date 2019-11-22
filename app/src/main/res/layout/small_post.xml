@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="VM"
+            type="jso.kpl.traveller.viewmodel.RouteOtherDetail_VM" />
+
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/s_border"
+                android:backgroundTint="#45A1F5"
+                android:backgroundTintMode="multiply">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center_vertical"
+                    android:text="여행 일정"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/small_post_cancel_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/i_cancel" />
+                    <!--android:onClick="@{()->VM.smallPostCancelClickEvent()}" />-->
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/img_rel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header"
+                android:background="@drawable/s_border"
+                android:descendantFocusability="blocksDescendants"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/img_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    app:setLinearHorRvAdapter="@{VM.sp_imgAdapter}" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/comments_rel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_rel"
+                android:background="@drawable/s_border"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp">
+
+                <!--<Button
+                    android:id="@+id/like_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@{VM.like ? @drawable/i_liked_btn : @drawable/i_like_btn}"
+                    android:onClick="@{()->VM.like_btnClickEvent()}" />
+
+                <Button
+                    android:id="@+id/comments_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_toRightOf="@id/like_btn"
+                    android:background="@drawable/i_comments_btn" />-->
+
+                <TextView
+                    android:id="@+id/userId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@{VM.postItem.p_author}"
+                    android:textColor="@color/browser_actions_text_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                <!--android:layout_below="@id/like_btn"
+                    android:layout_alignStart="@id/like_btn"-->
+
+                <TextView
+                    android:id="@+id/user_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/userId"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toRightOf="@id/userId"
+                    android:text="@{VM.smallPostItem.sp_comment}"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
+
+                <!--<TextView
+                    android:id="@+id/comments_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/userId"
+                    android:layout_alignStart="@id/like_btn"
+                    android:text=""
+                    android:textSize="15sp" />-->
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/category_rel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comments_rel"
+                android:background="@drawable/s_border"
+                android:descendantFocusability="blocksDescendants"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:id="@+id/category_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="@string/category"
+                    android:textColor="@color/browser_actions_text_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/category_txt"
+                    android:layout_centerInParent="true"
+                    app:setLinearHorRvAdapter="@{VM.sp_categoryAdapter}" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/location_rel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/category_rel"
+                android:background="@drawable/s_border"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:id="@+id/location_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="Location"
+                    android:textColor="@color/browser_actions_text_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/location_txt"
+                    android:layout_centerHorizontal="true"
+                    android:text="@{VM.smallPostItem.sp_place}"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/cost_rel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/location_rel"
+                android:background="@drawable/s_border"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:id="@+id/cost_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="@string/cost"
+                    android:textColor="@color/browser_actions_text_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cost_txt"
+                    android:layout_centerHorizontal="true"
+                    android:text="@{VM.smallPostItem.sp_expenses}"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</layout>

@@ -13,16 +13,19 @@ import java.util.List;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.RodCategoryItemBinding;
+import jso.kpl.traveller.databinding.RodImgItemBinding;
 
 public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<RouteOtherDetailCategoryItemAdapter.ViewHolder> {
 
     private Context context;
     private ViewDataBinding binding;
+    private int type;
 
     public MutableLiveData<List<String>> items;
 
-    public RouteOtherDetailCategoryItemAdapter(MutableLiveData<List<String>> list) {
+    public RouteOtherDetailCategoryItemAdapter(MutableLiveData<List<String>> list, int type) {
         items = list;
+        this.type = type;
     }
 
     // onCreateViewHolder() - 아이템뷰를 위한 뷰홀더 객체 생성하여 리턴
@@ -30,8 +33,14 @@ public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<Ro
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        binding = DataBindingUtil.inflate(inflater, R.layout.rod_category_item, parent, false);
-        ViewHolder VH = new ViewHolder((RodCategoryItemBinding) binding);
+        ViewHolder VH;
+        if (type == 1) {
+            binding = DataBindingUtil.inflate(inflater, R.layout.rod_category_item, parent, false);
+            VH = new ViewHolder((RodCategoryItemBinding) binding);
+        } else {
+            binding = DataBindingUtil.inflate(inflater, R.layout.rod_img_item, parent, false);
+            VH = new ViewHolder((RodImgItemBinding) binding);
+        }
 
         return VH;
     }
@@ -39,8 +48,13 @@ public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<Ro
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String category = items.getValue().get(position);
-        holder.binding.setCategory(category);
+        if (type == 1) {
+            String category = items.getValue().get(position);
+            ((RodCategoryItemBinding) holder.binding).setCategory(category);
+        } else {
+            String img = items.getValue().get(position);
+            ((RodImgItemBinding) holder.binding).setImgs(img);
+        }
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴
@@ -52,9 +66,14 @@ public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<Ro
     // 아이템뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private RodCategoryItemBinding binding;
+        private ViewDataBinding binding;
 
         ViewHolder(RodCategoryItemBinding binding) {
+            super(binding.getRoot()) ;
+            this.binding = binding;
+        }
+
+        ViewHolder(RodImgItemBinding binding) {
             super(binding.getRoot()) ;
             this.binding = binding;
         }

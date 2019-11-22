@@ -1,5 +1,7 @@
 package jso.kpl.traveller.model;
 
+import androidx.annotation.BoolRes;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,23 +16,38 @@ public class Post {
     String p_end_date;
     boolean p_is_open;
 
+    List<String> p_category = new ArrayList<>();
     List<SmallPost> p_sp_list = new ArrayList<>();
 
-    public Post(String p_author, String p_place, boolean p_is_open) {
+    public Post() {
 
+    }
+
+    public Post(String p_author, String p_place, boolean p_is_open) {
         this.p_author = p_author;
         this.p_place = p_place;
         this.p_is_open = p_is_open;
     }
 
-    public Post(String p_author, String p_place, String p_expenses, String p_comment, String p_start_date, String p_end_date, boolean p_is_open) {
+    public Post(int p_id, String p_author, String p_place, String p_expenses, String p_comment, List<String> p_category, String p_start_date, String p_end_date, boolean p_is_open, List<SmallPost> p_sp_list) {
+        this.p_id = p_id;
         this.p_author = p_author;
         this.p_place = p_place;
         this.p_expenses = p_expenses;
         this.p_comment = p_comment;
+        this.p_category = p_category;
         this.p_start_date = p_start_date;
         this.p_end_date = p_end_date;
         this.p_is_open = p_is_open;
+        this.p_sp_list = p_sp_list;
+    }
+
+    public int getP_id() {
+        return p_id;
+    }
+
+    public void setP_id(int p_id) {
+        this.p_id = p_id;
     }
 
     public String getP_author() {
@@ -65,6 +82,14 @@ public class Post {
         this.p_comment = p_comment;
     }
 
+    public List<String> getP_category() {
+        return p_category;
+    }
+
+    public void setP_category(List<String> p_category) {
+        this.p_category = p_category;
+    }
+
     public String getP_start_date() {
         return p_start_date;
     }
@@ -89,14 +114,6 @@ public class Post {
         this.p_is_open = p_is_open;
     }
 
-    public int getP_id() {
-        return p_id;
-    }
-
-    public void setP_id(int p_id) {
-        this.p_id = p_id;
-    }
-
     public List<SmallPost> getP_sp_list() {
         return p_sp_list;
     }
@@ -108,11 +125,12 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" +
-                "p_id='" + p_id + '\'' +
+                "p_id=" + p_id +
                 ", p_author='" + p_author + '\'' +
                 ", p_place='" + p_place + '\'' +
                 ", p_expenses='" + p_expenses + '\'' +
                 ", p_comment='" + p_comment + '\'' +
+                ", p_category='" + p_category + '\'' +
                 ", p_start_date='" + p_start_date + '\'' +
                 ", p_end_date='" + p_end_date + '\'' +
                 ", p_is_open=" + p_is_open +

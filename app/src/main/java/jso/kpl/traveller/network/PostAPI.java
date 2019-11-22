@@ -17,8 +17,4 @@ public interface PostAPI {
     @Multipart
     @POST("/editing_post")
     Call<ResponseResult<Integer>> editingPost(@Part("Post") Post post, @Part ArrayList<MultipartBody.Part> imgs);
-
-//    @POST("/editing_post")
-//    Call<ResponseResult<Integer>> editingPost(@Body Post post);
-
 }
