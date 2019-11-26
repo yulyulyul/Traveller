@@ -1,7 +1,17 @@
 package jso.kpl.traveller.ui;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -10,24 +20,34 @@ import androidx.lifecycle.Observer;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.RouteSearchBinding;
 import jso.kpl.traveller.util.CurrencyChange;
+import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.RouteSearchViewModel;
 
 public class RouteSearch extends AppCompatActivity {
 
     String TAG = "Trav.RouteSearch.";
 
+    RouteSearchBinding binding;
+    RouteSearchViewModel routeSearchVm;
+
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = this;
+        routeSearchVm = new RouteSearchViewModel();
+
         //route search 바인딩 작업
-        final RouteSearchBinding binding = DataBindingUtil.setContentView(this, R.layout.route_search);
-        binding.setSearchVm(new RouteSearchViewModel(this));
+        binding = DataBindingUtil.setContentView(this, R.layout.route_search);
+        binding.setSearchVm(routeSearchVm);
         binding.setLifecycleOwner(this);
-        binding.executePendingBindings();
 
         //max min 노드가 움직이는 값을 가져오는 이벤트 함수
         binding.crystalRangeSeekBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
@@ -43,6 +63,24 @@ public class RouteSearch extends AppCompatActivity {
 
             }
         });
+
+        binding.getSearchVm().onBackClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClear();
+            }
+        };
+
+        binding.getSearchVm().onSearchClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(binding.getSearchVm().onSearchClicked() == 1){
+                    onClear();
+                }
+            }
+        };
+
+        binding.executePendingBindings();
 
         //max min 노드의 현재 위치 값을 가져오는 이벤트 함수
         binding.crystalRangeSeekBar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
@@ -63,28 +101,61 @@ public class RouteSearch extends AppCompatActivity {
 
                 if (!s.isEmpty()) {
 
+                    int maxCost;
+
+                    if(s.contains("₩")){
+                        maxCost = Integer.parseInt(s.replace("₩", "").replace(",", ""));
+                    }else{
+                        maxCost = Integer.parseInt(s);
+                    }
+
                     //입력값이 만원 이하이면 max값을 10000원으로 고정
-                    if (Integer.parseInt(s) > 10000){
+                    if (maxCost > 10000){
                         //시크바의 맥스 코스트에 입력
-                        binding.crystalRangeSeekBar.setMaxValue(Integer.parseInt(s));
+                        binding.crystalRangeSeekBar.setMaxValue(maxCost);
 
                         //시크바의 맥스트 코스트 텍스트
-                        binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(Integer.parseInt(s)));
+                        binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(maxCost));
+
+                        binding.getSearchVm().costRange.setValue(
+                                CurrencyChange.moneyFormatToWon(10000)
+                                        + " ~ "
+                                        + CurrencyChange.moneyFormatToWon(maxCost)
+                        );
+
                     }else {
                         //시크바의 맥스 코스트에 입력
                         binding.crystalRangeSeekBar.setMaxValue(10001);
 
                         //시크바의 맥스트 코스트 텍스트
                         binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(10001));
+
+                        binding.getSearchVm().costRange.setValue(
+                                CurrencyChange.moneyFormatToWon(10000)
+                                        + " ~ "
+                                        + CurrencyChange.moneyFormatToWon(10001)
+                        );
                     }
 
+                } else{
+                    binding.getSearchVm().costRange.setValue("초기화");
                 }
-                binding.getSearchVm().costRange.setValue("초기화");
+
             }
         });
 
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+        onClear();
+    }
+
+    public void onClear(){
+        binding.getSearchVm().onCleared();
+        finish();
+    }
 }

@@ -16,14 +16,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.App;
+import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.model.SearchReq;
+import jso.kpl.traveller.network.PostAPI;
+import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.GridTypePost;
 import jso.kpl.traveller.ui.Fragment.VerticalTypePost;
 import jso.kpl.traveller.ui.RouteOtherDetail;
 import jso.kpl.traveller.ui.adapters.GridTypePostAdapter;
 import jso.kpl.traveller.ui.adapters.VerticalTypePostAdapter;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RouteListViewModel extends ViewModel implements GridTypePostAdapter.OnGridItemClickListener, VerticalTypePostAdapter.OnVerticalItemClickListener {
 
@@ -32,7 +40,18 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
     현재 구성 TabLayout + FrameLayout(Fragment * 2)
      */
     String TAG = "Trav.MainRouteViewModel.";
+
     String imageUri = "android.resource://jso.kpl.toyroutesearch/drawable/i_blank_person_icon";
+
+    public SearchReq searchReq;
+
+    public SearchReq getSearchReq() {
+        return searchReq;
+    }
+
+    public void setSearchReq(SearchReq searchReq) {
+        this.searchReq = searchReq;
+    }
 
     public FragmentManager fm;
 
@@ -53,7 +72,10 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
 
     public MutableLiveData<List<RePost>> rePostList = new MutableLiveData<>();
 
+    //통신 관련 -------------------------------------------------------------------------------------
+    PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);;
 
+    //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {
 
         gridAdapter = new GridTypePostAdapter(getPostList());
@@ -74,9 +96,12 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
 
         List<TabLayout.Tab> tabs = new ArrayList<>();
 
-        tabs.add(tabLayout.newTab().setText("1st"));
-        tabs.add(tabLayout.newTab().setText("2nd"));
+        tabs.add(tabLayout.newTab().setIcon(R.drawable.i_grid_icon));
 
+        tabs.add(tabLayout.newTab().setIcon(R.drawable.i_vertical_icon));
+
+        tabs.get(0).getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.clicked));
+        tabs.get(1).getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.non_clicked));
         return tabs;
     }
 
@@ -89,6 +114,9 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
         gt_post = new GridTypePost();
         fm.beginTransaction().add(container.getId(), gt_post).commit();
 
+        searchByCondition();
+        Log.d(TAG, "onTabSelected: 1 첫번쨰 로딩");
+
         listener = new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -99,6 +127,7 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
                 switch (CLICK_NO) {
                     case 0:
 
+                        tab.getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.clicked));
                         /*
                         클릭한 탭에 해당하는 프래그먼트가 null이라면 객체화 후, [container:FrameLayout]에 올린다.
                         만약 null이 아니라면 보여지는 프래그먼트는 hide 처리를 하고 해당 탭의 프래그먼트를 show 처리를 해준다.
@@ -106,19 +135,28 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
                         if (gt_post == null) {
                             gt_post = new GridTypePost();
                             fm.beginTransaction().add(container.getId(), gt_post).commit();
+                            searchByCondition();
+                            Log.d(TAG, "onTabSelected: 1 첫번쨰 로딩");
                         } else {
                             fm.beginTransaction().show(gt_post).commit();
+                            Log.d(TAG, "onTabSelected: 1 이건 아닌데..");
                         }
 
                         if (vt_post != null) fm.beginTransaction().hide(vt_post).commit();
 
                         break;
                     case 1:
+
+                        tab.getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.clicked));
+
                         if (vt_post == null) {
                             vt_post = new VerticalTypePost();
                             fm.beginTransaction().add(container.getId(), vt_post).commit();
+                            Log.d(TAG, "onTabSelected: 2 첫번쨰 로딩");
+                            searchByCondition();
                         } else {
                             fm.beginTransaction().show(vt_post).commit();
+                            Log.d(TAG, "onTabSelected: 2 이건 아닌데..");
                         }
 
                         if (gt_post != null) fm.beginTransaction().hide(gt_post).commit();
@@ -131,6 +169,7 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
             public void onTabUnselected(TabLayout.Tab tab) {
 
                 final int NONE_CLICK_NO = tab.getPosition();
+                tab.getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.non_clicked));
 
             }
 
@@ -166,6 +205,39 @@ public class RouteListViewModel extends ViewModel implements GridTypePostAdapter
         };
 
         return listener;
+    }
+
+    public void searchByCondition(){
+        if(getSearchReq() != null){
+            Call<List<ResponseResult<Post>>> call = postAPI.searchByCondition(getSearchReq());
+
+            call.enqueue(new Callback<List<ResponseResult<Post>>>() {
+                @Override
+                public void onResponse(Call<List<ResponseResult<Post>>> call, Response<List<ResponseResult<Post>>> response) {
+
+                    List<Post> postList = new ArrayList<>();
+
+                    if(response.body() != null){
+                        for(ResponseResult<Post> pr_post : response.body()){
+                            if(pr_post.getRes_type() == 1){
+                                postList.add((Post)pr_post.getRes_obj());
+                            }else{
+                                Log.d(TAG, "onResponse: " + pr_post.getRes_msg());
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<List<ResponseResult<Post>>> call, Throwable t) {
+                    sendToast(App.INSTANCE, "에러로 인해 포스트를 불러오는데 실패했습니다.");
+
+                    Log.e(TAG, "Post init load onFailure: ", t);
+                }
+            });
+        }
+
     }
 
     //초기 값 - 더미

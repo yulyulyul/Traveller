@@ -3,6 +3,6 @@
     <!--  res/drawable/rounded_edittext.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
 android:shape="rectangle" android:padding="10dp">
-<stroke android:width="1dp" android:color="#D5D5D5"/>
+<stroke android:width="1dp" android:color="@color/clicked"/>
 <solid android:color="#FFFFFF"/>
 </shape>

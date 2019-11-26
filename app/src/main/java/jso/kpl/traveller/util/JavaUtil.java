@@ -14,10 +14,24 @@ import android.util.TypedValue;
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import jso.kpl.traveller.App;
 
 public class JavaUtil {
+
+    //현재 시간을 구하는 함수
+    public static String currentTime() {
+        long now = System.currentTimeMillis();
+
+        Date date = new Date(now);
+
+        SimpleDateFormat sdf
+                = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+
+        return sdf.format(date);
+    }
 
     //이미지 축약 주소를 실제 주소로 바꿔주는 함수
     public static Uri getImageFullPath(Context context, Uri uri) {

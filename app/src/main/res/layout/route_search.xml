@@ -1,152 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="20">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="40"
-            android:orientation="vertical">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginHorizontal="50dp"
-                android:layout_marginVertical="10dp"
-                android:layout_weight="10"
-                android:background="@drawable/s_border_square"
-                android:hint="Country"
-                android:padding="10dp"
-                android:text="@={searchVm.srLD.sr_country}" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginHorizontal="50dp"
-                android:layout_marginVertical="10dp"
-                android:layout_weight="10"
-                android:background="@drawable/s_border_square"
-                android:hint="Max Cost"
-                android:inputType="number"
-                android:padding="10dp"
-                android:maxLength="9"
-                android:text="@={searchVm.inputMaxCost}" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="20"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="가격 범위" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="@={searchVm.costRange}" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/crystal_range_seek_bar"
-                        android:layout_alignLeft="@+id/crystal_range_seek_bar"
-                        android:text="@={searchVm.seekBarMin}" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/crystal_range_seek_bar"
-                        android:layout_alignRight="@+id/crystal_range_seek_bar"
-                        android:text="@={searchVm.seekBarMax}" />
-
-                    <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                        android:id="@+id/crystal_range_seek_bar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="30dp"
-                        app:bar_color="#448AFF"
-                        app:bar_highlight_color="#3F51B5"
-                        app:corner_radius="10"
-                        app:data_type="_integer"
-                        app:gap="0"
-                        app:left_thumb_color="#303F9F"
-                        app:left_thumb_color_pressed="#C5CAE9"
-                        app:max_start_value="10000"
-                        app:min_start_value="0"
-                        app:right_thumb_color="#303F9F"
-                        app:right_thumb_color_pressed="#C5CAE9"
-                        app:setMAX="@{searchVm.srLD.sr_max_cost}"
-                        app:setMIN="@{searchVm.srLD.sr_min_cost}" />
-
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="20dp"
-                android:background="#80808080" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="100dp"
-            android:layout_weight="25">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{()->searchVm.onSearchClicked()}"/>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="searchVm"
             type="jso.kpl.traveller.viewmodel.RouteSearchViewModel" />
     </data>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="9">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/i_left_arrow_icon"
+                            android:layout_margin="15dp"
+                            app:OnClickListener="@{searchVm.onBackClickListener}"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="초기화"
+                            android:textSize="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="15dp"
+                            android:onClick="@{()->searchVm.onResetClicked()}"/>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="루트 검색"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="장소"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:layout_marginHorizontal="20dp" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginVertical="10dp"
+                            android:hint="장소를 입력해주세요."
+                            android:paddingHorizontal="10dp"
+                            android:text="@={searchVm.srLD.sr_country}"
+                            android:textSize="20dp"
+                            android:singleLine="true"
+                            android:nextFocusDown="@id/search_expenses"
+                            android:background="@android:color/transparent" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_margin="10dp"
+                            android:background="#80808080" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="비용"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:layout_marginHorizontal="20dp" />
+
+                        <EditText
+                            android:id="@+id/search_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginVertical="10dp"
+                            android:background="@android:color/transparent"
+                            android:hint="최대 금액을 입력해주세요."
+                            android:inputType="number"
+                            android:paddingHorizontal="10dp"
+                            android:maxLength="9"
+                            android:singleLine="true"
+                            android:text="@={searchVm.inputMaxCost}"
+                            android:textSize="20dp"
+                            app:onChangeMoney="@{null}"
+                            android:nextFocusDown="@id/crystal_range_seek_bar"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="20"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="20dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="가격 범위"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:text="@={searchVm.costRange}"
+                                    android:textStyle="bold" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="bottom"
+                                android:layout_marginVertical="20dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/crystal_range_seek_bar"
+                                    android:layout_alignLeft="@+id/crystal_range_seek_bar"
+                                    android:text="@={searchVm.seekBarMin}"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/crystal_range_seek_bar"
+                                    android:layout_alignRight="@+id/crystal_range_seek_bar"
+                                    android:text="@={searchVm.seekBarMax}"
+                                    android:textStyle="bold" />
+
+                                <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                                    android:id="@+id/crystal_range_seek_bar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginHorizontal="20dp"
+                                    app:bar_color="@color/non_clicked"
+                                    app:bar_highlight_color="@color/clicked"
+                                    app:corner_radius="10"
+                                    app:data_type="_integer"
+                                    app:gap="0"
+                                    app:left_thumb_color="#C5CAE9"
+                                    app:left_thumb_color_pressed="@color/simple_white"
+                                    app:min_value="10000"
+                                    app:max_value="10001"
+                                    app:max_start_value="10001"
+                                    app:min_start_value="10000"
+                                    app:right_thumb_color="#C5CAE9"
+                                    app:right_thumb_color_pressed="@color/simple_white"
+                                    app:setMAX="@{searchVm.srLD.sr_max_cost}"
+                                    app:setMIN="@{searchVm.srLD.sr_min_cost}" />
+
+
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_margin="10dp"
+                            android:background="#80808080" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:background="@color/white"
+            style="@android:style/ButtonBar">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/clicked"
+                android:text="검         색"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
+               app:OnClickListener="@{searchVm.onSearchClickListener}" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </layout>

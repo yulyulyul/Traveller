@@ -52,7 +52,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
     EditingPostViewModel editingPostVm;
     EditingPostBinding binding;
 
-    final int EDITING_POST = 22;
     final int SELECT_POST_PERIOD = 33;
 
     int pos;
@@ -99,11 +98,17 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                     if (binding.getEditingPostVm().inputExpenses.getValue() != null){
 
-                        if(binding.getEditingPostVm().inputExpenses.getValue().contains("₩"))
-                            post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue().replace("₩", "").replace(",",""));
-                        else
-                            post.setP_expenses(binding.getEditingPostVm().inputExpenses.getValue());
+                        if(binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0){
+                            int total_expense = 0;
 
+                            for(int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++){
+
+                                if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
+                                   total_expense += Integer.parseInt(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                                else
+                                    total_expense += Integer.parseInt(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
+                            }
+                        }
                     } else{
                        post.setP_expenses(0 + "");
                     }
@@ -178,7 +183,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                         }
                     });
-
 
                 } else {
                     if (binding.getEditingPostVm().inputPlace.getValue() == null || binding.getEditingPostVm().inputPlace.getValue().equals("")) {
@@ -282,6 +286,22 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 .addToBackStack(null).commit();
 
         binding.getEditingPostVm().fragment.setValue(null);
+
+
+        long total_expense = 0;
+
+        if(binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0){
+
+            for(int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++){
+
+                if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                else
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
+            }
+        }
+
+        binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
     }
 
     @Override
@@ -314,10 +334,30 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
     @Override
     public void onNodeLongClicked() {
-        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() == 1) {
+
+        Toast.makeText(App.INSTANCE, "롱클", Toast.LENGTH_SHORT).show();
+        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() == 0) {
             binding.getEditingPostVm().isClick.setValue(true);
             binding.postSave.setTextColor(getColor(R.color.non_clicked));
         }
+
+        //노드를 삭제했을 때 메인 포스트의 경비 계산을 다신 한다.
+        long total_expense = 0;
+
+        if(binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0){
+
+            for(int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++){
+
+                if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                else
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
+            }
+        }
+
+        binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+
+
     }
 
     @Override

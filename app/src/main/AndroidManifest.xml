@@ -20,13 +20,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.EnlargeImage"></activity>
+        <activity android:name=".ui.EnlargeImage" />
         <activity
             android:name=".ui.EditingPost"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.MyPage" />
         <activity android:name=".ui.SignUp" />
-        <activity android:name=".ui.RouteSearch" />
+        <activity android:name=".ui.RouteSearch"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.RouteList" />
         <activity android:name=".ui.FavoriteCountry" />
         <activity android:name=".ui.FavoriteCountryInfo" />

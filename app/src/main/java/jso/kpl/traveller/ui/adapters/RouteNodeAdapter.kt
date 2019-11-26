@@ -318,9 +318,9 @@ class RouteNodeAdapter
             Log.d(TAG, "삭제 노드`s location = " + _node.locationText.text)
             Log.d(TAG, "삭제 노드`s cost = " + _node.costtv.text)
 
-            onNodeClickListener.onNodeLongClicked()
-
             removeItem(_idx)
+
+            onNodeClickListener.onNodeLongClicked()
 
             true
         })

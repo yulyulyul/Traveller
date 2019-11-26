@@ -121,9 +121,11 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             //MyPage의 두번째 뷰타입으로 누르면 Route Search로 넘어간다.
             case ROUTE_SEARCH:
 
+                holder.searchBinding.setSearchVM(new MyPageViewModel());
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        holder.searchBinding.getSearchVM().onSearchClicked();
                         myPageClickListener.onSearchClicked();
                     }
                 });

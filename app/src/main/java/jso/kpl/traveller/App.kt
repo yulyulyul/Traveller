@@ -36,11 +36,7 @@ class App : Application()
         {
             return googleAuth
         }
-
-
     }
-
-
 
     override fun onCreate()
     {

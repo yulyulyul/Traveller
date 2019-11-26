@@ -7,6 +7,7 @@
     <data>
 
         <import type="android.view.View" />
+
         <import type="jso.kpl.traveller.R" />
 
         <variable
@@ -48,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:text="여행 장소"
                     android:textSize="20dp"
-                    android:textStyle="bold|italic"
+                    android:textStyle="bold"
                     android:textColor="#808080"
                     android:layout_centerInParent="true" />
 
@@ -72,27 +73,48 @@
                 android:orientation="vertical"
                 android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:text="* 장소"
-                    android:textColor="@{(postTypeVm.inputPlace.getValue().length() > 0)? R.color.non_clicked:R.color.clicked}"/>
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:paddingVertical="10dp"-->
+                <!--                    android:paddingHorizontal="20dp">-->
+                <!--                    -->
+                <!--                    -->
+                <!--                </LinearLayout>-->
 
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:focusable="auto"
-                    android:focusableInTouchMode="true"
-                    android:hint="장소 입력"
-                    android:nextFocusDown="@id/edit_expenses"
-                    android:padding="5dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:singleLine="true"
-                    android:text="@={postTypeVm.inputPlace}"
-                    android:textSize="20dp"
-                    app:setInitFocusing="@{true}" />
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="장소"
+                        android:textSize="16dp"
+                        android:textColor="@color/clicked"
+                        android:textStyle="bold"
+                        android:padding="5dp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:focusable="auto"
+                        android:focusableInTouchMode="true"
+                        android:hint="장소 입력"
+                        android:nextFocusDown="@id/edit_expenses"
+                        android:padding="5dp"
+
+                        android:singleLine="true"
+                        android:text="@={postTypeVm.inputPlace}"
+                        android:textSize="20dp"
+                        app:setInitFocusing="@{true}" />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -109,28 +131,39 @@
                 android:orientation="vertical"
                 android:layout_marginVertical="5dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="경비"
-                    android:layout_marginHorizontal="10dp" />
-
-                <EditText
-                    android:id="@+id/edit_expenses"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="여행 경비 입력"
-                    android:background="@android:color/transparent"
-                    android:text="@={postTypeVm.inputExpenses}"
-                    android:textSize="20dp"
-                    android:inputType="number"
-                    android:padding="5dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:focusable="true"
-                    android:singleLine="true"
-                    android:maxLength="15"
-                    android:nextFocusDown="@id/edit_comment"
-                    app:onChangeMoney="@{null}"/>
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="경비"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="5dp" />
+
+                    <EditText
+                        android:id="@+id/edit_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="여행 경비 입력"
+                        android:background="@android:color/transparent"
+                        android:text="@={postTypeVm.inputExpenses}"
+                        android:textSize="20dp"
+                        android:inputType="number"
+                        android:padding="5dp"
+                        android:focusable="true"
+                        android:singleLine="true"
+                        android:maxLength="15"
+                        android:nextFocusDown="@id/edit_comment"
+                        app:onChangeMoney="@{null}" />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -146,25 +179,36 @@
                 android:orientation="vertical"
                 android:layout_marginVertical="5dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="내용"
-                    android:layout_marginHorizontal="10dp" />
-
-                <EditText
-                    android:id="@+id/edit_comment"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="내용을 입력해주세요. (200자 제한)"
-                    android:background="@android:color/transparent"
-                    android:text="@={postTypeVm.inputComment}"
-                    android:textSize="20dp"
-                    android:padding="5dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:focusable="true"
-                    android:maxLength="200"
-                    app:setDontEnter="@{null}"/>
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="내용"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:padding="5dp" />
+
+                    <EditText
+                        android:id="@+id/edit_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="내용을 입력해주세요. (200자 제한)"
+                        android:background="@android:color/transparent"
+                        android:text="@={postTypeVm.inputComment}"
+                        android:textSize="20dp"
+                        android:padding="5dp"
+                        android:focusable="true"
+                        android:maxLength="200"
+                        app:setDontEnter="@{null}" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -182,32 +226,45 @@
                 android:orientation="vertical"
                 android:visibility="@{postTypeVm.isCalendar?View.VISIBLE:View.GONE}">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="기간"
-                    android:layout_marginHorizontal="10dp" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    app:OnClickListener="@{postTypeVm.onCalendarClickListener}">
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp">
 
                     <TextView
-                        android:id="@+id/text_calendar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:focusable="true"
-                        android:hint="여행 기간을 설정해주세요."
-                        android:nextFocusDown="@id/edit_comment"
-                        android:padding="5dp"
-                        android:singleLine="true"
-                        android:text="@={postTypeVm.travelResult}"
-                        android:textSize="20dp" />
+                        android:text="기간"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="16dp"
+                        android:padding="5dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        app:OnClickListener="@{postTypeVm.onCalendarClickListener}">
+
+                        <TextView
+                            android:id="@+id/text_calendar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:focusable="true"
+                            android:hint="여행 기간을 설정해주세요."
+                            android:nextFocusDown="@id/edit_comment"
+                            android:padding="5dp"
+                            android:singleLine="true"
+                            android:text="@={postTypeVm.travelResult}"
+                            android:textSize="20dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
 
                 <View
                     android:layout_width="match_parent"
@@ -229,40 +286,52 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:text="카테고리"
-                        android:textSize="20dp"
-                        android:padding="5dp" />
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:background="@drawable/i_plus_icon"
-                        app:OnClickListener="@{postTypeVm.onAddCategoryClickListener}" />
-
-                </LinearLayout>
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/category_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:text="카테고리"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:padding="5dp" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@drawable/i_plus_icon"
+                            app:OnClickListener="@{postTypeVm.onAddCategoryClickListener}" />
 
 
                     </LinearLayout>
 
-                </HorizontalScrollView>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp">
+
+                        <LinearLayout
+                            android:id="@+id/category_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -289,31 +358,43 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="포토"
-                            android:layout_weight="8"
-                            android:padding="5dp"
-                            android:textSize="20dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/photo_layout"
-                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:layout_marginHorizontal="10dp">
+                        android:orientation="vertical"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="20dp">
 
-                        <Button
-                            android:id="@+id/addPhoto"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/i_circle_plus_icon" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="포토"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:layout_weight="8"
+                                android:padding="5dp"
+                                android:textSize="16dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/photo_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginHorizontal="10dp"
+                            android:gravity="center">
+
+                            <Button
+                                android:id="@+id/addPhoto"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/i_circle_plus_icon" />
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 

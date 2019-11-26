@@ -20,7 +20,19 @@
             android:layout_height="0dp"
             android:layout_weight="10"
             app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
-            app:addOnTabSelected="@{mainListVm.onTestClicked(container)}" />
+            app:addOnTabSelected="@{mainListVm.onTestClicked(container)}"
+            android:background="@color/simple_white"
+            app:tabIndicatorColor="@color/clicked"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </HorizontalScrollView>
 
         <FrameLayout
             android:id="@+id/container"
