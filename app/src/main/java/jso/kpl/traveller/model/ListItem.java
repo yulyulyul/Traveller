@@ -11,13 +11,15 @@ public class ListItem implements Serializable {
     int p_id;
     String p_place;
     String p_expenses;
+    String sp_imgs;
 
-    public ListItem(int u_userid, String u_profile_img, int p_id, String p_place, String p_expenses) {
+    public ListItem(int u_userid, String u_profile_img, int p_id, String p_place, String p_expenses, String sp_imgs) {
         this.u_userid = u_userid;
         this.u_profile_img = u_profile_img;
         this.p_id = p_id;
         this.p_place = p_place;
         this.p_expenses = p_expenses;
+        this.sp_imgs = sp_imgs;
     }
 
     public int getU_userid() {
@@ -58,6 +60,14 @@ public class ListItem implements Serializable {
 
     public void setP_expenses(String p_expenses) {
         this.p_expenses = p_expenses;
+    }
+
+    public String getSp_imgs() {
+        return sp_imgs;
+    }
+
+    public void setSp_imgs(String sp_imgs) {
+        this.sp_imgs = sp_imgs;
     }
 
     @Override

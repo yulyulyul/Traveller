@@ -27,7 +27,7 @@
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                app:setCircleImg="@{verticalItemVm.rePost.rp_profile}"/>
+                app:setCircleImg="@{verticalItemVm.postLD.u_profile_img}"/>
 
         </RelativeLayout>
 
@@ -66,7 +66,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{verticalItemVm.rePost.post.p_place}"
+                        android:text="@{verticalItemVm.postLD.p_place}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>
@@ -100,7 +100,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@{verticalItemVm.rePost.post.p_expenses}"
+                        android:text="@{verticalItemVm.postLD.p_expenses}"
                         android:gravity="center_vertical"/>
 
                 </LinearLayout>

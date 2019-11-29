@@ -20,7 +20,6 @@
             android:layout_marginVertical="10dp"
             android:background="#D5D5D5"/>
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

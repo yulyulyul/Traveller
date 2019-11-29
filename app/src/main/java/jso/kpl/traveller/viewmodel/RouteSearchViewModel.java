@@ -49,7 +49,7 @@ public class RouteSearchViewModel extends ViewModel {
         this.app = (Application) App.INSTANCE;
 
         //국가와 seek bar의 초기값
-        srLD.setValue(new SearchReq("", 10000, 10001));
+        srLD.setValue(new SearchReq("", 0, 1000000));
 
         //각 max min Text 입력
         seekBarMax.setValue(CurrencyChange.moneyFormatToWon(srLD.getValue().getSr_max_cost()));
@@ -60,17 +60,17 @@ public class RouteSearchViewModel extends ViewModel {
     }
 
     public void onResetClicked(){
-        srLD.setValue(new SearchReq("", 10000, 10001));
+        srLD.setValue(new SearchReq("", 0, 1000000));
         inputMaxCost.setValue("");
-        seekBarMax.setValue(CurrencyChange.moneyFormatToWon(10001));
-        seekBarMin.setValue(CurrencyChange.moneyFormatToWon(10000));
+        seekBarMax.setValue(CurrencyChange.moneyFormatToWon(1000000));
+        seekBarMin.setValue(CurrencyChange.moneyFormatToWon(0));
     }
 
     //최종 검색 조건 이벤트
     public int onSearchClicked(){
 
-        int minCost = 10000;
-        int maxCost = 10001;
+        int minCost = 0;
+        int maxCost = 1000000;
 
         if(srLD.getValue().getSr_country() != null){
             if(srLD.getValue().getSr_country().length() > 0){
@@ -91,7 +91,7 @@ public class RouteSearchViewModel extends ViewModel {
                 Intent goToResult = new Intent(app, RouteList.class);
 
                 goToResult.putExtra("req", new MyPageItem(srLD.getValue(), 0));
-
+                goToResult.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 app.startActivity(goToResult);
 
                 return 1;

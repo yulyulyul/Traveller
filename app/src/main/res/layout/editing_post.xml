@@ -342,15 +342,16 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:onClick="@{()->editingPostVm.onOpenClicked()}"
                 android:layout_gravity="center"
-                android:padding="5dp"
+                android:paddingVertical="5dp"
+                android:paddingLeft="5dp"
                 android:weightSum="10">
 
                 <ImageView
                     android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:layout_gravity="center"

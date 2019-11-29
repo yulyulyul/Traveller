@@ -11,12 +11,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:setStaggerRvAdapter="@{gridVm.gridAdapter}"
-            app:setDecoration="@{gridVm.decoration}"/>
+            app:setDecoration="@{gridVm.decoration}"
+            app:onAddScrollListener="@{gridVm.onGridScrollListener}"/>
 
     </LinearLayout>
 
     <data>
-
         <variable
             name="gridVm"
             type="jso.kpl.traveller.viewmodel.RouteListViewModel" />

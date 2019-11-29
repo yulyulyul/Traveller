@@ -10,10 +10,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.VerticalPostItemBinding;
+import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
@@ -29,18 +32,18 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
     OnVerticalItemClickListener onVerticalItemClickListener;
 
     public interface OnVerticalItemClickListener{
-        void VerticalItemClicked(RePost rePost);
+        void VerticalItemClicked(int p_id);
     }
 
     public void setOnVerticalItemClickListener(OnVerticalItemClickListener onVerticalItemClickListener) {
         this.onVerticalItemClickListener = onVerticalItemClickListener;
     }
 
-    //리사이클러 뷰의 아이템 리스트 - (포스트 데이터 + 이미지)
-    MutableLiveData<List<RePost>> rePostList = new MutableLiveData<>();
+    //리사이클러 뷰의 아이템 리스트
+    List<ListItem> postList;
 
-    public VerticalTypePostAdapter(List<RePost> rePostList) {
-        this.rePostList.setValue(rePostList);
+    public VerticalTypePostAdapter(List<ListItem> list) {
+        this.postList = list;
     }
 
     @NonNull
@@ -58,20 +61,49 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
     public void onBindViewHolder(@NonNull VerticalTypePostViewHolder holder, int position) {
 
         //RePost(Post + imgStr)의 객체
-        final RePost rePost = rePostList.getValue().get(position);
+        final ListItem item = postList.get(position);
 
-        Log.d(TAG, "ver item: " + rePost.getPost().getP_place());
-        holder.onBind(rePost);
-        holder.binding.executePendingBindings();
+        String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
+
+        item.setU_profile_img(path);
+
+        holder.onBind(item);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onVerticalItemClickListener.VerticalItemClicked(rePost);
+                onVerticalItemClickListener.VerticalItemClicked(item.getP_id());
             }
         });
 
     }
 
+    public void addItem(ListItem item) {
+
+        if(postList == null)
+            postList = new ArrayList<>();
+
+        postList.add(item);
+
+        notifyItemInserted(postList.size() - 1);
+    }
+
+    public void addItems(List<ListItem> items) {
+
+        if(postList == null)
+            postList = new ArrayList<>();
+
+        postList.addAll(items);
+
+        notifyDataSetChanged();
+    }
+
+    public void removeItems() {
+
+        postList = new ArrayList<>();
+
+        notifyDataSetChanged();
+    }
     @Override
     public long getItemId(int position) {
         return position;
@@ -84,8 +116,8 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "Vertical - getItemCount: " + rePostList.getValue().size());
-        return rePostList.getValue().size();
+
+        return postList.size();
     }
 
     class VerticalTypePostViewHolder extends RecyclerView.ViewHolder {
@@ -100,8 +132,8 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
             binding.setLifecycleOwner(new RouteList());
         }
 
-        public void onBind(RePost rePost){
-            binding.getVerticalItemVm().rePost.setValue(rePost);
+        public void onBind(ListItem item){
+            binding.getVerticalItemVm().postLD.setValue(item);
 
         }
 

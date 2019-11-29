@@ -16,6 +16,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:setLinearRvAdapter="@{verticalVm.verticalAdapter}"/>
+            app:setLinearRvAdapter="@{verticalVm.verticalAdapter}"
+            app:onAddScrollListener = "@{verticalVm.onVerticalScrollListener}"/>
     </LinearLayout>
 </layout>

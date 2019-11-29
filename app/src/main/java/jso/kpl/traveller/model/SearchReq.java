@@ -13,17 +13,11 @@ public class SearchReq implements Serializable {
     int sr_min_cost;
     int sr_max_cost;
 
-    String sr_tag;
-
-    //날짜
-    String sr_date;
-
     public SearchReq(String sr_country, int sr_min_cost, int sr_max_cost) {
         this.sr_country = sr_country;
         this.sr_min_cost = sr_min_cost;
         this.sr_max_cost = sr_max_cost;
 
-        sr_date = JavaUtil.currentTime();
     }
 
     public String getSr_country() {
@@ -50,22 +44,12 @@ public class SearchReq implements Serializable {
         this.sr_max_cost = sr_max_cost;
     }
 
-    public String getSr_tag() {
-        return sr_tag;
-    }
-
-    public void setSr_tag(String sr_tag) {
-        this.sr_tag = sr_tag;
-    }
-
     @Override
     public String toString() {
         return "SearchReq{" +
                 "sr_country='" + sr_country + '\'' +
                 ", sr_min_cost=" + sr_min_cost +
                 ", sr_max_cost=" + sr_max_cost +
-                ", sr_tag='" + sr_tag + '\'' +
-                ", sr_date='" + sr_date + '\'' +
                 '}';
     }
 }

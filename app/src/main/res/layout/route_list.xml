@@ -25,20 +25,33 @@
             app:tabIndicatorColor="@color/clicked"/>
 
         <HorizontalScrollView
+            android:id="@+id/category_horizontal_layout"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:scrollbars="none">
 
             <LinearLayout
+                android:id="@+id/category_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"/>
 
         </HorizontalScrollView>
 
-        <FrameLayout
-            android:id="@+id/container"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="90" />
+            android:layout_weight="90"
+            app:onRefreshListener="@{mainListVm.onRefreshListener}">
+
+            <FrameLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

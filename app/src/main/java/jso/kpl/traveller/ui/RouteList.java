@@ -2,24 +2,37 @@ package jso.kpl.traveller.ui;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.RouteListBinding;
+import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
 public class RouteList extends AppCompatActivity {
 
+
+
     String TAG = "Trav.RouteList.";
+
+    MyPageItem item;
 
     RouteListBinding binding;
     RouteListViewModel routeListVm = new RouteListViewModel();
-
-    SearchReq searchReq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,25 +45,32 @@ public class RouteList extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         if(getIntent() != null){
+            item = (MyPageItem) getIntent().getSerializableExtra("req");
 
-            MyPageItem item = (MyPageItem) getIntent().getSerializableExtra("req");
-
-            if(item.getType() == 0){
-                searchReq = (SearchReq) item.getO();
-                routeListVm.setSearchReq(searchReq);
-
-                Log.d(TAG, "검색 조건: " + searchReq.toString());
-
-                binding.getMainListVm().searchByCondition();
-            } else{
-                // 이후 More list 조건을 맞춰야함
-            }
-
+            binding.getMainListVm().searchByCondition(item);
         }
 
+        if(((MyPageItem) getIntent().getSerializableExtra("req")).getType() == 0){
+            binding.categoryHorizontalLayout.setVisibility(View.VISIBLE);
+            binding.getMainListVm().addCategoryLayout(this, binding.categoryLayout);
+        }else{
+            binding.categoryHorizontalLayout.setVisibility(View.GONE);
+        }
 
-        binding.executePendingBindings();
-
-        Log.d(TAG, "테스트: " + binding.getMainListVm().getSearchReq().toString());
     }
+
+//    @Override
+//    public void onRefresh() {
+//        Log.d(TAG, "onRefresh: ");
+//
+//        binding.getMainListVm().postList.setValue(new ArrayList<ListItem>());
+//        binding.getMainListVm().gridAdapter.removeItems();
+//        binding.getMainListVm().verticalAdapter.removeItems();
+//
+//        Log.d(TAG, "onRefresh: " + ((MyPageItem) getIntent().getSerializableExtra("req")).toString());
+//        binding.getMainListVm().searchByCondition((MyPageItem) getIntent().getSerializableExtra("req"));
+//
+//        binding.refreshLayout.setRefreshing(false);
+//
+//    }
 }

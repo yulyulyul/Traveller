@@ -7,14 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.GridPostItemBinding;
-import jso.kpl.traveller.model.RePost;
+import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
@@ -31,20 +32,20 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
      */
     OnGridItemClickListener onGridItemClickListener;
 
-    public interface OnGridItemClickListener{
-        void GridItemClicked(RePost rePost);
+    public interface OnGridItemClickListener {
+        void GridItemClicked(int p_id);
     }
 
     public void setOnGridItemClickListener(OnGridItemClickListener onGridItemClickListener) {
         this.onGridItemClickListener = onGridItemClickListener;
     }
 
-    //리사이클러 뷰의 아이템 리스트 - (포스트 데이터 + 이미지)
-    MutableLiveData<List<RePost>> rePostList = new MutableLiveData<>();
+    //리사이클러 뷰의 아이템 리스트
+    List<ListItem> postList;
 
     //생성자
-    public GridTypePostAdapter(List<RePost> rePostList) {
-        this.rePostList.setValue(rePostList);
+    public GridTypePostAdapter(List<ListItem> list) {
+        this.postList = list;
     }
 
     @NonNull
@@ -63,21 +64,49 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
     @Override
     public void onBindViewHolder(@NonNull GridTypePostViewHolder holder, final int position) {
 
-        Log.d(TAG + "onBindViewHolder", "Start");
-
         //RePost(Post + imgStr)의 객체
-        final RePost rePost = rePostList.getValue().get(position);
+        final ListItem item = postList.get(position);
 
-        holder.onBind(rePost);
-        Log.d(TAG, "Grid Item: " + rePost.getPost().getP_place());
+        String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getSp_imgs();
+
+        item.setSp_imgs(path);
+
+        holder.onBind(item);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onGridItemClickListener.GridItemClicked(rePost);
+                onGridItemClickListener.GridItemClicked(item.getP_id());
             }
         });
 
+    }
+
+    public void addItem(ListItem item) {
+
+        if(postList == null)
+            postList = new ArrayList<>();
+
+        postList.add(item);
+
+        notifyItemInserted(postList.size() - 1);
+    }
+
+    public void addItems(List<ListItem> items) {
+
+        if(postList == null)
+            postList = new ArrayList<>();
+
+        postList.addAll(items);
+
+        notifyDataSetChanged();
+    }
+
+    public void removeItems() {
+
+        postList = new ArrayList<>();
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -92,8 +121,7 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "Grid - getItemCount: ");
-        return rePostList.getValue().size();
+        return postList.size();
     }
 
     class GridTypePostViewHolder extends RecyclerView.ViewHolder {
@@ -102,15 +130,15 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
         public GridTypePostViewHolder(@NonNull GridPostItemBinding binding) {
             super(binding.getRoot());
+
             this.binding = binding;
             binding.setGridItemVm(new RouteListViewModel());
             binding.setLifecycleOwner(new RouteList());
         }
 
-        public void onBind(RePost rePost){
+        public void onBind(ListItem item) {
 
-            binding.getGridItemVm().rePost.setValue(rePost);
-            binding.executePendingBindings();
+            binding.getGridItemVm().postLD.setValue(item);
         }
     }
 }

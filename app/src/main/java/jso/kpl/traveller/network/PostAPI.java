@@ -3,6 +3,7 @@ package jso.kpl.traveller.network;
 import java.util.ArrayList;
 import java.util.List;
 
+import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SearchReq;
@@ -22,6 +23,13 @@ public interface PostAPI {
     @POST("/editing_post")
     Call<ResponseResult<Integer>> editingPost(@Part("Post") Post post, @Part ArrayList<MultipartBody.Part> imgs);
 
+    //검색을 통해 가져오는 포스트 리스트
+    @FormUrlEncoded
     @POST("/search_by_condition")
-    Call<List<ResponseResult<Post>>> searchByCondition(@Body SearchReq searchReq);
+    Call<ResponseResult<List<ListItem>>> searchByCondition(@Field("sr_country") String sr_country, @Field("sr_max_cost") int sr_max_cost, @Field("sr_min_cost") int sr_min_cost, @Field("p_id") int p_id, @Field("c_no") int c_no);
+
+    //자신이 작성한 포스트 리스트를 가져온다.
+    @FormUrlEncoded
+    @POST("/search_by_enroll")
+    Call<ResponseResult<List<ListItem>>> searchByEnroll(@Field("u_userid") int u_userid, @Field("p_id") int p_id);
 }

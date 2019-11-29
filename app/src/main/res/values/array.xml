@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="category">
-        <item>Food</item>
-        <item>Travel</item>
-        <item>Rest</item>
-        <item>Photo</item>
-        <item>Fun</item>
+        <item>식도락</item>
+        <item>여행</item>
+        <item>휴식</item>
+        <item>쇼핑</item>
+        <item>해외</item>
+        <item>국내</item>
+        <item>풍경</item>
+        <item>추억</item>
+        <item>명소</item>
     </string-array>
-
 
 </resources>

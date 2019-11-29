@@ -27,4 +27,12 @@ public class MyPageItem implements Serializable {
     public void setType(int type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "MyPageItem{" +
+                "o=" + o +
+                ", type=" + type +
+                '}';
+    }
 }

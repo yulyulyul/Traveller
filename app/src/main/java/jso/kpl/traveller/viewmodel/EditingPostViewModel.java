@@ -1,5 +1,8 @@
 package jso.kpl.traveller.viewmodel;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -181,7 +184,6 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         } else {
             fragment.setValue(new WritePostType());
         }
-
     }
 
     public SmallPost saveSmallPostData() {

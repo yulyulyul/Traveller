@@ -1,11 +1,8 @@
 package jso.kpl.traveller.bindings;
 
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -19,9 +16,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
@@ -62,6 +59,68 @@ public class BindingAdapters {
     public static void onBindGridRvAdapter(RecyclerView rv, RecyclerView.Adapter<?> adapter) {
 
         rv.setLayoutManager(new GridLayoutManager(rv.getContext(), 5));
+        rv.setAdapter(adapter);
+    }
+
+    @BindingAdapter("setGridPatternRvAdapter")
+    public static void onBindInsGridRvAdapter(RecyclerView rv, RecyclerView.Adapter<?> adapter) {
+
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(App.INSTANCE, 12, RecyclerView.VERTICAL, false);
+        //아이템을 2/3/2/3/..패턴으로 화면에 출력한다.
+
+
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+
+                int gridPosition = position % 12;
+
+                if (gridPosition == 1 || gridPosition == 7) {
+
+                    return 8;
+                } else if (gridPosition == 0 || gridPosition == 2) {
+                    return 4;
+                } else {
+                    return 0;
+                }
+//                if(gridPosition >= 0 && gridPosition < 6){
+//
+//                    switch (gridPosition) {
+//                        case 0:
+//                        case 2:
+//                        case 3:
+//                        case 4:
+//                        case 5:
+//                            return 4;
+//                        case 1:
+//                            return 8;
+//                    }
+//
+//
+//                }else if(gridPosition >= 6 && gridPosition < 12){
+//                    switch (gridPosition) {
+//                        case 7:
+//                        case 8:
+//                        case 9:
+//                        case 10:
+//                        case 11:
+//                            return 4;
+//                        case 6:
+//                            return 8;
+//                    }
+//
+//                }
+//
+//               return 0;
+            }
+        });
+
+//        f (position % 12 == 0 || position % 12 == 7) {
+//            SpannedGridLayoutManager.SpanInfo(2, 2)
+//        } else {
+//            SpannedGridLayoutManager.SpanInfo(1, 1)
+//        }
+        rv.setLayoutManager(gridLayoutManager);
         rv.setAdapter(adapter);
     }
 
@@ -162,7 +221,7 @@ public class BindingAdapters {
     }
 
     @BindingAdapter("setDontEnter")
-    public static void bindDontEnter(View v, String a){
+    public static void bindDontEnter(View v, String a) {
         //엔터입력시 없으면 입력 하지 않음.
         v.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -177,6 +236,7 @@ public class BindingAdapters {
         });
 
     }
+
     //프래그먼트 초기값 설정 바인딩 어댑터
     @BindingAdapter({"setFragmentManger", "setInitFragment"})
     public static void bindSetFragment(FrameLayout container, FragmentManager fm, Fragment fragment) {

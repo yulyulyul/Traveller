@@ -137,11 +137,11 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
             case 0:
                 //favorites
                 return new MyPageItem(
-                        new ListItem(2, "t_profile_1573822678472.jpg", 8, "미국", "99999"), USER_POST);
+                        new ListItem(2, "t_profile_1573822678472.jpg", 8, "미국", "99999", null), USER_POST);
             case 1:
                 //Recent Post
                 return new MyPageItem(
-                        new ListItem(2, "t_profile_1573822678472.jpg", 7, "독일", "777777"), USER_POST);
+                        new ListItem(2, "t_profile_1573822678472.jpg", 7, "독일", "777777", null), USER_POST);
             case 2:
                 //enroll
                 return new MyPageItem(
@@ -186,17 +186,17 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
         switch (type) {
             case SUB_COUNTRY:
-                intent.putExtra("req", new MyPageItem(null, SUB_COUNTRY));
+                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
                 App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "선호 국가 더 보기");
                 break;
             case SUB_FAVORITE:
-                intent.putExtra("req", new MyPageItem(null, SUB_FAVORITE));
+                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
                 App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "선호 포스트 더 보기");
                 break;
             case SUB_ENROLL:
-                intent.putExtra("req", new MyPageItem(null, SUB_ENROLL));
+                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
                 App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "등록한 포스트 더 보기");
                 break;
@@ -255,6 +255,9 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         Log.d(TAG + "통신 성공","성공적으로 전송");
 
         ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
+
+        Log.d(TAG, "메인 통신: " + res.getRes_obj().toString());
+
         List<ListItem> listItem = res.getRes_obj();
         if (listItem != null) {
             for (ListItem item : listItem) {
