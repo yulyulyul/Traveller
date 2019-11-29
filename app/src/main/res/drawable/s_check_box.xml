@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_checkable="false"
+        android:drawable="@drawable/i_non_click_circle_icon"/>
+
+    <item android:state_checkable="true"
+        android:drawable="@drawable/i_click_circle_icon"/>
+
+</selector>
