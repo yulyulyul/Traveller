@@ -254,21 +254,24 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     public void onResponse(Call call, Response response) {
         Log.d(TAG + "통신 성공","성공적으로 전송");
 
-        ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
+        if(response.body() != null){
+            ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
 
-        Log.d(TAG, "메인 통신: " + res.getRes_obj().toString());
+            List<ListItem> listItem = res.getRes_obj();
+            if (listItem != null) {
+                for (ListItem item : listItem) {
+                    String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
+                    item.setU_profile_img(imgPath);
+                    itemList.getValue().add(new MyPageItem(
+                            item, USER_POST));
+                }
+            } else {
 
-        List<ListItem> listItem = res.getRes_obj();
-        if (listItem != null) {
-            for (ListItem item : listItem) {
-                String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
-                item.setU_profile_img(imgPath);
-                itemList.getValue().add(new MyPageItem(
-                        item, USER_POST));
             }
-        } else {
-
+        } else{
+            Log.d(TAG, "onResponse: My Page 없음");
         }
+
     }
 
     @Override
