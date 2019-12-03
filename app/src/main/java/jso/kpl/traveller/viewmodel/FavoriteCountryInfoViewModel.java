@@ -1,5 +1,6 @@
 package jso.kpl.traveller.viewmodel;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -28,6 +29,16 @@ import retrofit2.Response;
 public class FavoriteCountryInfoViewModel extends BaseObservable {
 
     String TAG = "Trav.FcInfo.";
+
+    Activity activity ;
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
     public MutableLiveData<GridLayoutManager> layoutManager = new MutableLiveData<>();
     public MutableLiveData<List<FavoriteCountryInfoVO>> list = new MutableLiveData<>();
