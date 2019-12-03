@@ -1,6 +1,6 @@
 package jso.kpl.traveller.ui.adapters;
 
-import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,39 +14,52 @@ import java.util.List;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.FavoriteCountryItemBinding;
-import jso.kpl.traveller.model.FavoriteCountryVO;
-import jso.kpl.traveller.util.JavaUtil;
+import jso.kpl.traveller.model.Country;
 
 public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCountryItemAdapter.ViewHolder> {
 
-    private Context context;
+    String TAG = "Trav.FcAdapter.";
+
     private ViewDataBinding binding;
-    private OnItemClickListener listener;
 
-    private MutableLiveData<List<FavoriteCountryVO>> items;
+    //인터페이스 - 클릭 리스너
+    private OnCountryClickListener onCountryClickListener;
 
-    public FavoriteCountryItemAdapter(MutableLiveData<List<FavoriteCountryVO>> list) {
+    public interface OnCountryClickListener {
+        void onBtnClicked(int position, int type);
+
+        void onDetailClicked(int position);
+    }
+
+    public void setOnItemClickListener(OnCountryClickListener onCountryClickListener) {
+        this.onCountryClickListener = onCountryClickListener;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private MutableLiveData<List<Country>> items;
+
+    public FavoriteCountryItemAdapter(MutableLiveData<List<Country>> list) {
         this.items = list;
     }
 
     // onCreateViewHolder() - 아이템뷰를 위한 뷰홀더 객체 생성하여 리턴
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        binding = DataBindingUtil.inflate(inflater, R.layout.favorite_country_item, parent, false);
-        ViewHolder VH = new ViewHolder((FavoriteCountryItemBinding) binding);
 
-        return VH;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.favorite_country_item, parent, false);
+
+        return new ViewHolder((FavoriteCountryItemBinding) binding);
     }
 
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시, 아이템 데이터 세팅하는 부분
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        FavoriteCountryVO favoriteCountryVO = items.getValue().get(position);
-        holder.binding.setFC(favoriteCountryVO);
-        int drawableResourceId = JavaUtil.getImage(holder.itemView.getContext(), favoriteCountryVO.getFlag());
-        holder.binding.setImageUrl(drawableResourceId);
+        final Country country = items.getValue().get(position);
+        country.setCt_flag();
+
+        holder.binding.setCountryItem(country);
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴
@@ -56,46 +69,86 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
         return items.getValue().size();
     }
 
+    public void addItems(List<Country> list) {
+        items.getValue().addAll(list);
+
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(Country vo) {
+        items.getValue().remove(vo);
+
+    }
+
     // 아이템뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private FavoriteCountryItemBinding binding;
 
-        ViewHolder(FavoriteCountryItemBinding binding) {
-            super(binding.getRoot()) ;
+        ViewHolder(final FavoriteCountryItemBinding binding) {
+            super(binding.getRoot());
             this.binding = binding;
-            // 클릭 이벤트 리스너
+
+            // 국가 디테일 보기
             this.binding.relativeParent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        if(listener != null) {
-                            listener.onItemClick(position);
+                        if (onCountryClickListener != null) {
+                            onCountryClickListener.onDetailClicked(position);
                         }
                     }
+
                 }
             });
-            this.binding.countryInfoBtn.setOnClickListener(new View.OnClickListener() {
+
+
+            //국가 추가 또는 제거
+            this.binding.removeCountryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     int position = getAdapterPosition();
+
                     if (position != RecyclerView.NO_POSITION) {
-                        if (listener != null) {
-                            listener.onBtnClick(position);
+                        if (onCountryClickListener != null) {
+
+                            Log.d(TAG, "추가 삭제: " + binding.getCountryItem().ct_is_add_ld.getValue());
+                            //삭제
+                            onCountryClickListener.onBtnClicked(position, 0);
+                            Log.d(TAG, "국가 삭제");
+
+                        }
+                    }
+
+
+                }
+            });
+
+            //국가 추가 또는 제거
+            this.binding.addCountryBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    int position = getAdapterPosition();
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        if (onCountryClickListener != null) {
+
+                            Log.d(TAG, "추가 삭제: " + binding.getCountryItem().ct_is_add_ld.getValue());
+                            //추가
+                            onCountryClickListener.onBtnClicked(position, 1);
+                            Log.d(TAG, "국가 추가");
+
                         }
                     }
                 }
             });
+
+
         }
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-        void onBtnClick(int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
 }

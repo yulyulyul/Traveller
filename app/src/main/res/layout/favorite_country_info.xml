@@ -3,219 +3,266 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
-            name="VM"
-            type="jso.kpl.traveller.viewmodel.FavoriteCountryInfo_VM" />
+            name="fvInfoVm"
+            type="jso.kpl.traveller.viewmodel.FavoriteCountryInfoViewModel" />
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/relativeParent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="25dp">
 
-            <ImageView
-                android:id="@+id/flag"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="80dp"
-                android:layout_marginEnd="20dp"
-                app:loadImage="@{VM.imageUrl}" />
-
-            <TextView
-                android:id="@+id/country_warning"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relativeChild"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:onClick="@{()->VM.country_warningClickEvent()}"
-                android:text="@string/country_warning"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:layout_margin="15dp"
+                android:weightSum="100">
 
-            <Button
-                android:id="@+id/country_add_btn"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/country_warning"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/s_round_btn"
-                android:drawableLeft="@android:drawable/ic_menu_add"
-                android:drawablePadding="4dp"
-                android:onClick="@{()->VM.country_add_btnClickEvent()}"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:text="@string/country_add_btn"
-                android:textColor="@android:color/background_light" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="30">
 
-            <RelativeLayout
-                android:id="@+id/relativeChild"
+                    <ImageView
+                        android:id="@+id/flag"
+                        android:layout_width="175dp"
+                        android:layout_height="135dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        app:setFitCenterImg="@{fvInfoVm.countryItem.ct_flag}" />
+
+                </androidx.cardview.widget.CardView>
+
+                <RelativeLayout
+                    android:id="@+id/relativeChild"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70">
+
+                    <TextView
+                        android:id="@+id/country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="@{fvInfoVm.countryItem.ct_name}"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/country_eng"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/country"
+                        android:layout_toRightOf="@id/country"
+                        android:text="@{fvInfoVm.countryItem.ct_eng_name}"
+
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/continent_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/country"
+                        android:layout_alignLeft="@id/country"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/continent"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/continent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/continent_txt"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/continent_txt"
+                        android:text="@{fvInfoVm.countryItem.ct_continent}"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/capital_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/continent_txt"
+                        android:layout_alignLeft="@id/country"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/capital"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/capital"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/capital_txt"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/capital_txt"
+                        android:text="@{fvInfoVm.countryItem.ct_capital}"
+                        android:textColor="@color/browser_actions_text_color"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/language_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/capital_txt"
+                        android:layout_alignLeft="@id/country"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/language"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/language"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/language_txt"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/language_txt"
+                        android:text="@{fvInfoVm.countryItem.ct_language}"
+                        android:textColor="@color/browser_actions_text_color"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/currency_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/language_txt"
+                        android:layout_alignLeft="@id/country"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/currency"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/currency"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/currency_txt"
+                        android:layout_marginBottom="10dp"
+                        android:layout_toRightOf="@id/currency_txt"
+                        android:text="@{fvInfoVm.countryItem.ct_currency}"
+                        android:textColor="@color/browser_actions_text_color"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/religion_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/currency_txt"
+                        android:layout_alignLeft="@id/country"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/religion"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/religion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/religion_txt"
+                        android:layout_toRightOf="@id/religion_txt"
+                        android:text="@{fvInfoVm.countryItem.ct_religion}"
+                        android:textColor="@color/browser_actions_text_color"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/country_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="false"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_toRightOf="@id/flag">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginVertical="10dp">
 
                 <TextView
-                    android:id="@+id/country"
+                    android:id="@+id/country_warning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:text="@{VM.favoriteCountryVO.country}"
-                    android:textColor="#000000"
-                    android:textSize="20sp" />
+                    android:layout_below="@id/relativeChild"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:onClick="@{()->fvInfoVm.country_warningClickEvent()}"
+                    android:text="@string/country_warning"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/country_eng"
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/country_add_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_toRightOf="@id/country"
-                    android:text="@{VM.favoriteCountryVO.country_eng}"
-                    android:textColor="#000000"
-                    android:textSize="20sp" />
+                    android:layout_below="@id/country_warning"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="@drawable/s_round_btn"
+                    android:drawableLeft="@android:drawable/ic_menu_add"
+                    android:drawablePadding="4dp"
+                    app:OnClickListener="@{fvInfoVm.onAddClickListener}"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="선호 국가 추가"
+                    android:textColor="@android:color/background_light"
+                    android:visibility="@{fvInfoVm.countryItem.ct_is_add_ld?View.GONE:View.VISIBLE}"/>
 
-                <TextView
-                    android:id="@+id/continent_txt"
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/country_remove_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/country"
-                    android:layout_alignLeft="@id/country"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/continent"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_below="@id/country_warning"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="@drawable/s_round_btn"
+                    android:drawableLeft="@android:drawable/ic_notification_clear_all"
+                    android:drawablePadding="4dp"
+                    app:OnClickListener="@{fvInfoVm.onRemoveClickListener}"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="선호 국가 취소"
+                    android:textColor="@android:color/background_light"
+                    android:visibility="@{fvInfoVm.countryItem.ct_is_add_ld?View.VISIBLE:View.GONE}"/>
 
-                <TextView
-                    android:id="@+id/continent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/continent_txt"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toRightOf="@id/continent_txt"
-                    android:text="@{VM.favoriteCountryVO.continent}"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/capital_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/continent_txt"
-                    android:layout_alignLeft="@id/country"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/capital"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/capital"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/capital_txt"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toRightOf="@id/capital_txt"
-                    android:text="@{VM.favoriteCountryVO.capital}"
-                    android:textColor="@color/browser_actions_text_color"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/language_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/capital_txt"
-                    android:layout_alignLeft="@id/country"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/language"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/language"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/language_txt"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toRightOf="@id/language_txt"
-                    android:text="@{VM.favoriteCountryVO.language}"
-                    android:textColor="@color/browser_actions_text_color"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/currency_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/language_txt"
-                    android:layout_alignLeft="@id/country"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/currency"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/currency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/currency_txt"
-                    android:layout_marginBottom="10dp"
-                    android:layout_toRightOf="@id/currency_txt"
-                    android:text="@{VM.favoriteCountryVO.currency}"
-                    android:textColor="@color/browser_actions_text_color"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/religion_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/currency_txt"
-                    android:layout_alignLeft="@id/country"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/religion"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/religion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/religion_txt"
-                    android:layout_toRightOf="@id/religion_txt"
-                    android:text="@{VM.favoriteCountryVO.religion}"
-                    android:textColor="@color/browser_actions_text_color"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/relativeParent">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/TextView"
@@ -231,9 +278,10 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="@{VM.layoutManager.getValue()}"
-                app:setGridRvAdapter="@{VM.adapter}" />
+                app:layoutManager="@{fvInfoVm.layoutManager.getValue()}"
+                app:setGridRvAdapter="@{fvInfoVm.adapter}"
+                app:setGridSpan="@{3}"/>
 
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>

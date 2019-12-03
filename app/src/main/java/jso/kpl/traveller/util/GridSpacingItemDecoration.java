@@ -3,6 +3,7 @@ package jso.kpl.traveller.util;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -26,7 +27,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             }*/
         int position = parent.getChildAdapterPosition(view); // item position
 
-        int spanIndex = ((StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex();
+        int spanIndex = ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex();
 
         if (includeEdge) {
 

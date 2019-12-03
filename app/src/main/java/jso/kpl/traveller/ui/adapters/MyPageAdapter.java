@@ -19,12 +19,13 @@ import jso.kpl.traveller.databinding.MyPagePostBinding;
 import jso.kpl.traveller.databinding.MyPageProfileBinding;
 import jso.kpl.traveller.databinding.MyPageSearchBinding;
 import jso.kpl.traveller.databinding.MyPageSubtitleBinding;
+import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.MyPageSubtitle;
-import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.ui.MyPage;
+import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
 public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageViewHolder> implements FlagRvAdapter.OnFlagClickListener {
@@ -140,6 +141,12 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
                 holder.subtitleBinding.setSubtitleVM(new MyPageViewModel());
                 holder.subtitleBinding.getSubtitleVM().mp_subtitle.setValue(subtitle);
 
+                if(holder.subtitleBinding.getSubtitleVM().mp_subtitle.getValue().getType() == 1){
+                    holder.subtitleBinding.getSubtitleVM().subtitleStr = "더 보기";
+                } else{
+                    holder.subtitleBinding.getSubtitleVM().subtitleStr = "더 보기";
+                }
+
                 //각 파트에 해당하는 인덱스를 보낸다.
                 holder.subtitleBinding.mpMoreBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -154,7 +161,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             //선호 국가 국기 0~4개와 선호 국가를 추가할 수 있는 버튼 1개로 구성된 뷰타입
             case FLAG_ITEM:
 
-                List<String> flagList = (List<String>) itemList.getValue().get(position).getO();
+                List<Country> flagList = (List<Country>) itemList.getValue().get(position).getO();
 
                 holder.flagBinding.setFlagVM(new MyPageViewModel());
                 holder.flagBinding.getFlagVM().mp_flag.setValue(flagList);
@@ -171,6 +178,13 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
                 //final RePost rePost = (RePost) itemList.getValue().get(position).getO();
                 final ListItem listItem = (ListItem) itemList.getValue().get(position).getO();
                 holder.postBinding.setPostVM(new MyPageViewModel());
+
+                if(!listItem.getP_expenses().contains("₩")){
+                    String expenses = listItem.getP_expenses();
+
+                    listItem.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(expenses)));
+                }
+
                 holder.postBinding.getPostVM().mp_post.setValue(listItem);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {

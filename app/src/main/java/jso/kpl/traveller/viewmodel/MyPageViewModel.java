@@ -13,6 +13,7 @@ import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
@@ -21,6 +22,7 @@ import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.MyPageAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.FavoriteCountry;
@@ -33,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPageClickListener, Callback {
+public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPageClickListener {
 
     String TAG = "Trav.MyPageViewModel.";
 
@@ -70,9 +72,13 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     //[My Page - View Type: Flag]의 아이템
     // -> Flag 뷰타입의 리사이클러 뷰의 아이템 리스트 - Object로 받는다. 1) 국기 2) post
-    public MutableLiveData<List<String>> mp_flag = new MutableLiveData<>();
+    public MutableLiveData<List<Country>> mp_flag = new MutableLiveData<>();
 
-    public MutableLiveData<String> mp_flag_item = new MutableLiveData<>();
+    public MutableLiveData<String> mpFlagItem = new MutableLiveData<>();
+
+    public String subtitleStr;
+
+    List<Country> countryVOList;
 
     public View.OnClickListener onEditingPostClickListener;
 
@@ -90,6 +96,11 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     final int SUB_COUNTRY = 1;
     final int SUB_FAVORITE = 2;
     final int SUB_ENROLL = 3;
+
+    //통신------------------------------------------------------------------------------------------
+    CountryAPI countryAPI;
+    Call<ResponseResult<List<Country>>> call;
+    //----------------------------------------------------------------------------------------------
 
     public MyPageViewModel() {
 
@@ -123,8 +134,51 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     }
 
     //[My Page - View Type: Flag]의 반환 값
-    public MyPageItem getFlagList(List<String> list) {
-        return new MyPageItem(list, FLAG_ITEM);
+    public void getFlagList() {
+
+        final Country addCountry = new Country(0, null, "add_flag", null, null, null, null, null, false);
+        addCountry.setCt_flag();
+
+        countryVOList = new ArrayList<>();
+
+        countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
+
+        call = countryAPI.loadFavoriteCountry(App.Companion.getUserid(), 1);
+
+        call.enqueue(new Callback<ResponseResult<List<Country>>>() {
+            @Override
+            public void onResponse(Call<ResponseResult<List<Country>>> call, Response<ResponseResult<List<Country>>> response) {
+
+                if (response.body() != null) {
+                    ResponseResult<List<Country>> res = ((ResponseResult<List<Country>>) response.body());
+
+                    if(res.getRes_obj() != null){
+                        List<Country> listItem = res.getRes_obj();
+
+                        for(int i = 0; i < listItem.size(); i++){
+                            listItem.get(i).setCt_flag();
+
+                            Log.d(TAG, "My Page Country: " + listItem.get(i).toString());
+                        }
+                        countryVOList = listItem;
+                    }
+
+                } else {
+                    Log.d(TAG, "onResponse: My Page 없음");
+                }
+
+                countryVOList.add(addCountry);
+
+                itemList.getValue().add(3, new MyPageItem(countryVOList, FLAG_ITEM));
+            }
+
+            @Override
+            public void onFailure(Call<ResponseResult<List<Country>>> call, Throwable t) {
+                countryVOList.add(addCountry);
+                itemList.getValue().add(3, new MyPageItem(countryVOList, FLAG_ITEM));
+            }
+        });
+
     }
 
     //[My Page - View Type: Flag]의 반환 값
@@ -145,7 +199,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
             case 2:
                 //enroll
                 return new MyPageItem(
-                        new RePost(imageUri,post), USER_POST);
+                        new RePost(imageUri, post), USER_POST);
             default:
                 return null;
         }
@@ -161,7 +215,7 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     public void onSearchClicked() {
         Log.d(TAG, "onSearchClicked");
 
-        Intent intent =new Intent(App.INSTANCE, RouteSearch.class);
+        Intent intent = new Intent(App.INSTANCE, RouteSearch.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         App.INSTANCE.startActivity(intent);
@@ -181,14 +235,16 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     public void onMoreClicked(int type) {
 
         Intent intent = new Intent(App.INSTANCE, RouteList.class);
-
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         switch (type) {
             case SUB_COUNTRY:
-                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
-                App.INSTANCE.startActivity(intent);
-                Log.d(TAG + "More", "선호 국가 더 보기");
+
+                Intent flagIntent = new Intent(App.INSTANCE, FavoriteCountry.class);
+                flagIntent .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                flagIntent .putExtra("type", 0);
+                App.INSTANCE.startActivity(flagIntent);
+
                 break;
             case SUB_FAVORITE:
                 intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
@@ -210,75 +266,88 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     @Override
     public void onAddFlagClicked() {
-        Log.d(TAG, "onAddFlagClicked: ");
 
-        Intent intent =new Intent(App.INSTANCE, FavoriteCountry.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent flagIntent = new Intent(App.INSTANCE, FavoriteCountry.class);
+        flagIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        flagIntent.putExtra("type", 1);
+        App.INSTANCE.startActivity(flagIntent);
 
-        App.INSTANCE.startActivity(intent);
+        Log.d(TAG + "More", "선호 국가 더 보기");
     }
 
     public void init(User user) {
 
-        mp_flag.setValue(new ArrayList<String>());
-        mp_flag.getValue().add(imageUri);
-        mp_flag.getValue().add(imageUri);
-        mp_flag.getValue().add("android.resource://jso.kpl.traveller/drawable/i_flag_add_icon");
+        mp_flag.setValue(new ArrayList<Country>());
 
         //My Page의 리사이클러 뷰에 들어갈 데이터 객체화
         //들어가는 순서대로 뷰에 출력
         itemList.setValue(new ArrayList<MyPageItem>());
 
-        if(user != null)
+        //0. 유저 프로필
+        if (user != null)
             itemList.getValue().add(getHeadProfile(user.getU_profile_img(), user.getU_email()));
 
+        //1. 루트 서치
         itemList.getValue().add(getRouteSearch());
 
-        itemList.getValue().add(getSubtitle(1, "Preferred Country", true));
-        itemList.getValue().add(getFlagList(mp_flag.getValue()));
+        //2. 서브 타이틀 - 선호하는 국가
+        itemList.getValue().add(getSubtitle(1, "선호하는 국가", true));
 
-        itemList.getValue().add(getSubtitle(2, "Favorites Post", true));
-        itemList.getValue().add(getUserPost(0));
+        //3. 선호하는 국가 국기 리스트
+        getFlagList();
+
+        //4. 서브 타이틀 - 좋아하는 포스트
+        itemList.getValue().add(getSubtitle(2, "좋아하는 포스트", true));
+
+        //5, 6. 유저 포스트 - 좋아하는 포스트
+        itemList.getValue().add( getUserPost(0));
         itemList.getValue().add(getUserPost(1));
 
-        itemList.getValue().add(getSubtitle(-1, "Recent Post", false));
+        //7. 서브 타이틀 - 최근 포스트
+        itemList.getValue().add(getSubtitle(-1, "최근 포스트", false));
+
+        //8. 유저 포스트 - 최근 포스트
         itemList.getValue().add(getUserPost(1));
 
-        itemList.getValue().add(getSubtitle(3, "Enrolled Post", true));
-        myPageAPI.myPageEnroll(App.Companion.getUserid()).enqueue(this);
+        //9. 서브 타이틀 - 내가 등록한 포스트
+        itemList.getValue().add(getSubtitle(3, "내가 등록한 포스트", true));
 
+        myPageAPI.myPageEnroll(App.Companion.getUserid()).enqueue(new Callback<ResponseResult<List<ListItem>>>() {
 
-    }
+            @Override
+            public void onResponse(Call call, Response response) {
+                Log.d(TAG + "통신 성공", "성공적으로 전송");
 
-    @Override
-    public void onResponse(Call call, Response response) {
-        Log.d(TAG + "통신 성공","성공적으로 전송");
+                if (response.body() != null) {
+                    ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
 
-        if(response.body() != null){
-            ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
+                    List<ListItem> listItem = res.getRes_obj();
+                    if (listItem != null) {
+                        for (ListItem item : listItem) {
+                            String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
+                            item.setU_profile_img(imgPath);
+                            itemList.getValue().add(new MyPageItem(
+                                    item, USER_POST));
+                        }
+                    } else {
 
-            List<ListItem> listItem = res.getRes_obj();
-            if (listItem != null) {
-                for (ListItem item : listItem) {
-                    String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
-                    item.setU_profile_img(imgPath);
-                    itemList.getValue().add(new MyPageItem(
-                            item, USER_POST));
+                    }
+                } else {
+                    Log.d(TAG, "onResponse: My Page 없음");
                 }
-            } else {
 
             }
-        } else{
-            Log.d(TAG, "onResponse: My Page 없음");
-        }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+                t.printStackTrace();
+            }
+        });
+
 
     }
 
-    @Override
-    public void onFailure(Call call, Throwable t) {
-        Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
-        Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
-        t.printStackTrace();
-    }
 
 }

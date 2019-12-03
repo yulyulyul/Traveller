@@ -54,28 +54,28 @@ public class GridTypePost extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.grid_type_post, container, false);
         binding.setGridVm(routeListVm);
         binding.setLifecycleOwner(this);
-
-        binding.getGridVm().onGridScrollListener = new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                int lastVisibleItemPosition = ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPositions(null)[0];
-                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
-
-                if(itemTotalCount < 12){
-                    Log.d(TAG, "onScrollStateChanged: ");
-                } else{
-                    if((itemTotalCount - 3) == lastVisibleItemPosition || (itemTotalCount - 2) == lastVisibleItemPosition || (itemTotalCount - 1) == lastVisibleItemPosition || itemTotalCount == lastVisibleItemPosition){
-
-                        binding.getGridVm().searchByCondition((MyPageItem) getActivity().getIntent().getSerializableExtra("req"));
-
-                        Log.d(TAG, "onScrollStateChanged: 마지막이야");
-                    }
-                }
-            }
-        };
+//
+//        binding.getGridVm().onGridScrollListener = new RecyclerView.OnScrollListener() {
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                int lastVisibleItemPosition = ((StaggeredGridLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPositions(null)[0];
+//                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
+//
+//                if(itemTotalCount < 17){
+//                    Log.d(TAG, "onScrollStateChanged: ");
+//                } else{
+//                    if((itemTotalCount - 3) == lastVisibleItemPosition || (itemTotalCount - 2) == lastVisibleItemPosition || (itemTotalCount - 1) == lastVisibleItemPosition || itemTotalCount == lastVisibleItemPosition){
+//
+//                        binding.getGridVm().searchByCondition((MyPageItem) getActivity().getIntent().getSerializableExtra("req"));
+//
+//                        Log.d(TAG, "onScrollStateChanged: 마지막이야");
+//                    }
+//                }
+//            }
+//        };
 
         return binding.getRoot();
     }

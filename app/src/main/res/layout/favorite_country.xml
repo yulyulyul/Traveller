@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="VM"
-            type="jso.kpl.traveller.viewmodel.FavoriteCountry_VM" />
+            name="fcVm"
+            type="jso.kpl.traveller.viewmodel.FavoriteCountryViewModel" />
 
     </data>
 
@@ -13,5 +13,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:setLinearRvAdapter="@{VM.adapter}" />
+        app:setLinearRvAdapter="@{fcVm.fciAdapter}"
+        android:background="@color/simple_white"/>
 </layout>

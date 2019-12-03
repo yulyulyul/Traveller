@@ -12,6 +12,7 @@ import java.util.List;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.FlagImageBinding;
+import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
@@ -20,8 +21,9 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     //Flag 뷰의 클릭 리스너, 국기를 클릭 할 때와 국기 추가를 클릭할 때
     public OnFlagClickListener onFlagClickListener;
 
-    public interface OnFlagClickListener{
+    public interface OnFlagClickListener {
         void onFlagClicked();
+
         void onAddFlagClicked();
     }
 
@@ -34,9 +36,9 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     FlagImageBinding binding;
 
     //선호 플래그 4개 + 국기 추가 1개
-    List<String> flagList;
+    List<Country> flagList;
 
-    public FlagRvAdapter(List<String> flagList) {
+    public FlagRvAdapter(List<Country> flagList) {
         this.flagList = flagList;
     }
 
@@ -54,11 +56,9 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     @Override
     public void onBindViewHolder(@NonNull FlagRvAdapter.FlagRvViewHolder holder, final int position) {
 
-        String imgStr = flagList.get(position);
+        Country country = flagList.get(position);
 
-        holder.binding.setFlagRvVM(new MyPageViewModel());
-
-        holder.binding.getFlagRvVM().mp_flag_item.setValue(imgStr);
+        holder.onBind(country.getCt_flag());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +66,9 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
 
                 //플래그 4개는 선호 국가 클릭 리스너, 마지막 플러스 이미지는 선호 국가 추가 클릭 리스너
                 //플래그 마지막 더하기
-                if(position == flagList.size() - 1){
+                if (position == flagList.size() - 1) {
                     onFlagClickListener.onAddFlagClicked();
-                }else{
+                } else {
                     //플래그 클릭
                     onFlagClickListener.onFlagClicked();
                 }
@@ -79,14 +79,10 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     @Override
     public int getItemCount() {
         //해당 리사이클러 뷰의 최대 갯수를 5개로 제한
-        if(flagList.size() < 6){
-            return flagList.size();
-        }else{
-            return 5;
-        }
+        return flagList.size();
     }
 
-    class FlagRvViewHolder extends RecyclerView.ViewHolder{
+    class FlagRvViewHolder extends RecyclerView.ViewHolder {
 
         FlagImageBinding binding;
 
@@ -94,8 +90,12 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
             super(binding.getRoot());
             this.binding = binding;
 
+            binding.setFlagRvVM(new MyPageViewModel());
             binding.setLifecycleOwner(new MyPage());
-            binding.executePendingBindings();
+        }
+
+        public void onBind(String img){
+            binding.getFlagRvVM().mpFlagItem.setValue(img);
         }
     }
 }

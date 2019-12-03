@@ -44,12 +44,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="90"
-            app:onRefreshListener="@{mainListVm.onRefreshListener}">
+            app:onRefreshListener="@{mainListVm.onRefreshListener}"
+            app:checkRefresh="@{mainListVm.isRefresh}">
 
             <FrameLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@color/simple_white"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

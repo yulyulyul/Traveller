@@ -41,18 +41,16 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
     }
 
     //리사이클러 뷰의 아이템 리스트
-    List<ListItem> postList;
+    List<ListItem> postList = new ArrayList<>();
 
     //생성자
-    public GridTypePostAdapter(List<ListItem> list) {
-        this.postList = list;
+    public GridTypePostAdapter() {
+
     }
 
     @NonNull
     @Override
     public GridTypePostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        Log.d(TAG + "onCreateViewHolder", "Start");
 
         LayoutInflater lif = LayoutInflater.from(parent.getContext());
 
@@ -66,10 +64,6 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
         //RePost(Post + imgStr)의 객체
         final ListItem item = postList.get(position);
-
-        String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getSp_imgs();
-
-        item.setSp_imgs(path);
 
         holder.onBind(item);
 
@@ -137,6 +131,9 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
         }
 
         public void onBind(ListItem item) {
+
+            String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getSp_imgs();
+            item.setSp_imgs(path);
 
             binding.getGridItemVm().postLD.setValue(item);
         }

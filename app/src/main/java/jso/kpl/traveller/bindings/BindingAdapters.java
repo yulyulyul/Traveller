@@ -1,8 +1,10 @@
 package jso.kpl.traveller.bindings;
 
+import android.graphics.Rect;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -16,7 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -34,6 +35,7 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
+import jso.kpl.traveller.util.JavaUtil;
 
 //RecyclerView에 Adapter 적용
 public class BindingAdapters {
@@ -55,10 +57,10 @@ public class BindingAdapters {
         recyclerView.setAdapter(adapter);
     }
 
-    @BindingAdapter("setGridRvAdapter")
-    public static void onBindGridRvAdapter(RecyclerView rv, RecyclerView.Adapter<?> adapter) {
+    @BindingAdapter({"setGridRvAdapter", "setGridSpan"})
+    public static void onBindGridRvAdapter(RecyclerView rv, RecyclerView.Adapter<?> adapter, int count) {
 
-        rv.setLayoutManager(new GridLayoutManager(rv.getContext(), 5));
+        rv.setLayoutManager(new GridLayoutManager(rv.getContext(), count));
         rv.setAdapter(adapter);
     }
 
@@ -301,4 +303,29 @@ public class BindingAdapters {
         });
     }
 
+    @BindingAdapter("extendTouchRange")
+    public static void bindTouchRange(final View v, final int size) {
+        final View parent = (View) v.getParent();
+
+        parent.post(new Runnable() {
+            @Override
+            public void run() {
+                final Rect r = new Rect();
+                r.bottom = JavaUtil.dpToPx(size);
+                r.top = JavaUtil.dpToPx(size);
+                r.left = JavaUtil.dpToPx(size);
+                r.right = JavaUtil.dpToPx(size);
+
+                parent.setTouchDelegate(new TouchDelegate(r, v));
+            }
+        });
+    }
+
+    @BindingAdapter({"bind:loadImage"})
+    public static void loadImage(ImageView imageView, int imageUrl) {
+        Glide.with(imageView.getContext())
+                .load(imageUrl)
+                .error(R.drawable.i_empty_image_icon)
+                .into(imageView);
+    }
 }

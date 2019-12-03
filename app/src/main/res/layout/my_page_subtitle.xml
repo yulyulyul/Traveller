@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -10,37 +11,34 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="10dp"
-            android:background="#D5D5D5"/>
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="5dp"
+        android:gravity="center">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp">
-
+            android:layout_marginHorizontal="25dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:textStyle="bold"
                 android:text="@{subtitleVM.mp_subtitle.subtitle}" />
 
-            <ImageButton
+            <TextView
                 android:id="@+id/mp_more_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
-                android:background="@drawable/i_plus_icon"
+                android:text="@{subtitleVM.subtitleStr}"
+                android:textSize="16dp"
                 android:scaleType="fitCenter"
+                app:extendTouchRange="@{10}"
                 android:visibility="@{subtitleVM.mp_subtitle.visible ? View.VISIBLE:View.GONE}"/>
 
         </RelativeLayout>

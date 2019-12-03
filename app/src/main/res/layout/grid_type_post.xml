@@ -10,7 +10,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:setStaggerRvAdapter="@{gridVm.gridAdapter}"
+            app:setGridRvAdapter="@{gridVm.gridAdapter}"
+            app:setGridSpan="@{3}"
             app:setDecoration="@{gridVm.decoration}"
             app:onAddScrollListener="@{gridVm.onGridScrollListener}"/>
 

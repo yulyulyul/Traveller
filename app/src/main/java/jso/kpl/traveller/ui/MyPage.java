@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MyPageBinding;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
 public class MyPage extends AppCompatActivity {
@@ -33,6 +35,7 @@ public class MyPage extends AppCompatActivity {
 
         myPageVM = new MyPageViewModel();
 
+        //유저 데이터를 가져온다.
         if(getIntent() != null){
 
             user = ((User)getIntent().getSerializableExtra("user"));
@@ -45,7 +48,7 @@ public class MyPage extends AppCompatActivity {
         myPageVM.setOnEditingPostClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: ");
+                Log.d(TAG, "Go 포스트 작성");
                 startActivityForResult(new Intent(getApplicationContext(), EditingPost.class), EDITING_POST);
             }
         });
@@ -55,24 +58,22 @@ public class MyPage extends AppCompatActivity {
         pageBinding.setLifecycleOwner(this);
 
         pageBinding.getMyPageVm().init(user);
-
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == 0) {
-            System.out.println("나야나 : ");
-            System.out.println("req Code : " + requestCode);
-            System.out.println("res Code : " + resultCode);
-            Toast.makeText(App.INSTANCE, "포스트 등록 안했음..", Toast.LENGTH_LONG).show();
+            Toast.makeText(App.INSTANCE, "포스트 등록을 취소하셨습니다.", Toast.LENGTH_LONG).show();
         } else {
-            System.out.println("req Code : " + requestCode);
-            System.out.println("res Code : " + resultCode);
             Intent intent = getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
             startActivity(intent);
-            Toast.makeText(App.INSTANCE, "포스트 등록 했음..", Toast.LENGTH_LONG).show();
+            Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록을 하셨습니다.", Toast.LENGTH_LONG).show();
         }
+
     }
+
 }

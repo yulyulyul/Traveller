@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/style_route_node"
-        android:backgroundTint="@color/clicked"/>
+        android:backgroundTint="@color/clicked" />
 
     <jso.kpl.traveller.ui.RouteView.RouteLine
         android:id="@+id/headLine"

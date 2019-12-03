@@ -2,9 +2,11 @@ package jso.kpl.traveller.ui.adapters
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Rect
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -16,6 +18,7 @@ import jso.kpl.traveller.model.Route
 import jso.kpl.traveller.model.SmallPost
 import jso.kpl.traveller.model.ViewTag
 import jso.kpl.traveller.ui.TestPage
+import jso.kpl.traveller.util.JavaUtil
 import kotlinx.android.synthetic.main.custom_node.view.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -304,6 +307,19 @@ class RouteNodeAdapter
     // RootLinear의 마지막 view에 추가한다.
     private fun addNode(_node :View, _idx:Int)
     {
+
+        val parent = _node.nodeBtn.getParent() as View
+
+        parent.post {
+            val r = Rect()
+            r.bottom = JavaUtil.dpToPx(20.0f)
+            r.top = JavaUtil.dpToPx(20.0f)
+            r.left = JavaUtil.dpToPx(20.0f)
+            r.right = JavaUtil.dpToPx(20.0f)
+
+            parent.touchDelegate = TouchDelegate(r, _node.nodeBtn)
+        }
+
         _node.nodeBtn.setOnClickListener(View.OnClickListener {
             //    Toast.makeText(ctx, "node location : " + _node.locationText.text + " cost val : " + _node.costtv.text, Toast.LENGTH_SHORT).show()
 

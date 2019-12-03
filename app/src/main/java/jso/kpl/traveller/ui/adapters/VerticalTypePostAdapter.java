@@ -19,6 +19,7 @@ import jso.kpl.traveller.databinding.VerticalPostItemBinding;
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.RePost;
 import jso.kpl.traveller.ui.RouteList;
+import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
 public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePostAdapter.VerticalTypePostViewHolder> {
@@ -40,10 +41,10 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
     }
 
     //리사이클러 뷰의 아이템 리스트
-    List<ListItem> postList;
+    List<ListItem> postList = new ArrayList<>();
 
-    public VerticalTypePostAdapter(List<ListItem> list) {
-        this.postList = list;
+    public VerticalTypePostAdapter() {
+
     }
 
     @NonNull
@@ -62,10 +63,6 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
 
         //RePost(Post + imgStr)의 객체
         final ListItem item = postList.get(position);
-
-        String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
-
-        item.setU_profile_img(path);
 
         holder.onBind(item);
 
@@ -133,6 +130,17 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
         }
 
         public void onBind(ListItem item){
+
+            if(!item.getU_profile_img().contains("http://")){
+                String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
+                item.setU_profile_img(path);
+            }
+
+            if(!item.getP_expenses().contains("₩")){
+                Long expensesLng = Long.parseLong(item.getP_expenses());
+                item.setP_expenses(CurrencyChange.moneyFormatToWon(expensesLng));
+            }
+
             binding.getVerticalItemVm().postLD.setValue(item);
 
         }

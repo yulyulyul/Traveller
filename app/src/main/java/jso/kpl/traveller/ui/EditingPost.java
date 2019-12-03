@@ -108,6 +108,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                                 else
                                     total_expense += Integer.parseInt(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
                             }
+
+                            post.setP_expenses(total_expense + "");
                         }
                     } else{
                        post.setP_expenses(0 + "");

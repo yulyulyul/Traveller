@@ -3,103 +3,114 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
-            name="FC"
-            type="jso.kpl.traveller.model.FavoriteCountryVO" />
-
-        <variable
-            name="imageUrl"
-            type="int" />
-
+            name="countryItem"
+            type="jso.kpl.traveller.model.Country" />
     </data>
 
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="5dp">
 
         <RelativeLayout
             android:id="@+id/relativeParent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/s_border">
+            android:gravity="center"
+            android:layout_margin="10dp">
 
-            <ImageView
-                android:id="@+id/flag"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                app:loadImage="@{imageUrl}" />
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="false"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/flag">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/country"
+                <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:cardCornerRadius="5dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        app:setFitCenterImg="@{countryItem.ct_flag}" />
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@{FC.country}"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:layout_gravity="center">
 
-                <TextView
-                    android:id="@+id/country_eng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/country"
-                    android:text="@{FC.country_eng}"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
 
-                <TextView
-                    android:id="@+id/continent_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/country"
-                    android:layout_alignLeft="@id/country"
-                    android:text="@string/continent" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:text="@{countryItem.ct_name}"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
 
-                <TextView
-                    android:id="@+id/continent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/continent_txt"
-                    android:layout_toRightOf="@id/continent_txt"
-                    android:text="@{FC.continent}" />
+                        <TextView
+                            android:id="@+id/country_eng"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{countryItem.ct_eng_name}"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
 
-                <TextView
-                    android:id="@+id/capital_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/continent_txt"
-                    android:layout_alignParentTop="false"
-                    android:layout_marginLeft="15dp"
-                    android:layout_toRightOf="@id/continent"
-                    android:text="@string/capital" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/capital"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/continent_txt"
-                    android:layout_alignParentTop="false"
-                    android:layout_toRightOf="@id/capital_txt"
-                    android:text="@{FC.capital}" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-            </RelativeLayout>
+                        <TextView
+                            android:id="@+id/continent_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/continent" />
+
+                        <TextView
+                            android:id="@+id/continent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{countryItem.ct_continent}" />
+
+                        <TextView
+                            android:id="@+id/capital_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/capital" />
+
+                        <TextView
+                            android:id="@+id/capital"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{countryItem.ct_capital}" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <Button
-                android:id="@+id/country_info_btn"
+                android:id="@+id/add_country_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -107,10 +118,26 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="12dp"
-                android:background="@android:drawable/ic_menu_send" />
+                android:backgroundTint="@color/clicked"
+                android:background="@android:drawable/ic_menu_add"
+                android:visibility="@{countryItem.ct_is_add_ld?View.GONE:View.VISIBLE}"/>
+
+            <Button
+                android:id="@+id/remove_country_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="12dp"
+                android:backgroundTint="@color/clicked"
+                android:background="@android:drawable/ic_menu_close_clear_cancel"
+                android:visibility="@{countryItem.ct_is_add_ld?View.VISIBLE:View.GONE}"/>
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
 </layout>

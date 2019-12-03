@@ -19,9 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +70,16 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     //검색 결과 리스트
     public MutableLiveData<ListItem> postLD = new MutableLiveData<>();
 
+    MyPageItem item;
+
+    public MyPageItem getItem() {
+        return item;
+    }
+
+    public void setItem(MyPageItem item) {
+        this.item = item;
+    }
+
     //각 adapter - 해당 뷰페이저의 Adapter, 각 뷰페이저의 프래그먼트들의 Adapter
     public GridTypePostAdapter gridAdapter;
     public VerticalTypePostAdapter verticalAdapter;
@@ -82,29 +89,26 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
     //통신 관련 -------------------------------------------------------------------------------------
     PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);
-    int lastPid = 0;
-    int categoryNo = 0;
+    public int lastPid = 0;
+    public int categoryNo = 0;
 
-    public SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            Log.d(TAG, "onRefresh: 된다아아");
-        }
-    };
+    public MutableLiveData<Boolean> isRefresh = new MutableLiveData<>();
 
-    //Grid View의 스크롤 상태
+    public SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+
     public RecyclerView.OnScrollListener onGridScrollListener;
 
-    //vertical view 스크롤 상태
     public RecyclerView.OnScrollListener onVerticalScrollListener;
 
     //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {
 
+        isRefresh.setValue(false);
+
         postList.setValue(new ArrayList<ListItem>());
 
-        gridAdapter = new GridTypePostAdapter(postList.getValue());
-        verticalAdapter = new VerticalTypePostAdapter(postList.getValue());
+        gridAdapter = new GridTypePostAdapter();
+        verticalAdapter = new VerticalTypePostAdapter();
 
         gridAdapter.setOnGridItemClickListener(this);
         verticalAdapter.setOnVerticalItemClickListener(this);
@@ -227,6 +231,8 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             final int no = item.getType();
 
+            Log.d(TAG, "searchByCondition: " + lastPid);
+
             switch (no) {
                 case 0:
                     Log.d(TAG, "searchByCondition-Search");
@@ -249,8 +255,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             Log.d(TAG, "searchByCondition: Null");
         }
-
-
     }
 
     /*
@@ -295,7 +299,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
         categoryItem.setLayoutParams(params);
         categoryItem.setPadding(10, 10, 10, 10);
-        categoryItem.setBackgroundResource(R.drawable.s_border_round_square);
+        categoryItem.setBackgroundResource(R.drawable.s_border_round_square_gray);
         categoryItem.setOrientation(LinearLayout.HORIZONTAL);
         categoryItem.setVerticalGravity(Gravity.CENTER_VERTICAL);
 
@@ -311,7 +315,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         categoryItem.addView(tv);
 
         return categoryItem;
-
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -331,6 +334,8 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         //선택한 카테고리의 수에 따라 텍스트 뷰 생성
         for (int i = 0; i < categoryList.size(); i++) {
 
+            final int index = i;
+
             final LinearLayout tv = addCategoryItem(context, categoryList.get(i));
 
             layout.addView(tv);
@@ -338,7 +343,32 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "태그: " + ((TextView) tv.getChildAt(0)).getText().toString(), Toast.LENGTH_SHORT).show();
+
+                    lastPid = 0;
+
+                    for (int j = 0; j < layout.getChildCount(); j++) {
+
+                        if (layout.getChildAt(j) == tv) {
+                            layout.getChildAt(j).setBackgroundResource(R.drawable.s_border_round_square);
+
+                            categoryNo = j;
+
+                        } else {
+                            layout.getChildAt(j).setBackgroundResource(R.drawable.s_border_round_square_gray);
+                        }
+                    }
+
+                    postList.setValue(new ArrayList<ListItem>());
+
+                    gridAdapter.removeItems();
+                    verticalAdapter.removeItems();
+
+                    gridAdapter.notifyDataSetChanged();
+                    verticalAdapter.notifyDataSetChanged();
+
+                    searchByCondition(getItem());
+
+                    Toast.makeText(context, index + "번째 태그: " + ((TextView) tv.getChildAt(0)).getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -353,17 +383,30 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
         if (response.body() != null) {
 
+            postList.setValue(new ArrayList<ListItem>());
+            Log.d(TAG, "first p_id: " + lastPid);
             ResponseResult<List<ListItem>> result = (ResponseResult<List<ListItem>>) response.body();
 
-            if (result.getRes_type() == 1)
+            if (result.getRes_type() == 1) {
                 postList.getValue().addAll(result.getRes_obj());
-            else
+
+                gridAdapter.addItems(postList.getValue());
+                gridAdapter.notifyDataSetChanged();
+
+                verticalAdapter.addItems(postList.getValue());
+                verticalAdapter.notifyDataSetChanged();
+
+            } else if (result.getRes_type() == 0) {
                 Log.d(TAG, "onResponse: " + result.getRes_msg());
+                Toast.makeText(App.INSTANCE, "더 이상 포스트가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+            }
 
-            if(postList.getValue() != null && postList.getValue().size() > 0)
-                 lastPid = postList.getValue().get(postList.getValue().size() - 1).getP_id();
+            if (postList.getValue() != null && postList.getValue().size() > 0) {
 
-            gridAdapter.notifyDataSetChanged();
+                lastPid = postList.getValue().get(postList.getValue().size() - 1).getP_id();
+                Log.d(TAG, "last p_id: " + lastPid);
+            }
+
         }
     }
 
@@ -376,7 +419,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         Log.e(TAG, "Post init load onFailure: ", t);
     }
 
-
     //----------------------------------------------------------------------------------------------
 
     @BindingAdapter("onAddScrollListener")
@@ -386,12 +428,11 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         }
     }
 
-    @BindingAdapter("onRefreshListener")
-    public static void bindRefreshListener(SwipeRefreshLayout swipeRefreshLayout, SwipeRefreshLayout.OnRefreshListener listener) {
+    @BindingAdapter({"onRefreshListener", "checkRefresh"})
+    public static void bindRefreshListener(SwipeRefreshLayout swipeRefreshLayout, SwipeRefreshLayout.OnRefreshListener listener, boolean isRefresh) {
 
         swipeRefreshLayout.setOnRefreshListener(listener);
-        swipeRefreshLayout.setRefreshing(false);
-
+        swipeRefreshLayout.setRefreshing(isRefresh);
     }
 
 }

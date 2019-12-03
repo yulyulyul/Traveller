@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.Nullable
 import com.facebook.AccessToken
 import com.facebook.Profile
@@ -32,11 +33,17 @@ class App : Application()
         var userid:Int = 0
         var userNickname = ""
 
+        fun sendToast(msg:String){
+            Toast.makeText(App.INSTANCE, msg, Toast.LENGTH_SHORT).show();
+        }
+
         fun getGoogleAuth() : FirebaseAuth
         {
             return googleAuth
         }
     }
+
+
 
     override fun onCreate()
     {

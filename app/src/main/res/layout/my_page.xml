@@ -23,8 +23,7 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#ffffff"
-            app:backgroundTint="#80808080"
+            app:backgroundTint="@color/clicked"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
