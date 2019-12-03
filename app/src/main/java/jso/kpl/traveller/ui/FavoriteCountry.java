@@ -72,6 +72,7 @@ public class FavoriteCountry extends AppCompatActivity {
                     call = countryAPI.addFlag(App.Companion.getUserid(), country.getCt_no());
                 }
 
+                Log.d(TAG, "onBtnClicked: ");
                 call.enqueue(new Callback<ResponseResult<Integer>>() {
                     @Override
                     public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
