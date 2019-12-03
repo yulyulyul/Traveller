@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,6 +37,8 @@ import jso.kpl.traveller.R;
 import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
 import jso.kpl.traveller.util.JavaUtil;
+import me.jerryhanks.timelineview.IndicatorAdapter;
+import me.jerryhanks.timelineview.TimeLineView;
 
 //RecyclerView에 Adapter 적용
 public class BindingAdapters {
@@ -184,7 +187,7 @@ public class BindingAdapters {
     public static void onBindFitCenterImage(ImageView iv, String imgUri) {
 
         RequestOptions options
-                = RequestOptions.bitmapTransform(new FitCenter()).error(R.drawable.i_blank_person_icon);
+                = RequestOptions.bitmapTransform(new FitCenter()).error(null);
 
         Glide.with(iv.getContext())
                 .load(imgUri)
@@ -327,5 +330,26 @@ public class BindingAdapters {
                 .load(imageUrl)
                 .error(R.drawable.i_empty_image_icon)
                 .into(imageView);
+    }
+
+    // 동적 width 조절
+    @BindingAdapter("layout_width")
+    public static void setLayoutWidth(View view, float width) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.width = (int) width;
+        view.setLayoutParams(layoutParams);
+    }
+
+    // 동적 height 조절
+    @BindingAdapter("layout_height")
+    public static void setLayoutHeight(View view, float height) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = (int) height;
+        view.setLayoutParams(layoutParams);
+    }
+
+    @BindingAdapter({"setTimelineAdapter"})
+    public static void onBindTimelineAdapter(TimeLineView timelineView, IndicatorAdapter adapter) {
+        timelineView.setIndicatorAdapter(adapter);
     }
 }

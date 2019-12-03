@@ -36,9 +36,9 @@ public class MyPage extends AppCompatActivity {
         myPageVM = new MyPageViewModel();
 
         //유저 데이터를 가져온다.
-        if(getIntent() != null){
+        if (getIntent() != null) {
 
-            user = ((User)getIntent().getSerializableExtra("user"));
+            user = ((User) getIntent().getSerializableExtra("user"));
 
             App.Companion.setUserid(user.getU_userid());
             App.Companion.setUserNickname(user.getU_nick_name());
@@ -65,15 +65,13 @@ public class MyPage extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == 0) {
-            Toast.makeText(App.INSTANCE, "포스트 등록을 취소하셨습니다.", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "포스트 등록 안함");
         } else {
+            Log.d(TAG, "포스트 등록함");
             Intent intent = getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
             startActivity(intent);
-            Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록을 하셨습니다.", Toast.LENGTH_LONG).show();
         }
-
     }
-
 }

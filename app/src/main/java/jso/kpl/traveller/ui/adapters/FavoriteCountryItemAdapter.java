@@ -65,7 +65,6 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
     // getItemCount() - 전체 데이터 갯수 리턴
     @Override
     public int getItemCount() {
-
         return items.getValue().size();
     }
 
@@ -77,7 +76,6 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
 
     public void removeItem(Country vo) {
         items.getValue().remove(vo);
-
     }
 
     // 아이템뷰를 저장하는 뷰홀더 클래스
@@ -103,7 +101,6 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
 
                 }
             });
-
 
             //국가 추가 또는 제거
             this.binding.removeCountryBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,9 +143,6 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
                     }
                 }
             });
-
-
         }
     }
-
 }

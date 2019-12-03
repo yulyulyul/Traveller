@@ -111,5 +111,8 @@ dependencies {
 
     //이미지 멀티 피커
     implementation 'gun0912.ted:tedimagepicker:1.0.7'
+
+    //타임라인 뷰
+    implementation project(':timelineview')
 }
 apply plugin: 'com.google.gms.google-services'

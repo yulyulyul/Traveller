@@ -1,14 +1,14 @@
 package jso.kpl.traveller.viewmodel;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.MutableLiveData;
@@ -24,14 +24,45 @@ import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.databinding.TimeLineItemBinding;
+import jso.kpl.traveller.model.Cartlist;
+import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.model.Timeline;
+import jso.kpl.traveller.network.CartlistAPI;
+import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
+import jso.kpl.traveller.ui.adapters.CartlistItemAdapter;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
+import me.jerryhanks.timelineview.IndicatorAdapter;
+import me.jerryhanks.timelineview.interfaces.TimeLineViewCallback;
+import me.jerryhanks.timelineview.model.Status;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class EditingPostViewModel extends ViewModel implements View.OnClickListener {
+public class EditingPostViewModel extends ViewModel implements View.OnClickListener, Callback {
 
     String TAG = "Trav.EditingPostVm";
+
+    //Cartlist---------------------------------------------------------------------------------------
+    public MutableLiveData<CartlistItemAdapter> cartlistItemAdapter = new MutableLiveData<>();
+    public MutableLiveData<List<Cartlist>> cartlistItem = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isCartlist = new MutableLiveData<>();
+    public MutableLiveData<Boolean> noCartlist = new MutableLiveData<>();
+    public MutableLiveData<Integer> cartlistWidth = new MutableLiveData<>();
+    public View.OnClickListener onCartlistClickListener;
+    public MutableLiveData<IndicatorAdapter<Timeline>> timelineAdapter = new MutableLiveData<>();
+    public MutableLiveData<List<Timeline>> timelineItem = new MutableLiveData<>();
+    public MutableLiveData<Integer> timelineSelect = new MutableLiveData<>();
+
+    //레트로핏
+    CartlistAPI cartlistAPI = WebService.INSTANCE.getClient().create(CartlistAPI.class);
+
+    public void setOnCartlistClickListener(View.OnClickListener onCartlistClickListener) {
+        this.onCartlistClickListener = onCartlistClickListener;
+    }
 
     //상단바-----------------------------------------------------------------------------------------
     //EditPost 나가는 버튼 클릭 리스너
@@ -121,6 +152,20 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         isTag.setValue(false);
 
         photoList.setValue(new ArrayList<Uri>());
+
+        isCartlist.setValue(false);
+
+        cartlistAPI.cartlist(App.Companion.getUserid()).enqueue(this);
+
+        timelineItem.setValue(new ArrayList<Timeline>());
+        timelineItem.getValue().add(new Timeline(Status.COMPLETED, "", "", "", "", ""));
+        timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
+            public View onBindView(Timeline model, FrameLayout container, final int position) {
+                TimeLineItemBinding timeLineItemBinding = DataBindingUtil.inflate(LayoutInflater.from(App.INSTANCE), R.layout.time_line_item, container, false);
+                View view = timeLineItemBinding.getRoot();
+                return view;
+            }
+        }));
     }
 
     //달력 API 호출 반환값 - (String) Start Day & End Day
@@ -254,5 +299,104 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                 isCalendar.setValue(!isCalendar.getValue());
                 break;
         }
+    }
+
+    public void onCatelistCancelClicked() {
+        isCartlist.setValue(false);
+    }
+
+    public void onCartlistBackClick() {
+        isCartlist.setValue(false);
+        //cartlistWidth.setValue(-2);
+    }
+
+    @Override
+    public void onResponse(Call call, Response response) {
+        Log.d(TAG + "통신 성공", "성공적으로 전송");
+
+        ResponseResult<List<Cartlist>> cartlistRes = ((ResponseResult<List<Cartlist>>) response.body());
+
+        if (cartlistRes.getRes_type() == -1) {
+
+        } else if (cartlistRes.getRes_type() == 0) {
+            noCartlist.setValue(true);
+            Log.d(TAG, "카트리스트 없음");
+        } else {
+            noCartlist.setValue(false);
+            List<Cartlist> cartlist = cartlistRes.getRes_obj();
+            Log.d(TAG, cartlist.toString());
+            cartlistItem.setValue(new ArrayList<Cartlist>());
+            cartlistItem.getValue().addAll(cartlist);
+            Log.d(TAG, cartlistItem.getValue().toString());
+
+            cartlistItemAdapter.setValue(new CartlistItemAdapter(cartlistItem));
+
+            cartlistItemAdapter.getValue().setOnItemClickListener(
+                    new CartlistItemAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            int p_id = cartlistItem.getValue().get(position).getP_id();
+                            cartlistAPI.cartlist_timeline(p_id).enqueue(new Callback() {
+                                @Override
+                                public void onResponse(Call call, Response response) {
+                                    Log.d(TAG + "통신 성공", "성공적으로 전송");
+                                    timelineSelect.setValue(0);
+
+                                    ResponseResult<List<Timeline>> cartlistTimelineRes = ((ResponseResult<List<Timeline>>) response.body());
+                                    List<Timeline> cartlistTimeline = cartlistTimelineRes.getRes_obj();
+                                    for (int i = 0; i < cartlistTimeline.size(); i++) {
+                                        cartlistTimeline.get(i).setStatus(Status.COMPLETED);
+                                        cartlistTimeline.get(i).setSp_imgs(App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + cartlistTimeline.get(i).getSp_imgs());
+                                    }
+                                    timelineItem.getValue().clear();
+                                    timelineItem.getValue().addAll(cartlistTimeline);
+                                    Log.d(TAG, timelineItem.getValue().toString());
+
+                                    timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
+                                        public View onBindView(Timeline model, FrameLayout container, final int position) {
+                                            TimeLineItemBinding timeLineItemBinding = DataBindingUtil.inflate(LayoutInflater.from(App.INSTANCE), R.layout.time_line_item, container, false);
+
+                                            timeLineItemBinding.setTL(model);
+
+                                            timeLineItemBinding.content.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    System.out.println(position);
+                                                }
+                                            });
+
+                                            View view = timeLineItemBinding.getRoot();
+                                            return view;
+                                        }
+                                    }));
+
+                                    timelineAdapter.getValue().setOnItemClickListener(new IndicatorAdapter.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, int position) {
+                                            timelineSelect.setValue(position);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onFailure(Call call, Throwable t) {
+                                    Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+                                    t.printStackTrace();
+                                }
+                            });
+                            isCartlist.setValue(true); // 카트리스트 타임라인뷰 보이기
+                            onCartlistClickListener.onClick(view); // 네비게이션바 닫기
+                            //cartlistWidth.setValue(200);
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onFailure(Call call, Throwable t) {
+        Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
+        Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+        t.printStackTrace();
     }
 }

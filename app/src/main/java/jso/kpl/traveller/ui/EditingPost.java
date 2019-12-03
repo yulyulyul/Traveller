@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
@@ -236,7 +238,15 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             }
         });
 
-
+        binding.getEditingPostVm().setOnCartlistClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DrawerLayout drawer = binding.drawer;
+                        drawer.closeDrawer(Gravity.LEFT);
+                    }
+                }
+        );
     }
 
     @Override
@@ -253,7 +263,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 String endDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE);
 
                 if(binding.getEditingPostVm().travelPeriod.getValue() != null){
-                    Log.d(TAG, "onActivityResult: 낫널");
+                    Log.d(TAG, "onActivityResult: Not Null");
 
                     if(!startDate.equals("") && !startDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[0])){
                         binding.getEditingPostVm().travelPeriod.getValue()[0] = startDate;
