@@ -107,9 +107,12 @@
                     android:visibility="@{editingPostVm.isCartlist ? View.VISIBLE:View.GONE}">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/place"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/toolbar_cancel"
+                        android:gravity="center"
                         android:text="@{editingPostVm.timelineSelect != 0 ? editingPostVm.timelineItem.get(editingPostVm.timelineSelect).sp_place : editingPostVm.timelineItem.get(0).sp_place}"
                         android:textSize="20dp"
                         android:textStyle="bold" />
@@ -536,9 +539,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- 나중에 스몰포스트 > 카트리스트 전환 버튼
+                <!-- 나중에 스몰포스트 > 카트리스트 전환 버튼-->
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/back_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -549,7 +552,7 @@
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
                     android:onClick="@{()->editingPostVm.onCartlistBackClick()}"
-                    android:visibility="@{editingPostVm.isCartlist ? View.VISIBLE:View.GONE}" />-->
+                    android:visibility="gone" /><!--android:visibility="@{editingPostVm.isCartlist ? View.VISIBLE:View.GONE}"-->
 
                 <TextView
                     android:id="@+id/textView2"
@@ -564,7 +567,7 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/textView"
+                    android:layout_below="@id/back_btn"
                     app:setLinearRvAdapter="@{editingPostVm.cartlistItemAdapter}" /> <!--android:visibility="@{editingPostVm.isCartlist ? View.GONE:View.VISIBLE}"-->
             </RelativeLayout>
 
