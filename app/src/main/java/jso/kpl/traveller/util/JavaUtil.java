@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.io.File;
 import java.security.MessageDigest;
@@ -62,7 +64,7 @@ public class JavaUtil {
         }
     }
 
-    public static int dpToPx(float dp){
+    public static int dpToPx(float dp) {
         int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, App.INSTANCE.getResources().getDisplayMetrics());
         return px;
     }
@@ -73,6 +75,23 @@ public class JavaUtil {
         int drawableResourceId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
 
         return drawableResourceId;
+    }
+
+    public static void onTouchDownKey(View v, final View... views) {
+
+        final InputMethodManager imm = (InputMethodManager) App.INSTANCE.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (final View view : views) {
+
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    Log.d("Trav.util", "onClick");
+                    Log.d("Trav.util", "아이디: " + view.getId());
+                }
+            }
+        });
     }
 
 }

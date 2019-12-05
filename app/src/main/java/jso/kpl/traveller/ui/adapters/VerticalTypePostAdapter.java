@@ -133,7 +133,7 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
 
             if(!item.getU_profile_img().contains("http://")){
                 String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
-                item.setU_profile_img(path);
+                item.setU_profile_img(item.getU_profile_img());
             }
 
             if(!item.getP_expenses().contains("₩")){

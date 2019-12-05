@@ -174,8 +174,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
 
                             Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록했습니다.", Toast.LENGTH_LONG).show();
-                            //setResult(EDITING_POST);
-                            setResult(1);
+
+                            setResult(RESULT_OK);
                             finish();
                         }
 
@@ -386,11 +386,11 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         public void onClick(DialogInterface dialog, int which) {
                             try {
                                 //setResult(EDITING_POST);
-                                setResult(0);
+                                setResult(RESULT_CANCELED);
                                 finish();
                             } catch (Exception e) {
                                 //setResult(EDITING_POST);
-                                setResult(0);
+                                setResult(RESULT_CANCELED);
                                 finish();
                             }
                         }

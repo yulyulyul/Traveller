@@ -26,8 +26,6 @@ public class FavoriteCountryInfo extends AppCompatActivity implements Callback {
     private FavoriteCountryInfoBinding binding;
     private FavoriteCountryInfoViewModel fcInfoVm;
 
-    Call<ResponseResult<Integer>> call;
-
     int ctNo = 0;
 
     @Override
@@ -52,54 +50,27 @@ public class FavoriteCountryInfo extends AppCompatActivity implements Callback {
         binding.getFvInfoVm().init();
 
         binding.getFvInfoVm().loadCountryInfo(ctNo);
-
-        binding.getFvInfoVm().onAddClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                call = binding.getFvInfoVm().favoriteCountryCall(0);
-                call.enqueue(callback);
-            }
-        };
-
-        binding.getFvInfoVm().onRemoveClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                call = binding.getFvInfoVm().favoriteCountryCall(1);
-                call.enqueue(callback);
-
-            }
-        };
     }
 
 
     @Override
     public void onResponse(Call call, Response response) {
 
-        Intent intent = new Intent(App.INSTANCE, FavoriteCountry.class);
-        intent.putExtra("pos", getIntent().getIntExtra("pos",0));
-
         if(binding.getFvInfoVm().countryItem.getValue().ct_is_add_ld.getValue()){
 
             binding.getFvInfoVm().countryItem.getValue().ct_is_add_ld.setValue(false);
 
-            intent.putExtra("isAdd", false);
-            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK);
 
             App.Companion.sendToast("선호 국가가 취소되었습니다.");
 
         } else{
             binding.getFvInfoVm().countryItem.getValue().ct_is_add_ld.setValue(true);
 
-            intent.putExtra("isAdd", true);
-            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK);
 
             App.Companion.sendToast("선호 국가가 추가되었습니다.");
         }
-
-        intent.removeExtra("pos");
-        intent.removeExtra("isAdd");
     }
 
     @Override

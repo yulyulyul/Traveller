@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textStyle="bold"
-                android:text="@{subtitleVM.mp_subtitle.subtitle}" />
+                android:text="@{subtitleVM.mpSubtitleLD.subtitle}" />
 
             <TextView
                 android:id="@+id/mp_more_btn"
@@ -35,11 +35,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
-                android:text="@{subtitleVM.subtitleStr}"
                 android:textSize="16dp"
                 android:scaleType="fitCenter"
                 app:extendTouchRange="@{10}"
-                android:visibility="@{subtitleVM.mp_subtitle.visible ? View.VISIBLE:View.GONE}"/>
+                android:visibility="@{subtitleVM.mpSubtitleLD.visible ? View.VISIBLE:View.GONE}"/>
 
         </RelativeLayout>
     </LinearLayout>

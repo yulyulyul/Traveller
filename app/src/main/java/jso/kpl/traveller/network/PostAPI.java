@@ -32,4 +32,10 @@ public interface PostAPI {
     @FormUrlEncoded
     @POST("/search_by_enroll")
     Call<ResponseResult<List<ListItem>>> searchByEnroll(@Field("u_userid") int u_userid, @Field("p_id") int p_id);
+
+    //자신이 작성한 포스트 리스트를 가져온다.
+    @FormUrlEncoded
+    @POST("/load_like_post_list")
+    Call<ResponseResult<List<ListItem>>> loadLikePost(@Field("u_userid") int u_userid, @Field("p_id") int p_id, @Field("is_mypage") int is_mypage);
+
 }

@@ -1,8 +1,11 @@
 package jso.kpl.traveller.viewmodel;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
@@ -24,22 +27,22 @@ import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.MyPageAPI;
+import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
-import jso.kpl.traveller.ui.FavoriteCountry;
-import jso.kpl.traveller.ui.RouteList;
-import jso.kpl.traveller.ui.RouteOtherDetail;
 import jso.kpl.traveller.ui.RouteSearch;
+import jso.kpl.traveller.ui.SimplePost;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.ui.adapters.MyPageAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPageClickListener {
+public class MyPageViewModel extends ViewModel {
 
     String TAG = "Trav.MyPageViewModel.";
 
     //레트로핏
+    PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);
     MyPageAPI myPageAPI = WebService.INSTANCE.getClient().create(MyPageAPI.class);
 
     //----------------------------------------------------------------------------------------------
@@ -49,19 +52,19 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     public MyPageAdapter myPageAdapter;
 
     //(예정)Application class로 이동
-    String imageUri = "android.resource://jso.kpl.traveller/drawable/i_blank_person_icon";
+    public String imageUri = "android.resource://jso.kpl.traveller/drawable/dummy_travel_img1";
 
     //[My Page]의 리사이클러 뷰의 아이템 리스트
     // -> (Object o, int ViewType)의 리스트 형식
-    MutableLiveData<List<MyPageItem>> itemList = new MutableLiveData<>();
+    public MutableLiveData<List<MyPageItem>> itemList = new MutableLiveData<>();
 
     //[My Page - View Type: Profile]의 아이템
     // -> String 프로필 이미지, String 이메일
-    public MutableLiveData<MyPageProfile> mp_profile = new MutableLiveData<>();
+    public MutableLiveData<MyPageProfile> mpProfileLD = new MutableLiveData<>();
 
     //[My Page - View Type: subtitle]의 아이템
     // -> String 서브타이틀
-    public MutableLiveData<MyPageSubtitle> mp_subtitle = new MutableLiveData<>();
+    public MutableLiveData<MyPageSubtitle> mpSubtitleLD = new MutableLiveData<>();
 
     //[My Page - View Type: Flag]의 리사이클러 뷰의 adapter
     public FlagRvAdapter flagRvAdapter;
@@ -74,10 +77,6 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
     // -> Flag 뷰타입의 리사이클러 뷰의 아이템 리스트 - Object로 받는다. 1) 국기 2) post
     public MutableLiveData<List<Country>> mp_flag = new MutableLiveData<>();
 
-    public MutableLiveData<String> mpFlagItem = new MutableLiveData<>();
-
-    public String subtitleStr;
-
     List<Country> countryVOList;
 
     public View.OnClickListener onEditingPostClickListener;
@@ -86,16 +85,16 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         this.onEditingPostClickListener = onEditingPostClickListener;
     }
 
-    //My Page의 각 뷰타입
-    final int HEAD_PROFILE = 0;
+    public MutableLiveData<Boolean> isClick = new MutableLiveData<>();
+
+    public void onTestClicked() {
+        Log.d(TAG, "테스트 클릭 이벤트");
+        isClick.setValue(!isClick.getValue());
+    }
+
     final int ROUTE_SEARCH = 1;
     final int SUBTITLE_MORE = 2;
     final int USER_POST = 3;
-    final int FLAG_ITEM = 4;
-
-    final int SUB_COUNTRY = 1;
-    final int SUB_FAVORITE = 2;
-    final int SUB_ENROLL = 3;
 
     //통신------------------------------------------------------------------------------------------
     CountryAPI countryAPI;
@@ -104,23 +103,18 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
 
     public MyPageViewModel() {
 
+        flagRvAdapter = new FlagRvAdapter();
+
+        isClick.setValue(false);
         //[My Page]의 리사이클러 뷰 Adapter - 아이템 리스트를 넘겨준다.
-        myPageAdapter = new MyPageAdapter(itemList);
-
-        //[My Page]의 리사이클러 뷰 클릭 리스너 생성자
-        myPageAdapter.setMyPageClickListener(this);
-
+        myPageAdapter = new MyPageAdapter(itemList, this);
     }
 
     //[My Page - View Type: Profile]의 반환 값
-    public MyPageItem getHeadProfile(String imgStr, String email) {
-
-        String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgStr;
+    public MyPageProfile getHeadProfile(User user) {
 
         //My Page의 리사이클러 뷰의 0번째 순서 프로필
-        return new MyPageItem(
-                new MyPageProfile(path, email),
-                HEAD_PROFILE);
+        return new MyPageProfile(user.getU_profile_img(), user.getU_email());
     }
 
     //[My Page - View Type: Subtitle]의 반환 값
@@ -133,8 +127,17 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
         return new MyPageItem(null, ROUTE_SEARCH);
     }
 
+    //route search로 넘어가는 클릭 이벤트
+    public void onSearchClicked() {
+        Log.d(TAG, "onSearchClicked");
+
+        Intent intent = new Intent(App.INSTANCE, RouteSearch.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        App.INSTANCE.startActivity(intent);
+    }
+
     //[My Page - View Type: Flag]의 반환 값
-    public void getFlagList() {
+    public void countryCall() {
 
         final Country addCountry = new Country(0, null, "add_flag", null, null, null, null, null, false);
         addCountry.setCt_flag();
@@ -152,14 +155,14 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
                 if (response.body() != null) {
                     ResponseResult<List<Country>> res = ((ResponseResult<List<Country>>) response.body());
 
-                    if(res.getRes_obj() != null){
+                    if (res.getRes_obj() != null) {
                         List<Country> listItem = res.getRes_obj();
 
-                        for(int i = 0; i < listItem.size(); i++){
+                        for (int i = 0; i < listItem.size(); i++) {
                             listItem.get(i).setCt_flag();
-
-                            Log.d(TAG, "My Page Country: " + listItem.get(i).toString());
+                            listItem.get(i).setCt_is_add_ld();
                         }
+
                         countryVOList = listItem;
                     }
 
@@ -167,175 +170,67 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
                     Log.d(TAG, "onResponse: My Page 없음");
                 }
 
+                if (flagRvAdapter.getItemCount() > 0) {
+                    flagRvAdapter.removeItem();
+                    Log.d(TAG, "리무브" + flagRvAdapter.getItemCount());
+                }
+
                 countryVOList.add(addCountry);
 
-                itemList.getValue().add(3, new MyPageItem(countryVOList, FLAG_ITEM));
+                for (int i = 0; i < countryVOList.size(); i++)
+                    flagRvAdapter.updateItem(countryVOList.get(i));
+
+                flagRvAdapter.notifyDataSetChanged();
+
+                countryVOList.clear();
+                Log.d(TAG, "진행: " + flagRvAdapter.getItemCount());
             }
 
             @Override
             public void onFailure(Call<ResponseResult<List<Country>>> call, Throwable t) {
                 countryVOList.add(addCountry);
-                itemList.getValue().add(3, new MyPageItem(countryVOList, FLAG_ITEM));
+
+                for (int i = 0; i < countryVOList.size(); i++)
+                    flagRvAdapter.updateItem(countryVOList.get(i));
+
+                flagRvAdapter.notifyDataSetChanged();
+
             }
         });
-
     }
 
-    //[My Page - View Type: Flag]의 반환 값
-    public MyPageItem getUserPost(int type) {
-
-        Post post = new Post("asle1000", "France", true);
-        post.setP_expenses(1000000 + "");
-
-        switch (type) {
-            case 0:
-                //favorites
-                return new MyPageItem(
-                        new ListItem(2, "t_profile_1573822678472.jpg", 8, "미국", "99999", null), USER_POST);
-            case 1:
-                //Recent Post
-                return new MyPageItem(
-                        new ListItem(2, "t_profile_1573822678472.jpg", 7, "독일", "777777", null), USER_POST);
-            case 2:
-                //enroll
-                return new MyPageItem(
-                        new RePost(imageUri, post), USER_POST);
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void onProfileClicked(String email) {
-        Log.d(TAG, "Success: " + email);
-    }
-
-    //route search로 넘어가는 클릭 이벤트
-    @Override
-    public void onSearchClicked() {
-        Log.d(TAG, "onSearchClicked");
-
-        Intent intent = new Intent(App.INSTANCE, RouteSearch.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        App.INSTANCE.startActivity(intent);
-    }
-
-    //해당 포스트를 누르면 포스트 상세보기로 넘어가는 클릭 이벤트
-    @Override
-    public void onPostClicked(ListItem listItem) {
-        Log.d(TAG + "Post", "Post: " + listItem.toString());
-        Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("p_id", listItem.getP_id());
-        App.INSTANCE.startActivity(intent);
-    }
-
-    @Override
-    public void onMoreClicked(int type) {
-
-        Intent intent = new Intent(App.INSTANCE, RouteList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        switch (type) {
-            case SUB_COUNTRY:
-
-                Intent flagIntent = new Intent(App.INSTANCE, FavoriteCountry.class);
-                flagIntent .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                flagIntent .putExtra("type", 0);
-                App.INSTANCE.startActivity(flagIntent);
-
-                break;
-            case SUB_FAVORITE:
-                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
-                App.INSTANCE.startActivity(intent);
-                Log.d(TAG + "More", "선호 포스트 더 보기");
-                break;
-            case SUB_ENROLL:
-                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
-                App.INSTANCE.startActivity(intent);
-                Log.d(TAG + "More", "등록한 포스트 더 보기");
-                break;
-        }
-    }
-
-    @Override
-    public void onFlagClicked() {
-        Log.d(TAG, "onFlagClicked: ");
-    }
-
-    @Override
-    public void onAddFlagClicked() {
-
-        Intent flagIntent = new Intent(App.INSTANCE, FavoriteCountry.class);
-        flagIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        flagIntent.putExtra("type", 1);
-        App.INSTANCE.startActivity(flagIntent);
-
-        Log.d(TAG + "More", "선호 국가 더 보기");
-    }
-
-    public void init(User user) {
-
-        mp_flag.setValue(new ArrayList<Country>());
-
+    public void postCall(final Activity act, final LinearLayout layout, int type) {
         //My Page의 리사이클러 뷰에 들어갈 데이터 객체화
-        //들어가는 순서대로 뷰에 출력
-        itemList.setValue(new ArrayList<MyPageItem>());
 
-        //0. 유저 프로필
-        if (user != null)
-            itemList.getValue().add(getHeadProfile(user.getU_profile_img(), user.getU_email()));
+        Call<ResponseResult<List<ListItem>>> call;
 
-        //1. 루트 서치
-        itemList.getValue().add(getRouteSearch());
+        if (type == 1)
+            call = myPageAPI.myPageEnroll(App.Companion.getUserid());
+        else if(type == 2)
+            call = postAPI.loadLikePost(App.Companion.getUserid(), 0, 1);
+        else
+            call = null;
 
-        //2. 서브 타이틀 - 선호하는 국가
-        itemList.getValue().add(getSubtitle(1, "선호하는 국가", true));
-
-        //3. 선호하는 국가 국기 리스트
-        getFlagList();
-
-        //4. 서브 타이틀 - 좋아하는 포스트
-        itemList.getValue().add(getSubtitle(2, "좋아하는 포스트", true));
-
-        //5, 6. 유저 포스트 - 좋아하는 포스트
-        itemList.getValue().add( getUserPost(0));
-        itemList.getValue().add(getUserPost(1));
-
-        //7. 서브 타이틀 - 최근 포스트
-        itemList.getValue().add(getSubtitle(-1, "최근 포스트", false));
-
-        //8. 유저 포스트 - 최근 포스트
-        itemList.getValue().add(getUserPost(1));
-
-        //9. 서브 타이틀 - 내가 등록한 포스트
-        itemList.getValue().add(getSubtitle(3, "내가 등록한 포스트", true));
-
-        myPageAPI.myPageEnroll(App.Companion.getUserid()).enqueue(new Callback<ResponseResult<List<ListItem>>>() {
-
+        call.enqueue(new Callback<ResponseResult<List<ListItem>>>() {
             @Override
             public void onResponse(Call call, Response response) {
-                Log.d(TAG + "통신 성공", "성공적으로 전송");
 
                 if (response.body() != null) {
-                    ResponseResult<List<ListItem>> res = ((ResponseResult<List<ListItem>>) response.body());
 
-                    List<ListItem> listItem = res.getRes_obj();
-                    if (listItem != null) {
+                    ResponseResult<List<ListItem>> result = ((ResponseResult<List<ListItem>>) response.body());
+                    List<ListItem> listItem = result.getRes_obj();
+
+                    if (result.getRes_type() == 1) {
                         for (ListItem item : listItem) {
-                            String imgPath = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getU_profile_img();
-                            item.setU_profile_img(imgPath);
-                            itemList.getValue().add(new MyPageItem(
-                                    item, USER_POST));
-                        }
-                    } else {
 
+                            Log.d(TAG, "포스트: " + item.toString());
+                            item.setU_profile_img(item.getU_profile_img());
+                            layout.addView(new SimplePost(act, item));
+                        }
                     }
                 } else {
                     Log.d(TAG, "onResponse: My Page 없음");
                 }
-
             }
 
             @Override
@@ -345,9 +240,6 @@ public class MyPageViewModel extends ViewModel implements MyPageAdapter.OnMyPage
                 t.printStackTrace();
             }
         });
-
-
     }
-
 
 }

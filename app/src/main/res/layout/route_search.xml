@@ -9,9 +9,12 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/route_search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:clickable="true"
+        app:OnClickListener="@{searchVm.onBackgroundClickListener}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,14 +32,18 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/search_toolbar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:clickable="true">
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/i_left_arrow_icon"
-                            android:layout_margin="15dp"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="취소"
+                            android:textSize="20dp"
+                            android:layout_marginHorizontal="15dp"
+                            android:layout_centerVertical="true"
                             app:OnClickListener="@{searchVm.onBackClickListener}"/>
 
                         <TextView
@@ -82,6 +89,7 @@
                             android:layout_marginHorizontal="20dp" />
 
                         <EditText
+                            android:id="@+id/search_place"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:layout_marginHorizontal="20dp"
@@ -222,7 +230,6 @@
 
             </ScrollView>
 
-
         </LinearLayout>
 
         <LinearLayout
@@ -231,18 +238,18 @@
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_weight="1"
-            android:background="@color/white"
-            style="@android:style/ButtonBar">
+            android:background="@android:color/transparent">
 
             <Button
+                android:id="@+id/search_btn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_height="match_parent"
                 android:background="@color/clicked"
                 android:text="검         색"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold"
+
                app:OnClickListener="@{searchVm.onSearchClickListener}" />
 
         </LinearLayout>

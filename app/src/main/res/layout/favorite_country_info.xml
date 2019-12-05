@@ -215,44 +215,6 @@
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="18sp" />
 
-                <Button
-                    android:id="@+id/country_add_btn"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/country_warning"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:background="@drawable/s_round_btn"
-                    android:drawableLeft="@android:drawable/ic_menu_add"
-                    android:drawablePadding="4dp"
-                    app:OnClickListener="@{fvInfoVm.onAddClickListener}"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:text="선호 국가 추가"
-                    android:textColor="@android:color/background_light"
-                    android:visibility="@{fvInfoVm.countryItem.ct_is_add_ld?View.GONE:View.VISIBLE}"/>
-
-                <Button
-                    android:id="@+id/country_remove_btn"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/country_warning"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginHorizontal="20dp"
-                    android:background="@drawable/s_round_btn"
-                    android:drawableLeft="@android:drawable/ic_notification_clear_all"
-                    android:drawablePadding="4dp"
-                    app:OnClickListener="@{fvInfoVm.onRemoveClickListener}"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:text="선호 국가 취소"
-                    android:textColor="@android:color/background_light"
-                    android:visibility="@{fvInfoVm.countryItem.ct_is_add_ld?View.VISIBLE:View.GONE}"/>
-
 
             </LinearLayout>
 

@@ -91,7 +91,6 @@ public class RouteList extends AppCompatActivity {
                         }
                     }
                 }
-
             }
         };
 
@@ -112,8 +111,6 @@ public class RouteList extends AppCompatActivity {
                         }
                     }
                 }
-
-
             }
         };
     }

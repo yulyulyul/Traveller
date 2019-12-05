@@ -133,7 +133,7 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
         public void onBind(ListItem item) {
 
             String path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + item.getSp_imgs();
-            item.setSp_imgs(path);
+            item.setSp_imgs(item.getSp_imgs());
 
             binding.getGridItemVm().postLD.setValue(item);
         }

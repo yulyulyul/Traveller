@@ -1,10 +1,9 @@
 package jso.kpl.traveller.viewmodel;
 
-import android.content.Intent;
-import android.util.Log;
+import android.app.ProgressDialog;
+import android.view.View;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,7 +15,6 @@ import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.WebService;
-import jso.kpl.traveller.ui.FavoriteCountryInfo;
 import jso.kpl.traveller.ui.adapters.FavoriteCountryItemAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +29,11 @@ public class FavoriteCountryViewModel extends BaseObservable {
     public MutableLiveData<Country> countryItem = new MutableLiveData<>();
     public MutableLiveData<Boolean> isAdd = new MutableLiveData<>();
 
+    //에러 및 없을 때
+    public MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
+    public MutableLiveData<String> errorStr = new MutableLiveData<>();
+    public View.OnClickListener onRefreshClickListener;
+
     //통신------------------------------------------------------------------------------------------
     Call<ResponseResult<List<Country>>> loadCountryCall;
 
@@ -38,6 +41,8 @@ public class FavoriteCountryViewModel extends BaseObservable {
     CountryAPI countryAPI;
 
     public FavoriteCountryViewModel() {
+
+        isSuccess.setValue(true);
         isAdd.setValue(false);
         countryAPI= WebService.INSTANCE.getClient().create(CountryAPI.class);
     }
@@ -83,11 +88,12 @@ public class FavoriteCountryViewModel extends BaseObservable {
                             }
                         }
 
-
                         fciAdapter.notifyDataSetChanged();
 
                     } else{
-                        Toast.makeText(App.INSTANCE, "국가 리스트를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show();
+                        isSuccess.setValue(false);
+                        errorStr.setValue("등록된 선호 국가가 없습니다.");
+                       // Toast.makeText(App.INSTANCE, "국가 리스트를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -95,6 +101,9 @@ public class FavoriteCountryViewModel extends BaseObservable {
 
             @Override
             public void onFailure(Call<ResponseResult<List<Country>>> call, Throwable t) {
+
+                isSuccess.setValue(false);
+                errorStr.setValue("일시적 오류입니다.");
                 Toast.makeText(App.INSTANCE, "국가 리스트를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show();
             }
         });

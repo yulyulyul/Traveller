@@ -1,6 +1,5 @@
 package jso.kpl.traveller.viewmodel;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
@@ -30,16 +29,6 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
 
     String TAG = "Trav.FcInfo.";
 
-    Activity activity ;
-
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
-
     public MutableLiveData<GridLayoutManager> layoutManager = new MutableLiveData<>();
     public MutableLiveData<List<FavoriteCountryInfoVO>> list = new MutableLiveData<>();
     public MutableLiveData<Country> countryItem = new MutableLiveData<>();
@@ -65,10 +54,6 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextCompat.startActivity(App.INSTANCE, intent, null);
     }
-
-    public View.OnClickListener onAddClickListener;
-
-    public View.OnClickListener onRemoveClickListener;
 
     public Call<ResponseResult<Integer>> favoriteCountryCall (int type) {
 
@@ -131,9 +116,11 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
                     if (result.getRes_type() == 1) {
                         countryItem.setValue(result.getRes_obj().get(0));
                         countryItem.getValue().setCt_flag();
+                        countryItem.getValue().setCt_is_add_ld();
+
+                        Log.d(TAG, "이거: " + countryItem.getValue().toString());
                     }
                 }
-
             }
 
             @Override

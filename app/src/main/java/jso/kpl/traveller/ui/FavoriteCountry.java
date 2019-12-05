@@ -3,6 +3,7 @@ package jso.kpl.traveller.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -53,6 +54,16 @@ public class FavoriteCountry extends AppCompatActivity {
 
             onAdapterItemClicked();
         }
+
+        binding.getFcVm().onRefreshClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                startActivity(intent);
+            }
+        };
     }
 
     //선호 국가 클릭 및 상세보기 클릭 이벤트
@@ -85,10 +96,14 @@ public class FavoriteCountry extends AppCompatActivity {
                                         App.Companion.sendToast("선호 국가 추가되었습니다.");
                                         binding.getFcVm().countryList.getValue().remove(position);
                                         binding.getFcVm().fciAdapter.notifyItemRemoved(position);
+
+
                                     } else {
                                         App.Companion.sendToast("선호 국가 취소되었습니다.");
                                         binding.getFcVm().countryList.getValue().remove(position);
                                         binding.getFcVm().fciAdapter.notifyItemRemoved(position);
+
+
                                     }
                                 } else {
                                     if(!binding.getFcVm().countryList.getValue().get(position).ct_is_add_ld.getValue()){
@@ -128,6 +143,14 @@ public class FavoriteCountry extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+      //  super.onBackPressed();
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -136,13 +159,9 @@ public class FavoriteCountry extends AppCompatActivity {
         else{
             if (requestCode == 22) {
 
-                Log.d(TAG, "onActivityResult: 설마 시발려나");
-
                 Log.d(TAG, "onActivityResult: " + data.getIntExtra("pos", 0));
                 Log.d(TAG, "여기로 돌아온다." + data.getBooleanExtra("isAdd", false));
             }
         }
-
-
     }
 }

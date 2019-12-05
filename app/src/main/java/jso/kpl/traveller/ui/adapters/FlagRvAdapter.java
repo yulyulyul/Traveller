@@ -1,5 +1,6 @@
 package jso.kpl.traveller.ui.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.R;
@@ -22,8 +24,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     public OnFlagClickListener onFlagClickListener;
 
     public interface OnFlagClickListener {
-        void onFlagClicked();
-
+        void onFlagClicked(String country);
         void onAddFlagClicked();
     }
 
@@ -36,10 +37,10 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     FlagImageBinding binding;
 
     //선호 플래그 4개 + 국기 추가 1개
-    List<Country> flagList;
+    List<Country> flagList = new ArrayList<>();
 
-    public FlagRvAdapter(List<Country> flagList) {
-        this.flagList = flagList;
+    public FlagRvAdapter() {
+
     }
 
     @NonNull
@@ -56,7 +57,10 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     @Override
     public void onBindViewHolder(@NonNull FlagRvAdapter.FlagRvViewHolder holder, final int position) {
 
-        Country country = flagList.get(position);
+        final Country country = flagList.get(position);
+
+
+        Log.d(TAG, "선호 국가: " + country.toString());
 
         holder.onBind(country.getCt_flag());
 
@@ -70,10 +74,15 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
                     onFlagClickListener.onAddFlagClicked();
                 } else {
                     //플래그 클릭
-                    onFlagClickListener.onFlagClicked();
+                    onFlagClickListener.onFlagClicked(country.getCt_name());
                 }
             }
         });
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -82,20 +91,33 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
         return flagList.size();
     }
 
+    public void removeItem() {
+        flagList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void updateItem(Country country) {
+        if (flagList == null)
+            flagList = new ArrayList<>();
+
+        flagList.add(country);
+        notifyItemInserted(flagList.size() - 1);
+    }
+
     class FlagRvViewHolder extends RecyclerView.ViewHolder {
 
         FlagImageBinding binding;
 
         public FlagRvViewHolder(@NonNull FlagImageBinding binding) {
             super(binding.getRoot());
-            this.binding = binding;
 
-            binding.setFlagRvVM(new MyPageViewModel());
+            this.binding = binding;
             binding.setLifecycleOwner(new MyPage());
         }
 
-        public void onBind(String img){
-            binding.getFlagRvVM().mpFlagItem.setValue(img);
+        public void onBind(String img) {
+            binding.setFlagImg(img);
+            binding.executePendingBindings();
         }
     }
 }

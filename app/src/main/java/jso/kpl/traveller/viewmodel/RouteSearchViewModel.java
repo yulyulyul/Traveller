@@ -44,6 +44,8 @@ public class RouteSearchViewModel extends ViewModel {
     //뒤로가기 클릭리스너
     public View.OnClickListener onBackClickListener;
 
+    public View.OnClickListener onBackgroundClickListener;
+
     public RouteSearchViewModel() {
 
         this.app = (Application) App.INSTANCE;

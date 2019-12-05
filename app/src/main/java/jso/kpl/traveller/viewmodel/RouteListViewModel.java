@@ -192,31 +192,37 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
-                /*
-                현재 보여지는 프래그먼트에 해당하는 탭을 다시 누를 경우,
-                프래그먼트를 삭제하고 다시 [container:FrameLayout]에 붙인다.
-                 */
+                if(tab.getPosition() == 0){
 
-                final int RESELECT_NO = tab.getPosition();
 
-                switch (RESELECT_NO) {
-                    case 0:
-                        fm.beginTransaction().remove(gt_post).commit();
 
-                        gt_post = new GridTypePost(routeListVm);
+                } else if(tab.getPosition() == 1){
 
-                        fm.beginTransaction().add(container.getId(), gt_post).commit();
-                        break;
-                    case 1:
-                        fm.beginTransaction().remove(vt_post).commit();
-
-                        vt_post = new VerticalTypePost(routeListVm);
-
-                        fm.beginTransaction().add(container.getId(), vt_post).commit();
-
-                        break;
                 }
-
+//                /*
+//                현재 보여지는 프래그먼트에 해당하는 탭을 다시 누를 경우,
+//                프래그먼트를 삭제하고 다시 [container:FrameLayout]에 붙인다.
+//                 */
+//
+//                final int RESELECT_NO = tab.getPosition();
+//
+//                switch (RESELECT_NO) {
+//                    case 0:
+//                        fm.beginTransaction().remove(gt_post).commit();
+//
+//                        gt_post = new GridTypePost(routeListVm);
+//
+//                        fm.beginTransaction().add(container.getId(), gt_post).commit();
+//                        break;
+//                    case 1:
+//                        fm.beginTransaction().remove(vt_post).commit();
+//
+//                        vt_post = new VerticalTypePost(routeListVm);
+//
+//                        fm.beginTransaction().add(container.getId(), vt_post).commit();
+//
+//                        break;
+//                }
             }
         };
 
@@ -255,6 +261,10 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             Log.d(TAG, "searchByCondition: Null");
         }
+    }
+
+    public void initScrollPos(RecyclerView rv){
+        rv.scrollToPosition(0);
     }
 
     /*
@@ -385,6 +395,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             postList.setValue(new ArrayList<ListItem>());
             Log.d(TAG, "first p_id: " + lastPid);
+
             ResponseResult<List<ListItem>> result = (ResponseResult<List<ListItem>>) response.body();
 
             if (result.getRes_type() == 1) {

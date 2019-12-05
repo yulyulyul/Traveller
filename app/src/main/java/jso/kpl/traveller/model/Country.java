@@ -127,7 +127,24 @@ public class Country implements Serializable {
             Log.d(TAG, "띄어진 국가 영어 이름: " + imgStr);
         }
 
-        this.ct_flag = "android.resource://jso.kpl.traveller/drawable/" + imgStr;
+        this.ct_flag = imgStr;
+    }
+
+    public boolean isCt_is_add() {
+        return ct_is_add;
+    }
+
+    public void setCt_is_add(boolean ct_is_add) {
+        this.ct_is_add = ct_is_add;
+    }
+
+    public MutableLiveData<Boolean> getCt_is_add_ld() {
+        return ct_is_add_ld;
+    }
+
+    public void setCt_is_add_ld() {
+        this.ct_is_add_ld = new MutableLiveData<>();
+        this.ct_is_add_ld.setValue(isCt_is_add());
     }
 
     @Override
@@ -143,6 +160,8 @@ public class Country implements Serializable {
                 ", ct_currency='" + ct_currency + '\'' +
                 ", ct_religion='" + ct_religion + '\'' +
                 ", ct_flag='" + ct_flag + '\'' +
+                ", ct_is_add=" + ct_is_add +
+                ", ct_is_add_ld=" + ct_is_add_ld.getValue() +
                 '}';
     }
 }

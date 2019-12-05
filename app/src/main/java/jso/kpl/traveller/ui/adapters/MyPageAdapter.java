@@ -28,26 +28,28 @@ import jso.kpl.traveller.ui.MyPage;
 import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
-public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageViewHolder> implements FlagRvAdapter.OnFlagClickListener {
+public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageViewHolder>{
 
     String TAG = "Trav.MyPageAdapter.";
 
+    // 클릭 리스너 인터페이스--------------------------------------------------------------------------
     OnMyPageClickListener myPageClickListener;
 
     //My Page의 각 뷰에 대한 클릭 이벤트
     public interface OnMyPageClickListener {
-        void onProfileClicked(String email);
+
         void onSearchClicked();
+
         void onPostClicked(ListItem listItem);
+
         void onMoreClicked(int type);
-        void onFlagClicked();
-        void onAddFlagClicked();
     }
 
     public void setMyPageClickListener(OnMyPageClickListener myPageClickListener) {
         this.myPageClickListener = myPageClickListener;
     }
 
+    //---------------------------------------------------------------------------------------------
 
     //My Page의 갹 뷰타입을 지정한 인덱스
     final int HEAD_PROFILE = 0;
@@ -57,13 +59,17 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
     final int FLAG_ITEM = 4;
     final int ERROR_REFRESH = 5;
 
+    //---------------------------------------------------------------------------------------------
+
     //My Page의 모든 데이터를 가지고 있는 리스트
-    MutableLiveData<List<MyPageItem>> itemList;
+    public MutableLiveData<List<MyPageItem>> itemList;
 
     ViewDataBinding binding;
+    MyPageViewModel myPageVm;
 
-    public MyPageAdapter(MutableLiveData<List<MyPageItem>> list) {
+    public MyPageAdapter(MutableLiveData<List<MyPageItem>> list, MyPageViewModel myPageVm) {
         this.itemList = list;
+        this.myPageVm = myPageVm;
     }
 
     @NonNull
@@ -74,18 +80,9 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
 
         //각 뷰타입에 따라 데이터 바인딩 - 데이터 바인딩의 방향은 각 xml과 MyPageViewModel이다.
         switch (viewType) {
-            case HEAD_PROFILE:
-                binding = DataBindingUtil.inflate(lif, R.layout.my_page_profile, parent, false);
-                return new MyPageViewHolder((MyPageProfileBinding) binding);
-            case ROUTE_SEARCH:
-                binding = DataBindingUtil.inflate(lif, R.layout.my_page_search, parent, false);
-                return new MyPageViewHolder((MyPageSearchBinding) binding);
             case SUBTITLE_MORE:
                 binding = DataBindingUtil.inflate(lif, R.layout.my_page_subtitle, parent, false);
                 return new MyPageViewHolder((MyPageSubtitleBinding) binding);
-            case FLAG_ITEM:
-                binding = DataBindingUtil.inflate(lif, R.layout.my_page_flag, parent, false);
-                return new MyPageViewHolder((MyPageFlagBinding) binding);
             case USER_POST:
                 binding = DataBindingUtil.inflate(lif, R.layout.my_page_post, parent, false);
                 return new MyPageViewHolder((MyPagePostBinding) binding);
@@ -100,105 +97,60 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
         int type = itemList.getValue().get(position).getType();
 
         switch (type) {
-            //MyPage의 첫번째 뷰타입으로 유저의 이미지와 이메일을 보여준다.
-            case HEAD_PROFILE:
-
-                final MyPageProfile myPageProfile = (MyPageProfile) itemList.getValue().get(position).getO();
-
-                holder.profileBinding.setProfileVm(new MyPageViewModel());
-                holder.profileBinding.getProfileVm().mp_profile.setValue(myPageProfile);
-
-                holder.profileBinding.setEmail(holder.profileBinding.getProfileVm().mp_profile.getValue().getEmail());
-//                프로필 이미지 클릭 시 이메일 전송
-                holder.profileBinding.mpProfileIv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myPageClickListener.onProfileClicked(holder.profileBinding.getProfileVm().mp_profile.getValue().getEmail());
-                    }
-                });
-
-                break;
-
-            //MyPage의 두번째 뷰타입으로 누르면 Route Search로 넘어간다.
-            case ROUTE_SEARCH:
-
-                holder.searchBinding.setSearchVM(new MyPageViewModel());
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        holder.searchBinding.getSearchVM().onSearchClicked();
-                        myPageClickListener.onSearchClicked();
-                    }
-                });
-
-                break;
 
             //각 파트의 소제목과 더보기 버튼의 뷰타입
             case SUBTITLE_MORE:
 
                 final MyPageSubtitle subtitle = (MyPageSubtitle) itemList.getValue().get(position).getO();
 
-                holder.subtitleBinding.setSubtitleVM(new MyPageViewModel());
-                holder.subtitleBinding.getSubtitleVM().mp_subtitle.setValue(subtitle);
+                holder.subtitleBinding.getSubtitleVM().mpSubtitleLD.setValue(subtitle);
 
-                if(holder.subtitleBinding.getSubtitleVM().mp_subtitle.getValue().getType() == 1){
-                    holder.subtitleBinding.getSubtitleVM().subtitleStr = "더 보기";
-                } else{
-                    holder.subtitleBinding.getSubtitleVM().subtitleStr = "더 보기";
-                }
 
                 //각 파트에 해당하는 인덱스를 보낸다.
                 holder.subtitleBinding.mpMoreBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        final int type = holder.subtitleBinding.getSubtitleVM().mp_subtitle.getValue().getType();
-                        myPageClickListener.onMoreClicked(type);
+                       // final int type = holder.subtitleBinding.getSubtitleVM().mp_subtitle.getValue().getType();
+                      //  myPageClickListener.onMoreClicked(type);
                     }
                 });
-                break;
-
-            //선호 국가 국기 0~4개와 선호 국가를 추가할 수 있는 버튼 1개로 구성된 뷰타입
-            case FLAG_ITEM:
-
-                List<Country> flagList = (List<Country>) itemList.getValue().get(position).getO();
-
-                holder.flagBinding.setFlagVM(new MyPageViewModel());
-                holder.flagBinding.getFlagVM().mp_flag.setValue(flagList);
-
-                holder.flagBinding.getFlagVM().flagRvAdapter = new FlagRvAdapter(holder.flagBinding.getFlagVM().mp_flag.getValue());
-
-                holder.flagBinding.getFlagVM().flagRvAdapter.setOnFlagClickListener(this);
-
                 break;
 
             //포스트의 뷰타입
             case USER_POST:
 
-                //final RePost rePost = (RePost) itemList.getValue().get(position).getO();
-                final ListItem listItem = (ListItem) itemList.getValue().get(position).getO();
-                holder.postBinding.setPostVM(new MyPageViewModel());
-
-                if(!listItem.getP_expenses().contains("₩")){
-                    String expenses = listItem.getP_expenses();
-
-                    listItem.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(expenses)));
-                }
-
-                holder.postBinding.getPostVM().mp_post.setValue(listItem);
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myPageClickListener.onPostClicked(listItem);
-                        Log.d(TAG, "adapter - 포스트 클릭: " + listItem.toString());
-                    }
-                });
-
+//                //final RePost rePost = (RePost) itemList.getValue().get(position).getO();
+//                final ListItem listItem = (ListItem) itemList.getValue().get(position).getO();
+//                holder.postBinding.setPostVM(new MyPageViewModel());
+//
+//                if (listItem != null) {
+//                    if (!listItem.getP_expenses().contains("₩")) {
+//                        String expenses = listItem.getP_expenses();
+//                        listItem.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(expenses)));
+//                    }
+//
+//                    holder.postBinding.getPostVM().mp_post.setValue(listItem);
+//
+//                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            myPageClickListener.onPostClicked(listItem);
+//                            Log.d(TAG, "adapter - 포스트 클릭: " + listItem.toString());
+//                        }
+//                    });
+//
+//
+//                }
 
                 break;
             default:
         }
+    }
+
+    public void updateItem(int pos, MyPageItem item) {
+        itemList.getValue().set(pos, item);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -209,6 +161,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
     @Override
     public int getItemViewType(int position) {
 
+        Log.d(TAG, "넘버: " + position);
         int type = itemList.getValue().get(position).getType();
 
         switch (type) {
@@ -227,18 +180,18 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
         }
     }
 
-    //선호 플래그를 클릭할 시 루트 리스트 화면으로 넘어가는 클릭 이벤트
-    @Override
-    public void onFlagClicked() {
-        myPageClickListener.onFlagClicked();
-    }
-
-    //새로운 선호 국가를 추가할 수 있는 화면으로 넘어가는 클릭 이벤트
-    @Override
-    public void onAddFlagClicked() {
-        myPageClickListener.onAddFlagClicked();
-
-    }
+//    //선호 플래그를 클릭할 시 루트 리스트 화면으로 넘어가는 클릭 이벤트
+//    @Override
+//    public void onFlagClicked(String country) {
+//        myPageClickListener.onFlagClicked(country);
+//    }
+//
+//    //새로운 선호 국가를 추가할 수 있는 화면으로 넘어가는 클릭 이벤트
+//    @Override
+//    public void onAddFlagClicked() {
+//        myPageClickListener.onAddFlagClicked();
+//
+//    }
 
     class MyPageViewHolder extends RecyclerView.ViewHolder {
 
@@ -252,15 +205,16 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             super(binding.getRoot());
 
             this.profileBinding = binding;
+            this.profileBinding.setProfileVm(myPageVm);
 
             binding.setLifecycleOwner(new MyPage());
-
         }
 
         public MyPageViewHolder(@NonNull MyPageSearchBinding binding) {
             super(binding.getRoot());
 
             this.searchBinding = binding;
+            this.searchBinding.setSearchVM(myPageVm);
 
             binding.setLifecycleOwner(new MyPage());
         }
@@ -269,6 +223,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             super(binding.getRoot());
 
             this.subtitleBinding = binding;
+            this.subtitleBinding.setSubtitleVM(myPageVm);
 
             binding.setLifecycleOwner(new MyPage());
         }
@@ -277,6 +232,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             super(binding.getRoot());
 
             this.postBinding = binding;
+      //      this.postBinding.setPostVM(myPageVm);
 
             binding.setLifecycleOwner(new MyPage());
         }
@@ -285,6 +241,7 @@ public class MyPageAdapter extends RecyclerView.Adapter<MyPageAdapter.MyPageView
             super(binding.getRoot());
 
             this.flagBinding = binding;
+            this.flagBinding.setFlagVM(myPageVm);
 
             binding.setLifecycleOwner(new MyPage());
         }

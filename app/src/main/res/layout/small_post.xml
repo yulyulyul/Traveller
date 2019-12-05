@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="VM"
-            type="jso.kpl.traveller.viewmodel.RouteOtherDetail_VM" />
+            type="jso.kpl.traveller.viewmodel.RouteOtherDetailViewModel" />
 
     </data>
 

@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="flagRvVM"
-            type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
+            name="flagImg"
+            type="String" />
     </data>
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:layout_gravity="center"
-            app:setCircleImg="@{flagRvVM.mpFlagItem}"/>
+            app:setCircleImg="@{flagImg}"/>
 
     </LinearLayout>
 

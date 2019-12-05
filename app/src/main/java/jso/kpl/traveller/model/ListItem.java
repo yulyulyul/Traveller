@@ -1,17 +1,24 @@
 package jso.kpl.traveller.model;
 
+import android.view.View;
+
+import androidx.lifecycle.MutableLiveData;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListItem implements Serializable {
 
-    int u_userid;
-    String u_profile_img;
-    int p_id;
-    String p_place;
-    String p_expenses;
-    String sp_imgs;
+    public int u_userid;
+    public String u_profile_img;
+    public int p_id;
+    public String p_place;
+    public String p_expenses;
+    public String sp_imgs;
+
+    //이미지 오픈
+    public View.OnClickListener onPostClickListener;
 
     public ListItem(int u_userid, String u_profile_img, int p_id, String p_place, String p_expenses, String sp_imgs) {
         this.u_userid = u_userid;
@@ -73,11 +80,12 @@ public class ListItem implements Serializable {
     @Override
     public String toString() {
         return "ListItem{" +
-                "u_userid='" + u_userid + '\'' +
+                "u_userid=" + u_userid +
                 ", u_profile_img='" + u_profile_img + '\'' +
-                ", p_id='" + p_id + '\'' +
+                ", p_id=" + p_id +
                 ", p_place='" + p_place + '\'' +
                 ", p_expenses='" + p_expenses + '\'' +
+                ", sp_imgs='" + sp_imgs + '\'' +
                 '}';
     }
 }

@@ -13,19 +13,20 @@ import androidx.databinding.DataBindingUtil;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.SmallPostBinding;
-import jso.kpl.traveller.viewmodel.RouteOtherDetail_VM;
+import jso.kpl.traveller.viewmodel.RouteOtherDetailViewModel;
 
 public class SmallPostDialog extends Dialog {
 
     private Context context;
-    private RouteOtherDetail_VM vm;
+    private RouteOtherDetailViewModel vm;
 
     public SmallPostDialog(@NonNull Context context) {
         super(context);
+
         this.context = context;
     }
 
-    public void call(RouteOtherDetail_VM vm) {
+    public void call(RouteOtherDetailViewModel vm) {
 
         // 액티비티의 타이틀바를 숨긴다.
         requestWindowFeature(Window.FEATURE_NO_TITLE);

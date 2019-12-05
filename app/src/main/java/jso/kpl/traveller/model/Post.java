@@ -1,5 +1,7 @@
 package jso.kpl.traveller.model;
 
+import android.view.View;
+
 import androidx.annotation.BoolRes;
 
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ public class Post {
 
     List<String> p_category = new ArrayList<>();
     List<SmallPost> p_sp_list = new ArrayList<>();
+
+    boolean p_is_like;
+    boolean p_is_cart;
 
     public Post() {
 
@@ -120,6 +125,22 @@ public class Post {
 
     public void setP_sp_list(List<SmallPost> p_sp_list) {
         this.p_sp_list = p_sp_list;
+    }
+
+    public boolean isP_is_like() {
+        return p_is_like;
+    }
+
+    public void setP_is_like(boolean p_is_like) {
+        this.p_is_like = p_is_like;
+    }
+
+    public boolean isP_is_cart() {
+        return p_is_cart;
+    }
+
+    public void setP_is_cart(boolean p_is_cart) {
+        this.p_is_cart = p_is_cart;
     }
 
     @Override

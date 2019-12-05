@@ -1,17 +1,24 @@
 package jso.kpl.traveller.bindings;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,11 +26,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -164,8 +174,16 @@ public class BindingAdapters {
     @BindingAdapter({"setImg"})
     public static void onBindImage(ImageView iv, String imgUri) {
 
+        String path;
+
+        if(imgUri != null && imgUri.contains("f_")){
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
+        } else{
+            path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
+        }
+
         Glide.with(iv.getContext())
-                .load(imgUri)
+                .load(path)
                 .apply(new RequestOptions().placeholder(R.drawable.i_blank_person_icon).error(R.drawable.i_blank_person_icon))
                 .into(iv);
     }
@@ -174,11 +192,22 @@ public class BindingAdapters {
     @BindingAdapter({"setCircleImg"})
     public static void onBindCircleImage(ImageView iv, String imgUri) {
 
+        String path;
+
+        if(imgUri != null && imgUri.contains("f_")){
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
+        } else{
+            path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
+        }
+
+
+        Log.d("Trav.CircleImg", "Path: ");
+
         RequestOptions options
                 = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.i_blank_person_icon);
 
         Glide.with(iv.getContext())
-                .load(imgUri)
+                .load(path)
                 .apply(options)
                 .into(iv);
     }
@@ -186,11 +215,20 @@ public class BindingAdapters {
     @BindingAdapter({"setFitCenterImg"})
     public static void onBindFitCenterImage(ImageView iv, String imgUri) {
 
+        String path;
+
+        if(imgUri != null && imgUri.contains("f_")){
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
+        } else{
+            path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
+        }
+
         RequestOptions options
-                = RequestOptions.bitmapTransform(new FitCenter()).error(null);
+                = RequestOptions.bitmapTransform(new FitCenter()).error(R.drawable.i_empty_image_icon);
 
         Glide.with(iv.getContext())
-                .load(imgUri)
+                .load(path)
+                .centerCrop()
                 .apply(options)
                 .into(iv);
     }
@@ -352,4 +390,19 @@ public class BindingAdapters {
     public static void onBindTimelineAdapter(TimeLineView timelineView, IndicatorAdapter adapter) {
         timelineView.setIndicatorAdapter(adapter);
     }
+
+    @BindingAdapter("setViewPagerAdapter")
+    public static void onBindVpAdapter(ViewPager vp, PagerAdapter adapter){
+
+        vp.setAdapter(adapter);
+        vp.setClipToPadding(false);
+
+        int dpValue = 16;
+        float d = App.INSTANCE.getResources().getDisplayMetrics().density;
+        int margin = (int) (dpValue * d);
+        vp.setPadding(margin, 0, margin, 0);
+        vp.setPageMargin(margin/2);
+    }
+
+
 }

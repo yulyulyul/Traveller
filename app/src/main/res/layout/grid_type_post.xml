@@ -13,7 +13,7 @@
             app:setGridRvAdapter="@{gridVm.gridAdapter}"
             app:setGridSpan="@{3}"
             app:setDecoration="@{gridVm.decoration}"
-            app:onAddScrollListener="@{gridVm.onGridScrollListener}"/>
+            app:onAddScrollListener="@{gridVm.onGridScrollListener}" />
 
     </LinearLayout>
 

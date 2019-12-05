@@ -21,9 +21,9 @@ public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<Ro
     private ViewDataBinding binding;
     private int type;
 
-    public MutableLiveData<List<String>> items;
+    public List<String> items;
 
-    public RouteOtherDetailCategoryItemAdapter(MutableLiveData<List<String>> list, int type) {
+    public RouteOtherDetailCategoryItemAdapter(List<String> list, int type) {
         items = list;
         this.type = type;
     }
@@ -49,10 +49,10 @@ public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<Ro
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (type == 1) {
-            String category = items.getValue().get(position);
+            String category = items.get(position);
             ((RodCategoryItemBinding) holder.binding).setCategory(category);
         } else {
-            String img = items.getValue().get(position);
+            String img = items.get(position);
             ((RodImgItemBinding) holder.binding).setImgs(img);
         }
     }
@@ -60,7 +60,7 @@ public class RouteOtherDetailCategoryItemAdapter extends RecyclerView.Adapter<Ro
     // getItemCount() - 전체 데이터 갯수 리턴
     @Override
     public int getItemCount() {
-        return items.getValue().size();
+        return items.size();
     }
 
     // 아이템뷰를 저장하는 뷰홀더 클래스
