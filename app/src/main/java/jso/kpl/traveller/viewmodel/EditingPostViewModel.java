@@ -346,7 +346,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                     List<Timeline> cartlistTimeline = cartlistTimelineRes.getRes_obj();
                                     for (int i = 0; i < cartlistTimeline.size(); i++) {
                                         cartlistTimeline.get(i).setStatus(Status.COMPLETED);
-                                        cartlistTimeline.get(i).setSp_imgs(App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + cartlistTimeline.get(i).getSp_imgs());
+                                        cartlistTimeline.get(i).setSp_imgs(cartlistTimeline.get(i).getSp_imgs());
                                     }
                                     timelineItem.getValue().clear();
                                     timelineItem.getValue().addAll(cartlistTimeline);

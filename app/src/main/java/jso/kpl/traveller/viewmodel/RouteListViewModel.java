@@ -33,7 +33,7 @@ import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.GridTypePost;
 import jso.kpl.traveller.ui.Fragment.VerticalTypePost;
-import jso.kpl.traveller.ui.RouteOtherDetail;
+import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.adapters.GridTypePostAdapter;
 import jso.kpl.traveller.ui.adapters.VerticalTypePostAdapter;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
@@ -194,35 +194,10 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
                 if(tab.getPosition() == 0){
 
-
-
                 } else if(tab.getPosition() == 1){
 
                 }
-//                /*
-//                현재 보여지는 프래그먼트에 해당하는 탭을 다시 누를 경우,
-//                프래그먼트를 삭제하고 다시 [container:FrameLayout]에 붙인다.
-//                 */
-//
-//                final int RESELECT_NO = tab.getPosition();
-//
-//                switch (RESELECT_NO) {
-//                    case 0:
-//                        fm.beginTransaction().remove(gt_post).commit();
-//
-//                        gt_post = new GridTypePost(routeListVm);
-//
-//                        fm.beginTransaction().add(container.getId(), gt_post).commit();
-//                        break;
-//                    case 1:
-//                        fm.beginTransaction().remove(vt_post).commit();
-//
-//                        vt_post = new VerticalTypePost(routeListVm);
-//
-//                        fm.beginTransaction().add(container.getId(), vt_post).commit();
-//
-//                        break;
-//                }
+
             }
         };
 
@@ -247,6 +222,10 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
                     call = postAPI.searchByCondition(searchReq.getSr_country(), searchReq.getSr_max_cost(), searchReq.getSr_min_cost(), lastPid, categoryNo);
                     break;
+                case 2:
+                    Log.d(TAG, "searchByCondition-LIKE");
+                    call = postAPI.loadLikePost(1, 0, 0);
+                    break;
                 case 3:
                     Log.d(TAG, "searchByCondition-Enroll");
                     call = postAPI.searchByEnroll((int) item.getO(), lastPid);
@@ -263,10 +242,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         }
     }
 
-    public void initScrollPos(RecyclerView rv){
-        rv.scrollToPosition(0);
-    }
-
     /*
     각 프래그먼트의 리사이클러 뷰 아이템을 클릭하는 이벤트
      */
@@ -275,7 +250,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
         if (App.INSTANCE != null) {
 
-            Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
+            Intent intent = new Intent(App.INSTANCE, DetailPost.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("p_id", p_id);
             App.INSTANCE.startActivity(intent);
@@ -287,7 +262,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
         if (App.INSTANCE != null) {
 
-            Intent intent = new Intent(App.INSTANCE, RouteOtherDetail.class);
+            Intent intent = new Intent(App.INSTANCE, DetailPost.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("p_id", p_id);
             App.INSTANCE.startActivity(intent);
@@ -309,7 +284,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
         categoryItem.setLayoutParams(params);
         categoryItem.setPadding(10, 10, 10, 10);
-        categoryItem.setBackgroundResource(R.drawable.s_border_round_square_gray);
+        categoryItem.setBackgroundResource(R.drawable.s_category_gray);
         categoryItem.setOrientation(LinearLayout.HORIZONTAL);
         categoryItem.setVerticalGravity(Gravity.CENTER_VERTICAL);
 
@@ -364,7 +339,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
                             categoryNo = j;
 
                         } else {
-                            layout.getChildAt(j).setBackgroundResource(R.drawable.s_border_round_square_gray);
+                            layout.getChildAt(j).setBackgroundResource(R.drawable.s_category_gray);
                         }
                     }
 
@@ -439,11 +414,5 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         }
     }
 
-    @BindingAdapter({"onRefreshListener", "checkRefresh"})
-    public static void bindRefreshListener(SwipeRefreshLayout swipeRefreshLayout, SwipeRefreshLayout.OnRefreshListener listener, boolean isRefresh) {
-
-        swipeRefreshLayout.setOnRefreshListener(listener);
-        swipeRefreshLayout.setRefreshing(isRefresh);
-    }
 
 }

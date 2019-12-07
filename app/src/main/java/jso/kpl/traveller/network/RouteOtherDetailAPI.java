@@ -15,11 +15,15 @@ public interface RouteOtherDetailAPI {
 
     @FormUrlEncoded
     @POST("/load_post")
-    Call<ResponseResult<List<Post>>> loadPost(@Field("p_id") int p_id);
+    Call<ResponseResult<List<Post>>> loadPost(@Field("u_userid") int u_userid,@Field("p_id") int p_id);
 
     @FormUrlEncoded
     @POST("/load_small_post")
     Call<ResponseResult<List<SmallPost>>> loadSmallPost(@Field("sp_id") int sp_id);
+
+    @FormUrlEncoded
+    @POST("/update_recent_post")
+    Call<ResponseResult<Integer>> updateRecentPost(@Field("u_userid") int u_userid, @Field("p_id") int p_id);
 
     @FormUrlEncoded
     @POST("/like_post")

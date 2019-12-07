@@ -28,9 +28,14 @@ class RouteNodeAdapter
 
     //노드 클릭 시 해당 노드의 데이터를 전송
     lateinit var onNodeClickListener: OnNodeClickListener
+    lateinit var onNodeLongClickListener: OnNodeLongClickListener
 
     interface OnNodeClickListener {
         fun onNodeClicked(sp: SmallPost, pos: Int)
+
+    }
+
+    interface OnNodeLongClickListener{
         fun onNodeLongClicked()
     }
 
@@ -336,7 +341,7 @@ class RouteNodeAdapter
 
             removeItem(_idx)
 
-            onNodeClickListener.onNodeLongClicked()
+            onNodeLongClickListener.onNodeLongClicked()
 
             true
         })
@@ -402,7 +407,7 @@ class RouteNodeAdapter
                 {
                     removeItem(i)
 
-                    onNodeClickListener.onNodeLongClicked()
+                    onNodeLongClickListener.onNodeLongClicked()
 
                     true
                 })

@@ -20,7 +20,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.EnlargeImage" />
         <activity
             android:name=".ui.EditingPost"
             android:windowSoftInputMode="adjustResize" />
@@ -31,7 +30,7 @@
         <activity android:name=".ui.RouteList" />
         <activity android:name=".ui.FavoriteCountry" />
         <activity android:name=".ui.FavoriteCountryInfo" />
-        <activity android:name=".ui.RouteOtherDetail" />
+        <activity android:name=".ui.DetailPost" />
         <activity android:name=".ui.CustomDialog" />
 
         <meta-data

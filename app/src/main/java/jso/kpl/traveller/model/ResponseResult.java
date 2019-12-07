@@ -2,18 +2,9 @@ package jso.kpl.traveller.model;
 
 public class ResponseResult<T> {
 
-    int res_code;
     int res_type;
     String res_msg;
     T res_obj;
-
-    public int getRes_code() {
-        return res_code;
-    }
-
-    public void setRes_code(int res_code) {
-        this.res_code = res_code;
-    }
 
     public int getRes_type() {
         return res_type;

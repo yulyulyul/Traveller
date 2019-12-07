@@ -23,6 +23,10 @@ public interface PostAPI {
     @POST("/editing_post")
     Call<ResponseResult<Integer>> editingPost(@Part("Post") Post post, @Part ArrayList<MultipartBody.Part> imgs);
 
+    @FormUrlEncoded
+    @POST("/my_page_enroll")
+    Call<ResponseResult<List<ListItem>>> myPageEnroll(@Field("u_userid") int u_userid);
+
     //검색을 통해 가져오는 포스트 리스트
     @FormUrlEncoded
     @POST("/search_by_condition")
@@ -37,5 +41,10 @@ public interface PostAPI {
     @FormUrlEncoded
     @POST("/load_like_post_list")
     Call<ResponseResult<List<ListItem>>> loadLikePost(@Field("u_userid") int u_userid, @Field("p_id") int p_id, @Field("is_mypage") int is_mypage);
+
+    //자신이 마지막으로 본 포스트를 가져온다.
+    @FormUrlEncoded
+    @POST("/load_recent_post")
+    Call<ResponseResult<List<ListItem>>> loadRecentPost(@Field("u_userid") int u_userid);
 
 }

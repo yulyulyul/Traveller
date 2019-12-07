@@ -11,22 +11,16 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-
-import java.util.List;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MyPageBinding;
-import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
-import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MyPage extends AppCompatActivity implements View.OnClickListener, FlagRvAdapter.OnFlagClickListener {
 
@@ -42,8 +36,7 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
 
     final int REUTRN_FAVORITE_COUNTRY = 55;
 
-    final int SUB_COUNTRY = 1;
-    final int SUB_FAVORITE = 2;
+    final int SUB_LIKE = 2;
     final int SUB_ENROLL = 3;
 
     User user;
@@ -61,6 +54,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
 
             App.Companion.setUserid(user.getU_userid());
             App.Companion.setUserNickname(user.getU_nick_name());
+
+            getIntent().removeExtra("user");
         }
 
         //Editing Post로 이동 후 결과를 반환하는 클릭 이벤트 버튼
@@ -77,17 +72,38 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
         pageBinding.setLifecycleOwner(this);
 
         pageBinding.getMyPageVm().mpProfileLD.setValue(pageBinding.getMyPageVm().getHeadProfile(user));
-        pageBinding.getMyPageVm().countryCall();
+
 
         pageBinding.getMyPageVm().flagRvAdapter.setOnFlagClickListener(this);
 
-        loadEnroll();
+        //초기 값
+        pageBinding.getMyPageVm().countryCall();
+        loadPostCall(pageBinding.likePost, 1);
+        loadPostCall(pageBinding.recentPost, 2);
+        loadPostCall(pageBinding.enrollPost, 3);
+
+        pageBinding.getMyPageVm().onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                pageBinding.getMyPageVm().countryCall();
+                loadPostCall(pageBinding.likePost, 1);
+                loadPostCall(pageBinding.recentPost, 2);
+                loadPostCall(pageBinding.enrollPost, 3);
+
+                pageBinding.getMyPageVm().isRefresh.setValue(false);
+            }
+        };
     }
 
-    public void loadEnroll() {
+    @Override
+    protected void onRestart() {
+        super.onRestart();
 
-        pageBinding.getMyPageVm().postCall(act, pageBinding.enrollPost, 1);
-        pageBinding.getMyPageVm().postCall(act, pageBinding.likePost, 2);
+        Log.d(TAG, "onRestart");
+
+        loadPostCall(pageBinding.likePost, 1);
+        loadPostCall(pageBinding.recentPost, 2);
     }
 
     @Override
@@ -111,6 +127,14 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
         Log.d(TAG + "More", "선호 국가 더 보기");
     }
 
+    public void loadPostCall(LinearLayout layout, int type) {
+
+        if (layout.getChildCount() > 0)
+            layout.removeAllViews();
+
+        pageBinding.getMyPageVm().postCall(act, layout, type);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -124,10 +148,9 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
         }
 
         if (requestCode == EDITING_POST) {
-            Intent intent = getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
+
+            pageBinding.enrollPost.removeAllViews();
+            pageBinding.getMyPageVm().postCall(act, pageBinding.enrollPost, 3);
             Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록을 하셨습니다.", Toast.LENGTH_LONG).show();
         }
     }
@@ -150,7 +173,7 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
 
                 break;
             case R.id.mp_like_more:
-                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
+                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_LIKE));
                 App.INSTANCE.startActivity(intent);
                 Log.d(TAG + "More", "선호 포스트 더 보기");
                 break;

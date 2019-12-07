@@ -44,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditingPost extends AppCompatActivity implements WritePostType.OnDetachFragmentClickListener, RouteNodeAdapter.OnNodeClickListener {
+public class EditingPost extends AppCompatActivity implements WritePostType.OnDetachFragmentClickListener, RouteNodeAdapter.OnNodeClickListener, RouteNodeAdapter.OnNodeLongClickListener {
 
 
     String TAG = "Trav.EditingPost.";
@@ -53,6 +53,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
     EditingPostViewModel editingPostVm;
     EditingPostBinding binding;
+
+    Post post;
 
     final int SELECT_POST_PERIOD = 33;
 
@@ -96,7 +98,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         !binding.getEditingPostVm().inputPlace.getValue().equals("") &&
                         binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
 
-                    Post post = new Post(App.Companion.getUserNickname(), binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
+                    post = new Post(App.Companion.getUserNickname(), binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
 
                     if (binding.getEditingPostVm().inputExpenses.getValue() != null){
 

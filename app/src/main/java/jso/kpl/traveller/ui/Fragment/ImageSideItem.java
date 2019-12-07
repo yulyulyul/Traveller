@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ public class ImageSideItem extends Fragment {
 
         if(getArguments() != null){
             Bundle args = getArguments();
+
+            Log.d("Trav.Image", "이미지: " + args.getString("img"));
             binding.setImgItem(args.getString("img"));
         }
 

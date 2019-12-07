@@ -4,48 +4,71 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+
+import java.util.List;
 
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.SmallPostBinding;
-import jso.kpl.traveller.viewmodel.RouteOtherDetailViewModel;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.ui.Fragment.ImageSideItem;
+import jso.kpl.traveller.ui.adapters.ImageSideVpAdapter;
+import jso.kpl.traveller.viewmodel.DetailPostViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class SmallPostDialog extends Dialog {
+public class SmallPostDialog extends DialogFragment {
 
-    private Context context;
-    private RouteOtherDetailViewModel vm;
+    SmallPostBinding smallPostBinding;
+    DetailPostViewModel detailPostVm = new DetailPostViewModel();
 
-    public SmallPostDialog(@NonNull Context context) {
-        super(context);
-
-        this.context = context;
+    public SmallPostDialog() {
     }
 
-    public void call(RouteOtherDetailViewModel vm) {
+    public static SmallPostDialog getInstance(int sp_id) {
 
-        // 액티비티의 타이틀바를 숨긴다.
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        SmallPostDialog spDialog = new SmallPostDialog();
 
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Bundle args = new Bundle();
+        args.putInt("sp_id", sp_id);
 
-        // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        SmallPostBinding smallPostBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.small_post, null, false);
-        setContentView(smallPostBinding.getRoot());
-        smallPostBinding.setVM(vm);
+        spDialog.setArguments(args);
 
-        show();
-
-        smallPostBinding.smallPostCancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        return spDialog;
     }
+
+    public int getShownData() {
+        return getArguments().getInt("sp_id", 0);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        smallPostBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.small_post, null, false);
+
+        detailPostVm.setPostImgAdapter(new ImageSideVpAdapter(getChildFragmentManager(), 5));
+        smallPostBinding.setSmallPostVm(detailPostVm);
+
+        smallPostBinding.setLifecycleOwner(this);
+
+        smallPostBinding.getSmallPostVm().smallPostCall(getShownData());
+
+        return smallPostBinding.getRoot();
+    }
+
+
 
 }

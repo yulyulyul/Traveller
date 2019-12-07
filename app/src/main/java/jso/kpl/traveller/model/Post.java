@@ -4,10 +4,11 @@ import android.view.View;
 
 import androidx.annotation.BoolRes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Post {
+public class Post implements Serializable {
 
     int p_id;
     String p_author;
@@ -151,11 +152,13 @@ public class Post {
                 ", p_place='" + p_place + '\'' +
                 ", p_expenses='" + p_expenses + '\'' +
                 ", p_comment='" + p_comment + '\'' +
-                ", p_category='" + p_category + '\'' +
                 ", p_start_date='" + p_start_date + '\'' +
                 ", p_end_date='" + p_end_date + '\'' +
                 ", p_is_open=" + p_is_open +
+                ", p_category=" + p_category +
                 ", p_sp_list=" + p_sp_list +
+                ", p_is_like=" + p_is_like +
+                ", p_is_cart=" + p_is_cart +
                 '}';
     }
 }

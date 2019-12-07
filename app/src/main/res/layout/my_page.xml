@@ -11,235 +11,242 @@
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
     </data>
 
-    <RelativeLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:onRefreshListener="@{myPageVm.onRefreshListener}"
+        app:checkRefresh="@{myPageVm.isRefresh}">
 
-        <androidx.core.widget.NestedScrollView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <!--프로필 파트-->
                 <LinearLayout
-                    android:id="@+id/mp_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:background="@drawable/s_border_round_outside"
-                    android:gravity="center_vertical"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <!--프로필 이미지-->
-                    <RelativeLayout
-                        android:id="@+id/profile_relative"
+                    <!--프로필 파트-->
+                    <LinearLayout
+                        android:id="@+id/mp_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
+                        android:layout_height="150dp"
+                        android:background="@drawable/s_border_round_outside"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <!--프로필 이미지-->
+                        <RelativeLayout
+                            android:id="@+id/profile_relative"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center">
+
+                            <ImageView
+                                android:id="@+id/mp_profile_iv"
+                                android:layout_width="125dp"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:paddingLeft="20dp"
+                                android:scaleType="fitXY"
+                                app:setCircleImg="@{myPageVm.mpProfileLD.profileUri}" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/mp_profile_iv"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="20dp"
+                                android:text="@{myPageVm.mpProfileLD.email}"
+                                android:textColor="@color/white"
+                                android:textSize="20dp" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <!--루트 서치 파트-->
+                    <LinearLayout
+                        android:id="@+id/mp_route_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/mp_profile"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="15dp"
+                        android:background="@drawable/s_border_square"
+                        android:backgroundTint="@color/clicked"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="@{()->myPageVm.onSearchClicked()}">
 
                         <ImageView
-                            android:id="@+id/mp_profile_iv"
-                            android:layout_width="125dp"
-                            android:layout_height="wrap_content"
-                            android:adjustViewBounds="true"
-                            android:paddingLeft="20dp"
-                            android:scaleType="fitXY"
-                            app:setCircleImg="@{myPageVm.mpProfileLD.profileUri}" />
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/i_search_icon"
+                            android:backgroundTint="@color/white" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/s_border_square"
+                            android:clickable="false"
+                            android:gravity="center"
+                            android:hint="다른 여행자의 루트가 궁금하신가요?"
+                            android:textSize="15dp" />
+
+                    </LinearLayout>
+
+                    <!--선호 국가-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="25dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/mp_profile_iv"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="20dp"
-                            android:text="@{myPageVm.mpProfileLD.email}"
-                            android:textColor="@color/white"
-                            android:textSize="20dp" />
+                            android:text="선호하는 국가"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/mp_favorite_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="onClick"
+                            android:text="전체 국가 보기"
+                            android:textSize="16dp"
+                            app:extendTouchRange="@{10}" />
 
                     </RelativeLayout>
 
-                </LinearLayout>
-
-                <!--루트 서치 파트-->
-                <LinearLayout
-                    android:id="@+id/mp_route_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_below="@+id/mp_profile"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginVertical="15dp"
-                    android:background="@drawable/s_border_square"
-                    android:backgroundTint="@color/clicked"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="@{()->myPageVm.onSearchClicked()}">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/i_search_icon"
-                        android:backgroundTint="@color/white" />
-
-                    <TextView
+                    <!--선호 국가 리스트-->
+                    <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/s_border_square"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:hint="다른 여행자의 루트가 궁금하신가요?"
-                        android:textSize="15dp" />
+                        android:layout_marginHorizontal="30dp"
+                        android:layout_marginBottom="10dp"
+                        app:setGridRvAdapter="@{myPageVm.flagRvAdapter}"
+                        app:setGridSpan="@{5}" />
+
+                    <!--좋아요 서브 타이틀-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="25dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="좋아하는 포스트"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/mp_like_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:adjustViewBounds="true"
+                            android:onClick="onClick"
+                            android:scaleType="fitCenter"
+                            android:text="더보기"
+                            android:textSize="16dp"
+                            app:extendTouchRange="@{10}" />
+
+                    </RelativeLayout>
+
+                    <!--포스트-->
+                    <LinearLayout
+                        android:id="@+id/like_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                    <!--최근 서브 타이틀-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="25dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="최근 포스트"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/recent_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                    <!--등록 서브 타이틀-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="25dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="등록 포스트"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/mp_enroll_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="onClick"
+                            android:text="더보기"
+                            android:textSize="16dp"
+                            app:extendTouchRange="@{10}" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/enroll_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp" />
 
                 </LinearLayout>
 
-                <!--선호 국가-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginHorizontal="25dp">
+            </androidx.core.widget.NestedScrollView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="선호하는 국가"
-                        android:textStyle="bold" />
+            <!--Write Post 화면으로 넘어가는 버튼-->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="20dp"
+                android:src="@drawable/i_edit_post_icon"
+                android:tint="@color/white"
+                app:OnClickListener="@{myPageVm.onEditingPostClickListener}"
+                app:backgroundTint="@color/clicked" />
 
-                    <TextView
-                        android:id="@+id/mp_favorite_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:onClick="onClick"
-                        android:text="더보기"
-                        android:textSize="16dp"
-                        app:extendTouchRange="@{10}" />
+        </RelativeLayout>
 
-                </RelativeLayout>
-
-                <!--선호 국가 리스트-->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_marginBottom="10dp"
-                    app:setGridRvAdapter="@{myPageVm.flagRvAdapter}"
-                    app:setGridSpan="@{5}" />
-
-                <!--좋아요 서브 타이틀-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginHorizontal="25dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="좋아하는 포스트"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/mp_like_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:adjustViewBounds="true"
-                        android:onClick="onClick"
-                        android:scaleType="fitCenter"
-                        android:text="더보기"
-                        android:textSize="16dp"
-                        app:extendTouchRange="@{10}" />
-
-                </RelativeLayout>
-
-                <!--포스트-->
-                <LinearLayout
-                    android:id="@+id/like_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
-
-                <!--최근 서브 타이틀-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginHorizontal="25dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="최근 포스트"
-                        android:textStyle="bold" />
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/recent_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
-
-                <!--등록 서브 타이틀-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginHorizontal="25dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="등록 포스트"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/mp_enroll_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:onClick="onClick"
-                        android:text="더보기"
-                        android:textSize="16dp"
-                        app:extendTouchRange="@{10}" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/enroll_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp" />
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
-
-
-        <!--Write Post 화면으로 넘어가는 버튼-->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="20dp"
-            android:src="@drawable/i_edit_post_icon"
-            android:tint="@color/white"
-            app:OnClickListener="@{myPageVm.onEditingPostClickListener}"
-            app:backgroundTint="@color/clicked" />
-
-    </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

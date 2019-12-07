@@ -1,4 +1,4 @@
-package jso.kpl.traveller.ui;
+package jso.kpl.traveller.ui.PostType;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,21 +9,22 @@ import android.widget.LinearLayout;
 
 import androidx.databinding.DataBindingUtil;
 
-import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.MyPagePostBinding;
+import jso.kpl.traveller.databinding.SimplePostBinding;
 import jso.kpl.traveller.model.ListItem;
+import jso.kpl.traveller.ui.MyPage;
+import jso.kpl.traveller.ui.DetailPost;
 
 public class SimplePost extends LinearLayout {
 
-    MyPagePostBinding binding;
+    SimplePostBinding binding;
 
     public SimplePost(final Context context, final ListItem item) {
         super(context);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.my_page_post, this, true);
+        binding = DataBindingUtil.inflate(inflater, R.layout.simple_post, this, true);
 
         binding.setItem(item);
 
@@ -35,7 +36,7 @@ public class SimplePost extends LinearLayout {
 
                 Log.d("Trav.Item", "Post: " + binding.getItem().toString());
 
-                Intent intent = new Intent(context, RouteOtherDetail.class);
+                Intent intent = new Intent(context, DetailPost.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("p_id", item.getP_id());
                 context.startActivity(intent);

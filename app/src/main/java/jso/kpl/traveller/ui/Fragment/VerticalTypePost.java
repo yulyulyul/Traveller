@@ -45,28 +45,6 @@ public class VerticalTypePost extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.vertical_type_post, container, false);
         binding.setVerticalVm(routeListVm);
         binding.setLifecycleOwner(this);
-//
-//        binding.getVerticalVm().onVerticalScrollListener = new RecyclerView.OnScrollListener() {
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-//                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
-//
-//                if(itemTotalCount < 17){
-//                    Log.d(TAG, "onScrollStateChanged: ");
-//                } else{
-//                    if(itemTotalCount == lastVisibleItemPosition){
-//
-//                        binding.getVerticalVm().searchByCondition((MyPageItem) getActivity().getIntent().getSerializableExtra("req"));
-//                        Log.d(TAG, "onScrollStateChanged: 마지막이야");
-//                    }
-//                }
-//
-//            }
-//        };
 
         return binding.getRoot();
     }

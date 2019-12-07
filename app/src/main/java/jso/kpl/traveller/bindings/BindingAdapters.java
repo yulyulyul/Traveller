@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -404,5 +405,11 @@ public class BindingAdapters {
         vp.setPageMargin(margin/2);
     }
 
+    @BindingAdapter({"onRefreshListener", "checkRefresh"})
+    public static void bindRefreshListener(SwipeRefreshLayout swipeRefreshLayout, SwipeRefreshLayout.OnRefreshListener listener, boolean isRefresh) {
+
+        swipeRefreshLayout.setOnRefreshListener(listener);
+        swipeRefreshLayout.setRefreshing(isRefresh);
+    }
 
 }
