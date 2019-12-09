@@ -20,7 +20,7 @@
             android:layout_height="0dp"
             android:layout_weight="10"
             app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
-            app:addOnTabSelected="@{mainListVm.onTestClicked(container)}"
+            app:addOnTabSelected="@{mainListVm.onTabSelectedListener(container)}"
             android:background="@color/simple_white"
             app:tabIndicatorColor="@color/clicked"/>
 

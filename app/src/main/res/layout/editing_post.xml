@@ -285,7 +285,9 @@
                                         android:layout_marginVertical="5dp"
                                         android:orientation="vertical"
                                         android:paddingHorizontal="20dp"
-                                        android:paddingVertical="10dp">
+                                        android:paddingVertical="10dp"
+                                        android:focusable="true"
+                                        android:focusableInTouchMode="true">
 
                                         <TextView
                                             android:layout_width="wrap_content"
@@ -293,7 +295,7 @@
                                             android:layout_marginLeft="10dp"
                                             android:text="국가"
                                             android:textColor="@color/clicked"
-                                            android:textSize="16dp"
+                                            android:textSize="@dimen/middle_text_size"
                                             android:textStyle="bold" />
 
                                         <EditText
@@ -301,7 +303,6 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginHorizontal="10dp"
                                             android:background="@android:color/transparent"
-                                            android:focusable="true"
                                             android:hint="여행 국가를 입력해주세요."
                                             android:maxLength="85"
                                             android:nextFocusDown="@id/edit_expenses"
@@ -339,7 +340,7 @@
                                             android:layout_marginLeft="10dp"
                                             android:text="경비"
                                             android:textColor="@color/black"
-                                            android:textSize="16dp"
+                                            android:textSize="@dimen/middle_text_size"
                                             android:textStyle="bold" />
 
                                         <EditText
@@ -390,7 +391,7 @@
                                             android:layout_marginLeft="10dp"
                                             android:text="기간"
                                             android:textColor="@color/black"
-                                            android:textSize="16dp"
+                                            android:textSize="@dimen/middle_text_size"
                                             android:textStyle="bold" />
 
                                         <LinearLayout
@@ -444,7 +445,7 @@
                                             android:layout_marginLeft="10dp"
                                             android:text="내용"
                                             android:textColor="@color/black"
-                                            android:textSize="16dp"
+                                            android:textSize="@dimen/middle_text_size"
                                             android:textStyle="bold" />
 
                                         <EditText

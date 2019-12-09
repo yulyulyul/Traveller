@@ -58,9 +58,9 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
     public Call<ResponseResult<Integer>> favoriteCountryCall (int type) {
 
         if (type == 0)
-            call = countryAPI.addFlag(App.Companion.getUserid(), countryItem.getValue().getCt_no());
+            call = countryAPI.addFlag(App.Companion.getUser().getU_userid(), countryItem.getValue().getCt_no());
         else
-            call = countryAPI.deleteFavoriteCountry(App.Companion.getUserid(), countryItem.getValue().getCt_no());
+            call = countryAPI.deleteFavoriteCountry(App.Companion.getUser().getU_userid(), countryItem.getValue().getCt_no());
 
         return call;
     }
@@ -104,7 +104,7 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
 
     public void loadCountryInfo(int ctNo) {
 
-        Call<ResponseResult<List<Country>>> call = countryAPI.loadCountryInfo(App.Companion.getUserid(), ctNo);
+        Call<ResponseResult<List<Country>>> call = countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), ctNo);
 
         call.enqueue(new Callback<ResponseResult<List<Country>>>() {
             @Override

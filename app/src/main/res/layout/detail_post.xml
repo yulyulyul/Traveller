@@ -46,9 +46,9 @@
                             android:drawableLeft="@drawable/i_airplane"
                             android:drawablePadding="15dp"
                             android:gravity="center_vertical"
-                            android:text="Traveller"
+                            android:text="트레블러"
                             android:textColor="@color/colorWhite"
-                            android:textSize="25dp"
+                            android:textSize="@dimen/title_text_size"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -83,7 +83,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:text="여행 국가"
                                 android:textColor="@color/clicked"
-                                android:textSize="20dp"
+                                android:textSize="@dimen/subtitle_text_size"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -93,7 +93,7 @@
                                 android:padding="10dp"
                                 android:singleLine="true"
                                 android:text="@{rodVm.postItem.p_place}"
-                                android:textSize="20dp" />
+                                android:textSize="@dimen/subtitle_text_size" />
 
                         </LinearLayout>
 
@@ -110,7 +110,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:text="여행 기간"
                                 android:textColor="@color/clicked"
-                                android:textSize="20dp"
+                                android:textSize="@dimen/subtitle_text_size"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -120,7 +120,7 @@
                                 android:padding="10dp"
                                 android:singleLine="true"
                                 android:text="@{rodVm.postItem.p_start_date + '~' + rodVm.postItem.p_end_date}"
-                                android:textSize="20dp" />
+                                android:textSize="@dimen/subtitle_text_size" />
 
                         </LinearLayout>
 
@@ -138,7 +138,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:text="여행 경비"
                                 android:textColor="@color/clicked"
-                                android:textSize="20dp"
+                                android:textSize="@dimen/subtitle_text_size"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -148,7 +148,7 @@
                                 android:layout_marginHorizontal="10dp"
                                 android:background="@android:color/transparent"
                                 android:text="@{rodVm.postItem.p_expenses}"
-                                android:textSize="20dp" />
+                                android:textSize="@dimen/subtitle_text_size" />
 
                         </LinearLayout>
 
@@ -171,7 +171,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:text="여행 카테고리"
                                 android:textColor="@color/clicked"
-                                android:textSize="20dp"
+                                android:textSize="@dimen/subtitle_text_size"
                                 android:textStyle="bold"
                                 android:gravity="center"/>
 
@@ -196,7 +196,7 @@
                                 android:layout_marginVertical="10dp"
                                 android:text="여행 사진들"
                                 android:textColor="@color/clicked"
-                                android:textSize="20dp"
+                                android:textSize="@dimen/subtitle_text_size"
                                 android:textStyle="bold" />
 
                             <androidx.viewpager.widget.ViewPager
@@ -265,7 +265,7 @@
                             android:layout_marginBottom="5dp"
                             android:text="@{rodVm.postItem.p_author}"
                             android:textColor="@color/browser_actions_text_color"
-                            android:textSize="20dp"
+                            android:textSize="@dimen/subtitle_text_size"
                             android:textStyle="bold" />
 
                         <TextView
@@ -278,16 +278,7 @@
                             android:layout_toRightOf="@id/userId"
                             android:text="@{rodVm.postItem.p_comment}"
                             android:textColor="@color/colorBlack"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/comments_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/userId"
-                            android:layout_alignStart="@id/like_btn"
-                            android:text=""
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/subtitle_text_size" />
 
                     </LinearLayout>
                 </LinearLayout>

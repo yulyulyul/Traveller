@@ -1,16 +1,20 @@
 package jso.kpl.traveller.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import jso.kpl.traveller.App;
@@ -22,9 +26,9 @@ import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
-public class MyPage extends AppCompatActivity implements View.OnClickListener, FlagRvAdapter.OnFlagClickListener {
+public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListener {
 
-    Activity act = this;
+    Activity act = getActivity();
 
     String TAG = "Trav.MyPage.";
 
@@ -41,33 +45,45 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
 
     User user;
 
+    public Fragment newInstance(User user) {
+
+        MyPage myPage = new MyPage();
+
+        Bundle args = new Bundle();
+        args.putSerializable("user", user);
+
+        myPage.setArguments(args);
+
+        return myPage;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if(getArguments() != null){
+            user = (User) getArguments().getSerializable("user");
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.d(TAG, "My Page 호출");
 
         myPageVM = new MyPageViewModel();
-
-        //유저 데이터를 가져온다.
-        if (getIntent() != null) {
-
-            user = ((User) getIntent().getSerializableExtra("user"));
-
-            App.Companion.setUserid(user.getU_userid());
-            App.Companion.setUserNickname(user.getU_nick_name());
-
-            getIntent().removeExtra("user");
-        }
 
         //Editing Post로 이동 후 결과를 반환하는 클릭 이벤트 버튼
         myPageVM.setOnEditingPostClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Go 포스트 작성");
-                startActivityForResult(new Intent(getApplicationContext(), EditingPost.class), EDITING_POST);
+                startActivityForResult(new Intent(getActivity(), EditingPost.class), EDITING_POST);
             }
         });
 
-        pageBinding = DataBindingUtil.setContentView(this, R.layout.my_page);
+        pageBinding = DataBindingUtil.inflate(inflater, R.layout.my_page, container, false);
         pageBinding.setMyPageVm(myPageVM);
         pageBinding.setLifecycleOwner(this);
 
@@ -86,6 +102,7 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
             @Override
             public void onRefresh() {
 
+                Log.d(TAG, "My Page 리프레쉬");
                 pageBinding.getMyPageVm().countryCall();
                 loadPostCall(pageBinding.likePost, 1);
                 loadPostCall(pageBinding.recentPost, 2);
@@ -94,16 +111,20 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
                 pageBinding.getMyPageVm().isRefresh.setValue(false);
             }
         };
+
+        onMoreClicked();
+
+        return pageBinding.getRoot();
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    public void onResume() {
+        super.onResume();
 
-        Log.d(TAG, "onRestart");
-
-        loadPostCall(pageBinding.likePost, 1);
-        loadPostCall(pageBinding.recentPost, 2);
+//        Log.d(TAG, "onRestart");
+//
+//        loadPostCall(pageBinding.likePost, 1);
+//        loadPostCall(pageBinding.recentPost, 2);
     }
 
     @Override
@@ -111,7 +132,7 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
 
         Log.d(TAG, "onFlagClicked: " + country);
 
-        Intent intent = new Intent(getApplicationContext(), RouteList.class);
+        Intent intent = new Intent(getActivity(), RouteList.class);
         intent.putExtra("req", new MyPageItem(new SearchReq(country, 0, 1000000000), 0));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -120,7 +141,7 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
     @Override
     public void onAddFlagClicked() {
 
-        Intent flagIntent = new Intent(getApplicationContext(), FavoriteCountry.class);
+        Intent flagIntent = new Intent(getActivity(), FavoriteCountry.class);
         flagIntent.putExtra("type", 1);
         startActivityForResult(flagIntent, REUTRN_FAVORITE_COUNTRY);
 
@@ -132,14 +153,53 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
         if (layout.getChildCount() > 0)
             layout.removeAllViews();
 
-        pageBinding.getMyPageVm().postCall(act, layout, type);
+        pageBinding.getMyPageVm().postCall(getActivity(), layout, type);
+    }
+
+    public void onMoreClicked() {
+
+        pageBinding.getMyPageVm().onMoreCountryClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent flagIntent = new Intent(App.INSTANCE, FavoriteCountry.class);
+                flagIntent.putExtra("type", 0);
+                startActivityForResult(flagIntent, REUTRN_FAVORITE_COUNTRY);
+            }
+        };
+
+        pageBinding.getMyPageVm().onMoreEnrollClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(App.INSTANCE, RouteList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("req", new MyPageItem(App.Companion.getUser().getU_userid(), SUB_ENROLL));
+                App.INSTANCE.startActivity(intent);
+
+                Log.d(TAG + "More", "등록한 포스트 더 보기");
+            }
+        };
+
+        pageBinding.getMyPageVm().onMoreLikeClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(App.INSTANCE, RouteList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("req", new MyPageItem(App.Companion.getUser().getU_userid(), SUB_LIKE));
+                App.INSTANCE.startActivity(intent);
+
+                Log.d(TAG + "More", "선호 포스트 더 보기");
+            }
+        };
+
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK)
+        if (resultCode != getActivity().RESULT_OK)
             return;
 
         if (requestCode == 55) {
@@ -155,34 +215,6 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener, F
         }
     }
 
-    //더보기 클릭 리스너
-    @Override
-    public void onClick(View v) {
 
-        Intent intent = new Intent(App.INSTANCE, RouteList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        int id = v.getId();
-
-        switch (id) {
-            case R.id.mp_favorite_more:
-
-                Intent flagIntent = new Intent(getApplicationContext(), FavoriteCountry.class);
-                flagIntent.putExtra("type", 0);
-                startActivityForResult(flagIntent, REUTRN_FAVORITE_COUNTRY);
-
-                break;
-            case R.id.mp_like_more:
-                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_LIKE));
-                App.INSTANCE.startActivity(intent);
-                Log.d(TAG + "More", "선호 포스트 더 보기");
-                break;
-            case R.id.mp_enroll_more:
-                intent.putExtra("req", new MyPageItem(App.Companion.getUserid(), SUB_ENROLL));
-                App.INSTANCE.startActivity(intent);
-                Log.d(TAG + "More", "등록한 포스트 더 보기");
-                break;
-
-        }
-    }
 }
+

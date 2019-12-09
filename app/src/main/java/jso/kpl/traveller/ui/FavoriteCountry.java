@@ -78,9 +78,9 @@ public class FavoriteCountry extends AppCompatActivity {
                 final Country country = binding.getFcVm().countryList.getValue().get(position);
 
                 if(type == 0){
-                    call = countryAPI.deleteFavoriteCountry(App.Companion.getUserid(), country.getCt_no());
+                    call = countryAPI.deleteFavoriteCountry(App.Companion.getUser().getU_userid(), country.getCt_no());
                 } else{
-                    call = countryAPI.addFlag(App.Companion.getUserid(), country.getCt_no());
+                    call = countryAPI.addFlag(App.Companion.getUser().getU_userid(), country.getCt_no());
                 }
 
                 Log.d(TAG, "onBtnClicked: ");

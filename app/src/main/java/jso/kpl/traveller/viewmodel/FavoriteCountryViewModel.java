@@ -57,11 +57,11 @@ public class FavoriteCountryViewModel extends BaseObservable {
 
         if(type == 0){
 
-            loadCountryCall = countryAPI.loadCountryList(App.Companion.getUserid());
+            loadCountryCall = countryAPI.loadCountryList(App.Companion.getUser().getU_userid());
 
         } else if(type == 1){
 
-            loadCountryCall = countryAPI.loadFavoriteCountry(App.Companion.getUserid(), 0);
+            loadCountryCall = countryAPI.loadFavoriteCountry(App.Companion.getUser().getU_userid(), 0);
         }
 
         loadCountryCall.enqueue(new Callback<ResponseResult<List<Country>>>() {

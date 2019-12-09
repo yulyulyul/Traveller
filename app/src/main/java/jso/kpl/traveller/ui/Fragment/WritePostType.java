@@ -88,9 +88,13 @@ public class WritePostType extends Fragment {
         // Required empty public constructor
     }
 
+
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+        JavaUtil.downKeyboard(getActivity());
 
         if (getActivity() != null && getActivity() instanceof OnDetachFragmentClickListener) {
             onDetachFragmentClickListener = (OnDetachFragmentClickListener) getActivity();

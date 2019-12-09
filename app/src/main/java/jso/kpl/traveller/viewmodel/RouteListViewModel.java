@@ -130,7 +130,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     }
 
     //탭레이아웃의 콜백 리스너
-    public TabLayout.OnTabSelectedListener onTestClicked(final FrameLayout container) {
+    public TabLayout.OnTabSelectedListener onTabSelectedListener(final FrameLayout container) {
 
         /*첫 번째 탭의 [gt_post:fragment]의 생성자
             + [gt_post:fragment]를 frameLayout에 올린다.
@@ -261,6 +261,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public void VerticalItemClicked(int p_id) {
 
         if (App.INSTANCE != null) {
+
 
             Intent intent = new Intent(App.INSTANCE, DetailPost.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

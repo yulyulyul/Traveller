@@ -36,12 +36,14 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:layout_margin="20dp">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/i_left_space_arrow_icon"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="취소"
+                    android:textSize="20dp"
+                    android:layout_centerVertical="true"
                     app:OnClickListener="@{postTypeVm.onDetachFragmentClickListener}" />
 
                 <TextView
@@ -88,13 +90,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingVertical="10dp"
-                    android:paddingHorizontal="20dp">
+                    android:paddingHorizontal="20dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    app:setInitFocusing="@{true}">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="장소"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/middle_text_size"
                         android:textColor="@color/clicked"
                         android:textStyle="bold"
                         android:padding="5dp" />
@@ -103,16 +108,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
-                        android:focusable="auto"
-                        android:focusableInTouchMode="true"
                         android:hint="장소 입력"
                         android:nextFocusDown="@id/edit_expenses"
                         android:padding="5dp"
 
                         android:singleLine="true"
                         android:text="@={postTypeVm.inputPlace}"
-                        android:textSize="20dp"
-                        app:setInitFocusing="@{true}" />
+                        android:textSize="20dp" />
 
                 </LinearLayout>
 
@@ -142,7 +144,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="경비"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/middle_text_size"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:padding="5dp" />
@@ -190,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="내용"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/middle_text_size"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:padding="5dp" />
@@ -239,7 +241,7 @@
                         android:text="기간"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/middle_text_size"
                         android:padding="5dp" />
 
                     <LinearLayout
@@ -300,7 +302,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="8"
                             android:text="카테고리"
-                            android:textSize="16dp"
+                            android:textSize="@dimen/middle_text_size"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:padding="5dp" />
@@ -375,7 +377,7 @@
                                 android:textColor="@color/black"
                                 android:layout_weight="8"
                                 android:padding="5dp"
-                                android:textSize="16dp" />
+                                android:textSize="@dimen/middle_text_size" />
 
                         </LinearLayout>
 
@@ -436,7 +438,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Photo" />
+                    android:text="포토" />
 
             </LinearLayout>
 
@@ -457,7 +459,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Calendar" />
+                    android:text="기간" />
 
             </LinearLayout>
 
@@ -478,7 +480,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tag" />
+                    android:text="태그" />
 
             </LinearLayout>
 

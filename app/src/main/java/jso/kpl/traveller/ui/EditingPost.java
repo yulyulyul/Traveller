@@ -98,7 +98,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         !binding.getEditingPostVm().inputPlace.getValue().equals("") &&
                         binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
 
-                    post = new Post(App.Companion.getUserNickname(), binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
+                    post = new Post(App.Companion.getUser().getU_nick_name(), binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
 
                     if (binding.getEditingPostVm().inputExpenses.getValue() != null){
 
@@ -217,7 +217,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 } else {
                     binding.postSave.setTextColor(getColor(R.color.non_clicked));
                 }
-
             }
         });
 

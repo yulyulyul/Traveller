@@ -1,5 +1,6 @@
 package jso.kpl.traveller.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -92,6 +93,12 @@ public class JavaUtil {
                 }
             }
         });
+    }
+
+    public static void downKeyboard( Activity activity) {
+
+        InputMethodManager mInputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputMethodManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
     }
 
 }

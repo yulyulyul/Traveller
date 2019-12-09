@@ -83,7 +83,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
     }
 
     public void postCall(int pId) {
-        routeOtherDetailAPI.loadPost(App.Companion.getUserid(), pId).enqueue(this);
+        routeOtherDetailAPI.loadPost(App.Companion.getUser().getU_userid(), pId).enqueue(this);
     }
 
     public void smallPostCall(int sp_id) {
@@ -197,7 +197,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
 
     public void likeCall() {
 
-        routeOtherDetailAPI.likePost(App.Companion.getUserid(), postItem.getValue().getP_id(), isLike.getValue()).enqueue(new Callback<ResponseResult<Integer>>() {
+        routeOtherDetailAPI.likePost(App.Companion.getUser().getU_userid(), postItem.getValue().getP_id(), isLike.getValue()).enqueue(new Callback<ResponseResult<Integer>>() {
             @Override
             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
                 if (response.body() != null) {
@@ -231,7 +231,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
 
     public void updateRecentPostCall(){
         int i = 0;
-        routeOtherDetailAPI.updateRecentPost(App.Companion.getUserid(), postItem.getValue().getP_id()).enqueue(new Callback<ResponseResult<Integer>>() {
+        routeOtherDetailAPI.updateRecentPost(App.Companion.getUser().getU_userid(), postItem.getValue().getP_id()).enqueue(new Callback<ResponseResult<Integer>>() {
             @Override
             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
                 if(response.body() != null){

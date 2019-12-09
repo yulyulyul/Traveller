@@ -16,6 +16,7 @@ public class ListItem implements Serializable {
     public String p_place;
     public String p_expenses;
     public String sp_imgs;
+    public String p_write_date;
 
     //이미지 오픈
     public View.OnClickListener onPostClickListener;

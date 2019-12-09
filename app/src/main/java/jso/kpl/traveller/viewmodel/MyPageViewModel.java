@@ -15,16 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.App;
+import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.model.ListItem;
+import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
+import jso.kpl.traveller.ui.FavoriteCountry;
 import jso.kpl.traveller.ui.PostType.EmptyPost;
 import jso.kpl.traveller.ui.PostType.SimplePost;
+import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.RouteSearch;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
@@ -57,11 +61,18 @@ public class MyPageViewModel extends ViewModel {
         this.onEditingPostClickListener = onEditingPostClickListener;
     }
 
+    public MutableLiveData<Boolean> isLikeMore = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isEnrollMore = new MutableLiveData<>();
+
     public MutableLiveData<Boolean> isClick = new MutableLiveData<>();
 
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener;
 
     public MutableLiveData<Boolean> isRefresh = new MutableLiveData<>();
+
+    public View.OnClickListener onMoreEnrollClickListener;
+    public View.OnClickListener onMoreCountryClickListener;
+    public View.OnClickListener onMoreLikeClickListener;
 
     //통신------------------------------------------------------------------------------------------
     CountryAPI countryAPI;
@@ -69,6 +80,9 @@ public class MyPageViewModel extends ViewModel {
     //----------------------------------------------------------------------------------------------
 
     public MyPageViewModel() {
+
+        isLikeMore.setValue(false);
+        isEnrollMore.setValue(false);
 
         flagRvAdapter = new FlagRvAdapter();
 
@@ -103,7 +117,7 @@ public class MyPageViewModel extends ViewModel {
 
         countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
-        call = countryAPI.loadFavoriteCountry(App.Companion.getUserid(), 1);
+        call = countryAPI.loadFavoriteCountry(App.Companion.getUser().getU_userid(), 1);
 
         call.enqueue(new Callback<ResponseResult<List<Country>>>() {
             @Override
@@ -145,12 +159,20 @@ public class MyPageViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ResponseResult<List<Country>>> call, Throwable t) {
+
+                if (flagRvAdapter.getItemCount() > 0) {
+                    flagRvAdapter.removeItem();
+                    Log.d(TAG, "리무브" + flagRvAdapter.getItemCount());
+                }
+
                 favCountryList.add(addCountry);
 
                 for (int i = 0; i < favCountryList.size(); i++)
                     flagRvAdapter.updateItem(favCountryList.get(i));
 
                 flagRvAdapter.notifyDataSetChanged();
+
+                favCountryList.clear();
 
             }
         });
@@ -159,14 +181,16 @@ public class MyPageViewModel extends ViewModel {
     public void postCall(final Activity act, final LinearLayout layout, final int type) {
         //My Page의 리사이클러 뷰에 들어갈 데이터 객체화
 
+        Log.d(TAG, "마이 페이지 포스트 호출");
+
         Call<ResponseResult<List<ListItem>>> call;
 
         if (type == 1)
-            call = postAPI.loadLikePost(App.Companion.getUserid(), 0, 1);
+            call = postAPI.loadLikePost(App.Companion.getUser().getU_userid(), 0, 1);
         else if (type == 2)
-            call = postAPI.loadRecentPost(App.Companion.getUserid());
+            call = postAPI.loadRecentPost(App.Companion.getUser().getU_userid());
         else if (type == 3)
-            call = postAPI.myPageEnroll(App.Companion.getUserid());
+            call = postAPI.myPageEnroll(App.Companion.getUser().getU_userid());
         else
             call = null;
 
@@ -180,21 +204,51 @@ public class MyPageViewModel extends ViewModel {
                     List<ListItem> listItem = result.getRes_obj();
 
                     if (result.getRes_type() == 1) {
+
                         for (ListItem item : listItem) {
                             Log.d(TAG, "포스트: " + item.toString());
 
-                            if(!item.getP_expenses().contains("₩"))
+                            if (!item.getP_expenses().contains("₩"))
                                 item.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(item.getP_expenses())));
 
                             layout.addView(new SimplePost(act, item));
                         }
-                    } else if(result.getRes_type() == 0) {
+
+                        if (type == 1) {
+                            if (listItem.size() > 1) {
+                                isLikeMore.setValue(true);
+                                Log.d(TAG, "좋아요 포스트 더보기 2: " + isLikeMore.getValue());
+                            } else {
+                                isLikeMore.setValue(false);
+                                Log.d(TAG, "좋아요 포스트 더보기 1 이하: " + isLikeMore.getValue());
+                            }
+
+                        } else if (type == 3) {
+                            if (listItem.size() > 1) {
+                                isEnrollMore.setValue(true);
+                                Log.d(TAG, "등록 포스트 더보기 2: " + isEnrollMore.getValue());
+                            } else {
+                                isEnrollMore.setValue(false);
+                                Log.d(TAG, "등록 포스트 더보기 1 이하: " + isEnrollMore.getValue());
+                            }
+                        }
+
+                    } else if (result.getRes_type() == 0) {
+
+                        isLikeMore.setValue(false);
+                        isEnrollMore.setValue(false);
+
                         layout.addView(new EmptyPost(act, type));
                     }
                 } else {
 
+                    isLikeMore.setValue(false);
+                    isEnrollMore.setValue(false);
+
                     layout.addView(new EmptyPost(act, type));
                 }
+
+
             }
 
             @Override
@@ -203,10 +257,12 @@ public class MyPageViewModel extends ViewModel {
                 Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
                 t.printStackTrace();
 
+                isLikeMore.setValue(false);
+                isEnrollMore.setValue(false);
+
                 layout.addView(new EmptyPost(act, type));
 
             }
         });
     }
-
 }

@@ -15,6 +15,7 @@ import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
 import jso.kpl.traveller.network.LoginAPI
 import jso.kpl.traveller.network.WebService
+import jso.kpl.traveller.ui.MainTab
 import jso.kpl.traveller.ui.MyPage
 import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
 import mvvm.f4wzy.com.samplelogin.util.Util
@@ -121,7 +122,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             if (receiveUser != null) {
 
                 Toast.makeText(getApplication(), "로그인에 성공하였습니다.", Toast.LENGTH_LONG).show()
-                val ls_goLogin = Intent(getApplication(), MyPage::class.java)
+                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

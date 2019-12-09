@@ -155,7 +155,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
         isCartlist.setValue(false);
 
-        cartlistAPI.cartlist(App.Companion.getUserid()).enqueue(this);
+        cartlistAPI.cartlist(App.Companion.getUser().getU_userid()).enqueue(this);
 
         timelineItem.setValue(new ArrayList<Timeline>());
         timelineItem.getValue().add(new Timeline(Status.COMPLETED, "", "", "", "", ""));

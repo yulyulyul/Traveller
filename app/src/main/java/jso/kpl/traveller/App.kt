@@ -14,6 +14,7 @@ import java.security.MessageDigest
 import jso.kpl.traveller.thirdpartyapi.kakao.KakaoSDKAdapter
 import com.kakao.auth.KakaoSDK
 import com.kakao.auth.Session
+import jso.kpl.traveller.model.User
 import jso.kpl.traveller.viewmodel.LoginSelectViewModel
 
 
@@ -30,8 +31,7 @@ class App : Application()
 
         var TAG :String = "Trav.App"
 
-        var userid:Int = 0
-        var userNickname = ""
+        lateinit var user: User
 
         fun sendToast(msg:String){
             Toast.makeText(App.INSTANCE, msg, Toast.LENGTH_SHORT).show();
@@ -42,8 +42,6 @@ class App : Application()
             return googleAuth
         }
     }
-
-
 
     override fun onCreate()
     {

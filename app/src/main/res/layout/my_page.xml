@@ -35,7 +35,7 @@
                     <LinearLayout
                         android:id="@+id/mp_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="75dp"
                         android:background="@drawable/s_border_round_outside"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
@@ -49,19 +49,20 @@
 
                             <ImageView
                                 android:id="@+id/mp_profile_iv"
-                                android:layout_width="125dp"
+                                android:layout_width="65dp"
                                 android:layout_height="wrap_content"
                                 android:adjustViewBounds="true"
-                                android:paddingLeft="20dp"
+                                android:layout_marginLeft="20dp"
                                 android:scaleType="fitXY"
-                                app:setCircleImg="@{myPageVm.mpProfileLD.profileUri}" />
+                                app:setCircleImg="@{myPageVm.mpProfileLD.profileUri}"
+                                android:layout_centerVertical="true"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/mp_profile_iv"
+                                android:layout_toRightOf="@+id/mp_profile_iv"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="20dp"
+                                android:layout_marginLeft="10dp"
                                 android:text="@{myPageVm.mpProfileLD.email}"
                                 android:textColor="@color/white"
                                 android:textSize="20dp" />
@@ -122,9 +123,9 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:onClick="onClick"
                             android:text="전체 국가 보기"
                             android:textSize="16dp"
+                            app:OnClickListener="@{myPageVm.onMoreCountryClickListener}"
                             app:extendTouchRange="@{10}" />
 
                     </RelativeLayout>
@@ -158,11 +159,12 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:adjustViewBounds="true"
-                            android:onClick="onClick"
                             android:scaleType="fitCenter"
                             android:text="더보기"
                             android:textSize="16dp"
-                            app:extendTouchRange="@{10}" />
+                            app:extendTouchRange="@{10}"
+                            android:visibility="@{myPageVm.isLikeMore? View.VISIBLE:View.GONE}"
+                            app:OnClickListener="@{myPageVm.onMoreLikeClickListener}"/>
 
                     </RelativeLayout>
 
@@ -213,10 +215,11 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:onClick="onClick"
                             android:text="더보기"
                             android:textSize="16dp"
-                            app:extendTouchRange="@{10}" />
+                            app:extendTouchRange="@{10}"
+                            android:visibility="@{myPageVm.isEnrollMore? View.VISIBLE:View.GONE}"
+                            app:OnClickListener="@{myPageVm.onMoreEnrollClickListener}"/>
                     </RelativeLayout>
 
                     <LinearLayout
@@ -224,10 +227,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp" />
 
                 </LinearLayout>
 
