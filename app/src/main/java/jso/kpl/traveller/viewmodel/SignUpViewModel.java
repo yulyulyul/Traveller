@@ -29,10 +29,11 @@ import jso.kpl.traveller.R;
 import jso.kpl.traveller.interfaces.DialogYNInterface;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
-import jso.kpl.traveller.network.SignupAPI;
+import jso.kpl.traveller.network.UserAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.CustomDialog;
 import jso.kpl.traveller.ui.Login;
+import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.util.PermissionCheck;
 import jso.kpl.traveller.util.RegexMethod;
 import okhttp3.MediaType;
@@ -61,7 +62,7 @@ public class SignUpViewModel extends BaseObservable implements Callback {
     RegexMethod regexMethod = new RegexMethod();
 
     //레트로핏
-    SignupAPI signupAPI = WebService.INSTANCE.getClient().create(SignupAPI.class);
+    UserAPI userAPI= WebService.INSTANCE.getClient().create(UserAPI.class);
 
     //회원가입 Call
     Call<ResponseResult<User>> su_call;
@@ -115,7 +116,7 @@ public class SignUpViewModel extends BaseObservable implements Callback {
                 @Override
                 public void positiveBtn() {
 
-                    auth_call = signupAPI.authEmail(emailLD.getValue());
+                    auth_call = userAPI.authEmail(emailLD.getValue());
 
                     auth_call.enqueue(new Callback<ResponseResult<Integer>>() {
                         @Override
@@ -178,7 +179,7 @@ public class SignUpViewModel extends BaseObservable implements Callback {
         } else {
 
             //이메일, 닉네임, 패스워드를 담은 객체
-            user = new User(emailLD.getValue(), returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
+            user = new User(emailLD.getValue(), JavaUtil.returnSHA256(passwordLD.getValue()), nickNameLD.getValue(), getDeviceID());
 
             //프로필 이미지가 null이거나 초기값 사진 또는 에러 이미지일 때
             //if (photoUpdate.getValue() == null || photoUpdate.getValue().equals("drawable://" + R.drawable.i_blank_person_icon)) {
@@ -219,30 +220,9 @@ public class SignUpViewModel extends BaseObservable implements Callback {
             // String으로 데이터 보내면 DB에 ""가 포함되어 들어감
 
 
-            su_call = signupAPI.goSignUp(user, imgBody);
+            su_call = userAPI.goSignUp(user, imgBody);
 
             su_call.enqueue(this);
-
-            /*su_call = signupAPI.goSignUp(RequestBody.create(MediaType.parse("text/plain"), user.getUs_email()),
-                    RequestBody.create(MediaType.parse("text/plain"), user.getUs_pwd()), RequestBody.create(MediaType.parse("text/plain"), user.getUs_device()),
-                    RequestBody.create(MediaType.parse("text/plain"), user.getUs_nick_name()), imgBody);
-
-            su_call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.d(TAG + "통신 성공", "성공적으로 전송");
-                    Intent intent = new Intent(context, Login.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ContextCompat.startActivity(context, intent, null);
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    sendToast(context, "통신 불량");
-                    Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
-                    t.printStackTrace();
-                }
-            });*/
         }
     }
 
@@ -281,34 +261,6 @@ public class SignUpViewModel extends BaseObservable implements Callback {
             }
         });
 
-    }
-
-    //저장할 때 패스워드를 sha256으로 해시화 해서 보낸다.
-    public String returnSHA256(String str) {
-
-        String SHA = "";
-
-        try {
-            MessageDigest sh = MessageDigest.getInstance("SHA-256");
-
-            sh.update(str.getBytes());
-
-            byte byteData[] = sh.digest();
-
-            StringBuffer sb = new StringBuffer();
-
-            for (int i = 0; i < byteData.length; i++) {
-                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-            }
-
-            SHA = sb.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            SHA = null;
-        }
-
-        return SHA;
     }
 
     @Override

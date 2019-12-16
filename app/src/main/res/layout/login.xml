@@ -1,94 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context="rebuild.com.kakaotalk_login.Activity.LoginActivity"
-    >
+    tools:context="rebuild.com.kakaotalk_login.Activity.LoginActivity">
 
     <data>
+
         <variable
             name="viewmodel"
-            type="jso.kpl.traveller.viewmodel.LoginViewModel"/>
+            type="jso.kpl.traveller.viewmodel.LoginViewModel" />
     </data>
 
-<ScrollView
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/loginBackground"
-    android:fitsSystemWindows="true">
-
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="56dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
+        android:layout_height="match_parent"
+        android:background="@color/clicked"
+        android:fitsSystemWindows="true">
 
-        >
-
-        <ImageView android:src="@drawable/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
-
-
-        <!-- Email Label -->
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:textColorHint="@color/colorWhite"
-            >
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/input_email"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingTop="56dp"
+            android:paddingRight="24dp">
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:textColor="@color/colorWhite"
-                android:onTextChanged="@{viewmodel::onEmailChanged}"
-                android:text="@={viewmodel.email}"
-                android:hint="Email" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="트래블러"
+                android:textSize="50dp"
+                android:gravity="center"
+                android:textColor="@color/white" />
 
-        <!-- Password Label -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:textColorHint="@color/colorWhite"
-            >
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/input_password"
+            <!-- Email Label -->
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textColor="@color/colorWhite"
-                android:onTextChanged="@{viewmodel::onPasswordChanged}"
-                android:text="@={viewmodel.password}"
-                android:hint="Password"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textColorHint="@color/colorWhite">
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:text="Login"
-            android:textColor="@color/colorWhite"
-            android:background="@drawable/loginbtn_selector"
-            android:enabled="@{viewmodel.btnSelected}"
-            android:onClick="@{()->viewmodel.login()}"
-            >
-        </Button>
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="이메일"
+                    android:inputType="textEmailAddress"
+                    android:onTextChanged="@{viewmodel::onEmailChanged}"
+                    android:text="@={viewmodel.email}"
+                    android:textColor="@color/colorWhite" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
-</ScrollView>
+            <!-- Password Label -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textColorHint="@color/colorWhite">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="패스워드"
+                    android:inputType="textPassword"
+                    android:onTextChanged="@{viewmodel::onPasswordChanged}"
+                    android:text="@={viewmodel.password}"
+                    android:textColor="@color/colorWhite" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:backgroundTint="#00FFFF"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/btn_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:enabled="@{viewmodel.btnSelected}"
+                    android:onClick="@{()->viewmodel.login()}"
+                    android:text="로그인"
+                    android:textSize="@dimen/subtitle_text_size"
+                    android:textColor="@color/colorWhite"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="비밀번호 찾기"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </ScrollView>
 </layout>

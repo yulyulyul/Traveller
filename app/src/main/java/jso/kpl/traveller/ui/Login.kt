@@ -2,6 +2,7 @@ package jso.kpl.traveller.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -23,15 +24,21 @@ class Login : AppCompatActivity() {
         BindingLogin = DataBindingUtil.setContentView(this, R.layout.login)
         viewmodel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         BindingLogin?.viewmodel = viewmodel
-
-        initObservables()
     }
 
-    private fun initObservables()
-    {
-        viewmodel?.muUser?.observe(this, Observer { user ->
-            Toast.makeText(this, "welcome, ${user?.u_email}", Toast.LENGTH_LONG).show()
+    override fun onPause() {
+        super.onPause()
+
+        BindingLogin?.viewmodel?.isLogin?.observe(this, Observer {it ->
+            if(it){
+                Log.d("Trav.Login", BindingLogin?.viewmodel?.email?.get())
+                Log.d("Trav.Login", BindingLogin?.viewmodel?.returnSHA256(BindingLogin?.viewmodel?.password?.get()!!))
+
+                BindingLogin?.viewmodel?.autoSaveLogin(this)
+            }
         })
+
+        BindingLogin?.viewmodel?.onCleared()
     }
 
     override fun onDestroy()

@@ -66,6 +66,13 @@ public class SmallPostDialog extends DialogFragment {
 
         smallPostBinding.getSmallPostVm().smallPostCall(getShownData());
 
+        smallPostBinding.smallPostCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         return smallPostBinding.getRoot();
     }
 

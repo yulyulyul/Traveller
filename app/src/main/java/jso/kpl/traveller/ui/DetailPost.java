@@ -1,6 +1,8 @@
 package jso.kpl.traveller.ui;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -8,21 +10,19 @@ import androidx.databinding.DataBindingUtil;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.DetailPostBinding;
 import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.ui.Fragment.MyPage;
 import jso.kpl.traveller.ui.adapters.ImageSideVpAdapter;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.viewmodel.DetailPostViewModel;
 
-
-public class DetailPost extends AppCompatActivity  {
+public class DetailPost extends AppCompatActivity {
 
     String TAG = "Trav.RodView.";
-
 
     private DetailPostBinding binding;
     private DetailPostViewModel detailPostVm;
 
     int pId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +56,25 @@ public class DetailPost extends AppCompatActivity  {
                 SmallPostDialog spDialog = new SmallPostDialog();
                 spDialog.setArguments(bundle);
 
-                spDialog.show(((AppCompatActivity) DetailPost.this).getSupportFragmentManager(), "Dialog_TAG");
+                spDialog.show((DetailPost.this).getSupportFragmentManager(), "Dialog_TAG");
             }
 
         });
+
+        binding.topActionBar.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
 
+    @Override
+    public void onBackPressed() {
 
-
+        setResult(RESULT_OK);
+        binding.getRodVm().onCleared();
+        finish();
+    }
 }

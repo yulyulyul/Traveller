@@ -2,6 +2,7 @@ package jso.kpl.traveller.viewmodel;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,20 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.App;
-import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.model.ListItem;
-import jso.kpl.traveller.model.MyPageItem;
-import jso.kpl.traveller.model.MyPageProfile;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
-import jso.kpl.traveller.ui.FavoriteCountry;
+import jso.kpl.traveller.ui.Fragment.MyPage;
 import jso.kpl.traveller.ui.PostType.EmptyPost;
 import jso.kpl.traveller.ui.PostType.SimplePost;
-import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.RouteSearch;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
@@ -48,13 +45,14 @@ public class MyPageViewModel extends ViewModel {
 
     //[My Page - View Type: Profile]의 아이템
     // -> String 프로필 이미지, String 이메일
-    public MutableLiveData<MyPageProfile> mpProfileLD = new MutableLiveData<>();
+    public MutableLiveData<User> mpProfileLD = new MutableLiveData<>();
 
     //[My Page - View Type: Flag]의 리사이클러 뷰의 adapter
     public FlagRvAdapter flagRvAdapter;
 
     List<Country> favCountryList;
 
+    public View.OnClickListener onProfileClickListener;
     public View.OnClickListener onEditingPostClickListener;
 
     public void setOnEditingPostClickListener(View.OnClickListener onEditingPostClickListener) {
@@ -81,6 +79,8 @@ public class MyPageViewModel extends ViewModel {
 
     public MyPageViewModel() {
 
+        countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
+
         isLikeMore.setValue(false);
         isEnrollMore.setValue(false);
 
@@ -89,13 +89,6 @@ public class MyPageViewModel extends ViewModel {
         isRefresh.setValue(false);
         isClick.setValue(false);
         //[My Page]의 리사이클러 뷰 Adapter - 아이템 리스트를 넘겨준다.
-    }
-
-    //[My Page - View Type: Profile]의 반환 값
-    public MyPageProfile getHeadProfile(User user) {
-
-        //My Page의 리사이클러 뷰의 0번째 순서 프로필
-        return new MyPageProfile(user.getU_profile_img(), user.getU_email());
     }
 
     //route search로 넘어가는 클릭 이벤트
@@ -110,12 +103,10 @@ public class MyPageViewModel extends ViewModel {
     //[My Page - View Type: Flag]의 반환 값
     public void countryCall() {
 
-        final Country addCountry = new Country(0, null, "add_flag", null, null, null, null, null, false);
+        final Country addCountry = new Country("add_flag");
         addCountry.setCt_flag();
 
         favCountryList = new ArrayList<>();
-
-        countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
         call = countryAPI.loadFavoriteCountry(App.Companion.getUser().getU_userid(), 1);
 
@@ -131,7 +122,7 @@ public class MyPageViewModel extends ViewModel {
 
                         for (int i = 0; i < listItem.size(); i++) {
                             listItem.get(i).setCt_flag();
-                            listItem.get(i).setCt_is_add_ld();
+                            listItem.get(i).setIs_favorite_ld();
                         }
 
                         favCountryList = listItem;
@@ -208,10 +199,12 @@ public class MyPageViewModel extends ViewModel {
                         for (ListItem item : listItem) {
                             Log.d(TAG, "포스트: " + item.toString());
 
+                            SimplePost simplePost = new SimplePost(act, item);
+
                             if (!item.getP_expenses().contains("₩"))
                                 item.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(item.getP_expenses())));
 
-                            layout.addView(new SimplePost(act, item));
+                            layout.addView(simplePost);
                         }
 
                         if (type == 1) {
@@ -241,14 +234,11 @@ public class MyPageViewModel extends ViewModel {
                         layout.addView(new EmptyPost(act, type));
                     }
                 } else {
-
                     isLikeMore.setValue(false);
                     isEnrollMore.setValue(false);
 
                     layout.addView(new EmptyPost(act, type));
                 }
-
-
             }
 
             @Override
@@ -261,7 +251,6 @@ public class MyPageViewModel extends ViewModel {
                 isEnrollMore.setValue(false);
 
                 layout.addView(new EmptyPost(act, type));
-
             }
         });
     }

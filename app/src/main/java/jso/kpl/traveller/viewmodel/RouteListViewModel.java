@@ -25,15 +25,17 @@ import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.model.Country;
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SearchReq;
+import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
+import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.Fragment.GridTypePost;
 import jso.kpl.traveller.ui.Fragment.VerticalTypePost;
-import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.adapters.GridTypePostAdapter;
 import jso.kpl.traveller.ui.adapters.VerticalTypePostAdapter;
 import jso.kpl.traveller.util.GridSpacingItemDecoration;
@@ -44,14 +46,14 @@ import retrofit2.Response;
 
 public class RouteListViewModel extends ViewModel implements Callback, GridTypePostAdapter.OnGridItemClickListener, VerticalTypePostAdapter.OnVerticalItemClickListener {
 
+    public String title;
+
     RouteListViewModel routeListVm = this;
     /*
         Route List - Route Search나 선호 국가를 눌렀을 때 해당 조건에 해당하는 포스트들의 리스트를 뿌려주는 화면
         현재 구성 TabLayout + FrameLayout(Fragment * 2)
          */
     String TAG = "Trav.MainRouteViewModel.";
-
-    String imageUri = "android.resource://jso.kpl.toyroutesearch/drawable/i_blank_person_icon";
 
     public MutableLiveData<List<ListItem>> postList = new MutableLiveData<>();
 
@@ -66,6 +68,8 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
     public GridTypePost gt_post;
     public VerticalTypePost vt_post;
+
+    public MutableLiveData<Country> countryItem = new MutableLiveData<>();
 
     //검색 결과 리스트
     public MutableLiveData<ListItem> postLD = new MutableLiveData<>();
@@ -89,6 +93,12 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
     //통신 관련 -------------------------------------------------------------------------------------
     PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);
+    CountryAPI countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
+
+    Call<ResponseResult<List<ListItem>>> call;
+
+    Callback callback = this;
+
     public int lastPid = 0;
     public int categoryNo = 0;
 
@@ -184,29 +194,18 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
                 tab.getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.non_clicked));
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
-                if(tab.getPosition() == 0){
-
-                } else if(tab.getPosition() == 1){
-
-                }
-
             }
         };
-
         return listener;
     }
 
     public void searchByCondition(MyPageItem item) {
-
-        Call<ResponseResult<List<ListItem>>> call;
 
         if (item != null) {
 
@@ -218,24 +217,73 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
                 case 0:
                     Log.d(TAG, "searchByCondition-Search");
 
+                    title = "검색 결과";
+
                     SearchReq searchReq = (SearchReq) item.getO();
 
                     call = postAPI.searchByCondition(searchReq.getSr_country(), searchReq.getSr_max_cost(), searchReq.getSr_min_cost(), lastPid, categoryNo);
+                    call.enqueue(callback);
                     break;
                 case 2:
+
+                    title = "좋아요 포스트";
+
                     Log.d(TAG, "searchByCondition-LIKE");
                     call = postAPI.loadLikePost(1, 0, 0);
+                    call.enqueue(callback);
                     break;
                 case 3:
+
+                    title = "등록 포스트";
+
                     Log.d(TAG, "searchByCondition-Enroll");
                     call = postAPI.searchByEnroll((int) item.getO(), lastPid);
+                    call.enqueue(callback);
                     break;
-                default:
-                    call = null;
+
+                case 4:
+                    title = "선호 국가";
+
+                    Log.d(TAG, "searchByCondition: " + item.getO());
+                    countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), (int) item.getO()).enqueue(new Callback<ResponseResult<Country>>() {
+                        @Override
+                        public void onResponse(Call<ResponseResult<Country>> countryCall, Response<ResponseResult<Country>> response) {
+
+                            if(response.body() != null){
+
+                                ResponseResult<Country> result = response.body();
+
+                                if(result.getRes_type() == 1){
+
+                                    result.getRes_obj().setCt_flag();
+                                    countryItem.setValue(result.getRes_obj());
+
+                                    Log.d(TAG, "onResponse: " + countryItem.getValue().getCt_name());
+                                    call = postAPI.searchByCondition(countryItem.getValue().getCt_name(), 100000000, 0, lastPid, categoryNo);
+
+                                    call.enqueue(callback);
+                                }
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseResult<Country>> call, Throwable t) {
+                            Log.e(TAG, "onFailure: ", t);
+                        }
+                    });
+
+                    break;
+                case 5:
+                    title = "포스트 리스트";
+
+                    Log.d(TAG, "All Post List");
+                    call = postAPI.loadPostList(lastPid, categoryNo);
+                    call.enqueue(callback);
                     break;
             }
 
-            call.enqueue(this);
         } else {
 
             Log.d(TAG, "searchByCondition: Null");
@@ -249,7 +297,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public void GridItemClicked(int p_id) {
 
         if (App.INSTANCE != null) {
-
             Intent intent = new Intent(App.INSTANCE, DetailPost.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("p_id", p_id);
@@ -261,15 +308,12 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public void VerticalItemClicked(int p_id) {
 
         if (App.INSTANCE != null) {
-
-
             Intent intent = new Intent(App.INSTANCE, DetailPost.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("p_id", p_id);
             App.INSTANCE.startActivity(intent);
         }
     }
-
     //-----------------------------------------------------------------------------------------------
 
     //태그를 추가할 때 TextView(태그값)를 동적으로 생성하는 함수
@@ -415,5 +459,8 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         }
     }
 
-
+    @Override
+    public void onCleared() {
+        super.onCleared();
+    }
 }

@@ -109,31 +109,34 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/add_country_btn"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="12dp"
-                android:backgroundTint="@color/clicked"
-                android:background="@android:drawable/ic_menu_add"
-                android:visibility="@{countryItem.ct_is_add_ld?View.GONE:View.VISIBLE}"/>
+                android:layout_centerVertical="true">
 
-            <Button
-                android:id="@+id/remove_country_btn"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="12dp"
-                android:backgroundTint="@color/clicked"
-                android:background="@android:drawable/ic_menu_close_clear_cancel"
-                android:visibility="@{countryItem.ct_is_add_ld?View.VISIBLE:View.GONE}"/>
+                <Button
+                    android:id="@+id/add_country_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/i_circle_plus_icon"
+                    android:visibility="@{countryItem.is_favorite_ld?View.GONE:View.VISIBLE}"/>
+
+                <Button
+                    android:id="@+id/remove_country_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/i_circle_minus_icon"
+                    android:visibility="@{countryItem.is_favorite_ld?View.VISIBLE:View.GONE}"/>
+
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

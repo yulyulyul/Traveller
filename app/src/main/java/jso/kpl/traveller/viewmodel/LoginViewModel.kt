@@ -1,5 +1,6 @@
 package jso.kpl.traveller.viewmodel
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
@@ -9,16 +10,14 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import jso.kpl.traveller.App
 import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
-import jso.kpl.traveller.network.LoginAPI
+import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.ui.MainTab
-import jso.kpl.traveller.ui.MyPage
+import jso.kpl.traveller.util.RegexMethod
 import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
-import mvvm.f4wzy.com.samplelogin.util.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +36,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     var muUser: MutableLiveData<User>? = null
     var progressDialog: SingleLiveEvent<Boolean>? = null
 
+    var isLogin : MutableLiveData<Boolean>? = null
+    var SHAPassword: String? = null
+
     //통신으로 받은 유저 객체
     var receiveUser: User? = null
 
@@ -46,6 +48,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         password = ObservableField("1q2w3e4r")
         muUser = MutableLiveData<User>()
         progressDialog = SingleLiveEvent<Boolean>()
+
+        isLogin = MutableLiveData<Boolean>()
+
     }
 
     companion object {
@@ -54,23 +59,22 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     // '이메일' EditText의 입력의 변화를 감지하는 부분
     fun onEmailChanged(s: CharSequence, start: Int, befor: Int, count: Int) {
-        btnSelected?.set(Util.isEmailValid(s.toString()) && password?.get()!!.length >= 8)
-
+        btnSelected?.set(RegexMethod.isEmailValid(s.toString()) && RegexMethod.isPasswordValid(password?.get()!!))
     }
 
     // 'Password' EditText의 입력의 변화를 감지하는 부분
     fun onPasswordChanged(s: CharSequence, start: Int, befor: Int, count: Int) {
-        btnSelected?.set(Util.isEmailValid(email?.get()!!) && s.toString().length >= 8)
+        btnSelected?.set(RegexMethod.isEmailValid(email?.get()!!) && RegexMethod.isPasswordValid(s.toString()!!))
     }
 
     // 직접 로그인시 서버에 email과 password를 보내 검증하는 부분.
     fun login() {
         progressDialog?.value = true
 
-        val SHAPassword: String? = returnSHA256(password?.get()!!)
+        SHAPassword = returnSHA256(password?.get()!!)
 
-        WebService.client.create(LoginAPI::class.java)
-            .LOGIN(LoginUser(email?.get()!!, SHAPassword!!))
+        WebService.client.create(UserAPI::class.java)
+            .goLogin(LoginUser(email?.get()!!, SHAPassword!!))
             .enqueue(this)
     }
 
@@ -103,7 +107,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     }
 
     //ViewModel이 끝날 때 불림.(Activity LifeCycle이랑 생명주기가 다름)
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
     }
 
@@ -121,6 +125,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
             if (receiveUser != null) {
 
+                //로그인 확인 저장 용
+                isLogin?.value = true
+
+                Log.d("Trav.Login", "이건가? "+isLogin?.value!!)
                 Toast.makeText(getApplication(), "로그인에 성공하였습니다.", Toast.LENGTH_LONG).show()
                 val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
@@ -147,4 +155,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             .show()
         progressDialog?.value = false
     }
+
+    //로그인 SharedPreferences
+    fun autoSaveLogin(act: Activity) {
+        val sp = act.getSharedPreferences("auto_login", Activity.MODE_PRIVATE)
+        val editor = sp.edit()
+
+        editor.putString("u_email", email?.get())
+        editor.putString("u_pwd", SHAPassword)
+
+        editor.commit()
+    }
+
 }

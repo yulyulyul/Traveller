@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="flagImg"
+            name="circleImg"
             type="String" />
     </data>
 
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
             android:layout_gravity="center"
-            app:setCircleImg="@{flagImg}"/>
+            app:setCircleImg="@{circleImg}"/>
 
     </LinearLayout>
 

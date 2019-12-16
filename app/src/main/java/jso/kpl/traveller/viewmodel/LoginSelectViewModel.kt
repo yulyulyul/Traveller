@@ -1,8 +1,10 @@
 package jso.kpl.traveller.viewmodel
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -20,15 +22,25 @@ import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.UnLinkResponseCallback
 import jso.kpl.traveller.App
 import jso.kpl.traveller.R
+import jso.kpl.traveller.model.LoginUser
+import jso.kpl.traveller.model.ResponseResult
+import jso.kpl.traveller.model.User
+import jso.kpl.traveller.network.UserAPI
+import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.thirdpartyapi.facebook.LoginCallback
 import jso.kpl.traveller.thirdpartyapi.kakao.SessionCallback
 import jso.kpl.traveller.ui.LoginSelect
 import jso.kpl.traveller.ui.LoginSelect.Companion.getInstance
+import jso.kpl.traveller.ui.MainTab
 import jso.kpl.traveller.ui.SignUp
 import jso.kpl.traveller.util.JavaUtil
+import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
+import retrofit2.Call
+import retrofit2.Response
 import java.util.*
+import javax.security.auth.callback.Callback
 
-class LoginSelectViewModel(application: Application) : AndroidViewModel(application) {
+class LoginSelectViewModel(application: Application) : AndroidViewModel(application), retrofit2.Callback<ResponseResult<User>>{
 
     // 카카오로 시작하기 버튼을 눌렀을때 view(Login.kt)에 변화를 알려주는 객체
     var iskakaoLogin: MutableLiveData<Boolean>? = null
@@ -45,7 +57,20 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
     // Firebase 인증 객체 선언
     var firebaseAuth: FirebaseAuth? = null
 
+    //자동 로그인
+    var progressDialog: SingleLiveEvent<Boolean>? = null
+
+    //통신으로 받은 유저 객체
+    var receiveUser: User? = null
+
+    var callback : retrofit2.Callback<ResponseResult<User>> ?= null
+
     init {
+
+        callback = this
+
+        progressDialog = SingleLiveEvent<Boolean>()
+
         //카카오
         iskakaoLogin = MutableLiveData<Boolean>()
 
@@ -60,7 +85,7 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     fun gotoLogin() {
 
-      //  val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.MyPage::class.java)
+      //  val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Fragment.MyPage::class.java)
         val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Login::class.java)
         ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         ContextCompat.startActivity(getApplication(), ls_goLogin, null)
@@ -205,6 +230,57 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
         ContextCompat.startActivity(getApplication(), su_intent, null)
 
+    }
+
+    fun autoLogin(act:Activity){
+        val sp = act.getSharedPreferences("auto_login", Activity.MODE_PRIVATE)
+
+        val email = sp.getString("u_email", "")
+        val pwd = sp.getString("u_pwd", "")
+
+        if(!email.equals("") && !pwd.equals("")){
+            WebService.client.create(UserAPI::class.java)
+                .goLogin(LoginUser(email, pwd))
+                .enqueue(callback)
+        }
+    }
+
+    // 로그인 요청시 Retrofit 결과 리턴받는 곳.
+    override fun onResponse(call: Call<ResponseResult<User>>?,
+                            response: Response<ResponseResult<User>>?
+    ) {
+        progressDialog?.value = false
+
+        var res_type:Int? = response?.body()?.res_type
+
+        if(res_type == 1){
+            receiveUser = response?.body()?.res_obj
+            Log.d(LoginViewModel.TAG + "응답 객체 : ", receiveUser?.toString())
+
+            if (receiveUser != null) {
+
+                Toast.makeText(getApplication(), "로그인에 성공하였습니다.", Toast.LENGTH_LONG).show()
+                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
+
+                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                ls_goLogin.putExtra("user", receiveUser);
+
+                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
+            }
+        } else if(res_type == 0){
+            Toast.makeText(getApplication(), "Email 또는 Password가 틀렸습니다.", Toast.LENGTH_LONG).show()
+        }else if(res_type == -1){
+
+        }
+    }
+
+    //로그인 요청시 Retrofit 통신 실패시 호출..
+    override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
+        Toast.makeText(getApplication(), "서버와의 통신에 실패하였습니다." + t.toString(), Toast.LENGTH_LONG)
+            .show()
+        progressDialog?.value = false
     }
 
     companion object {

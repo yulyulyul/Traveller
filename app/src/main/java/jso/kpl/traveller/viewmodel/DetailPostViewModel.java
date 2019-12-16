@@ -4,21 +4,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.databinding.BaseObservable;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.App;
-import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
 import jso.kpl.traveller.network.RouteOtherDetailAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.ImageSideItem;
-import jso.kpl.traveller.ui.SmallPostDialog;
 import jso.kpl.traveller.ui.adapters.ImageSideVpAdapter;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.ui.adapters.RouteOtherDetailCategoryItemAdapter;
@@ -27,20 +24,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailPostViewModel extends BaseObservable implements Callback {
+public class DetailPostViewModel extends ViewModel implements Callback {
 
     String TAG = "Trav.DetailPostViewModel.";
 
+    public String title = "포스트";
+
+    //해당 포스트의 라이브 데이터
     public MutableLiveData<Post> postItem = new MutableLiveData<>();
+
+    //스몰 포스트가 불렸을 때 들어갈 스몰 포스트 데이터의 라이브 데이터
     public MutableLiveData<SmallPost> smallPostItem = new MutableLiveData<>();
 
-    public MutableLiveData<RouteOtherDetailCategoryItemAdapter> adapter = new MutableLiveData<>();
-    public MutableLiveData<RouteOtherDetailCategoryItemAdapter> sp_categoryAdapter = new MutableLiveData<>();
+    //카테고리 리사이클러뷰의 어댑터
+    public MutableLiveData<RouteOtherDetailCategoryItemAdapter> categoryAdapter = new MutableLiveData<>();
 
+    //좋아요 체크 라이브 데이터
     public MutableLiveData<Boolean> isLike = new MutableLiveData<>();
+    //카트 리스트 체크 라이브 데이터
     public MutableLiveData<Boolean> isCart = new MutableLiveData<>();
 
     //--------------------
+    // 포스트 하위 모든 이미지들을 보여주는 객체
     public ImageSideVpAdapter postImgAdapter;
 
     public ImageSideVpAdapter getPostImgAdapter() {
@@ -59,7 +64,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
         isCart.setValue(false);
     }
 
-    //Route Node Layout
+    //루트 노드 어댑터
     public RouteNodeAdapter routeNodeAdapter;
 
     public RouteNodeAdapter getRouteNodeAdapter() {
@@ -76,20 +81,23 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
         isCart.setValue(!isCart.getValue());
     }
 
+    //좋아요 누를 때 클릭 이벤트
     public void onLikeClicked() {
-
         likeCall();
         Toast.makeText(App.INSTANCE, "좋아요 버튼 클릭", Toast.LENGTH_SHORT).show();
     }
 
+    //포스트를 부르는 통신 함수
     public void postCall(int pId) {
         routeOtherDetailAPI.loadPost(App.Companion.getUser().getU_userid(), pId).enqueue(this);
     }
 
+    //스몰 포스트를 부르는 통신 함수
     public void smallPostCall(int sp_id) {
         routeOtherDetailAPI.loadSmallPost(sp_id).enqueue(this);
     }
 
+    //포스트를 부를 때
     public void loadingPost(Post post) {
 
         if (postItem == null)
@@ -101,14 +109,14 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
 
         isLike.setValue(postItem.getValue().isP_is_like());
 
-        adapter.setValue(new RouteOtherDetailCategoryItemAdapter(postItem.getValue().getP_category(), 1));
+        categoryAdapter.setValue(new RouteOtherDetailCategoryItemAdapter(postItem.getValue().getP_category(), 1));
 
         // 기간 텍스트 설정
         isLike.setValue(postItem.getValue().isP_is_like());
 
         isCart.setValue(postItem.getValue().isP_is_cart());
 
-        if(!postItem.getValue().getP_expenses().contains("₩"))
+        if (!postItem.getValue().getP_expenses().contains("₩"))
             postItem.getValue().setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(postItem.getValue().getP_expenses())));
 
         post.getP_sp_list();
@@ -127,7 +135,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
             }
         }
 
-        if(getPostImgAdapter().getCount() == 0){
+        if (getPostImgAdapter().getCount() == 0) {
             ImageSideItem item = new ImageSideItem();
 
             Bundle bundle = new Bundle();
@@ -142,13 +150,11 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
         for (int i = 0; i < post.getP_sp_list().size(); i++) {
             SmallPost smallPost = post.getP_sp_list().get(i);
 
-            if(!smallPost.getSp_expenses().contains("₩"))
+            if (!smallPost.getSp_expenses().contains("₩"))
                 smallPost.setSp_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(smallPost.getSp_expenses())));
 
             getRouteNodeAdapter().putItem(smallPost);
         }
-
-
         Log.d(TAG + "Post 내용 : ", postItem.getValue().toString());
     }
 
@@ -158,10 +164,10 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
 
         Log.d(TAG, "loadingSmallPost: " + smallPostItem.getValue().toString());
 
-        if(!smallPostItem.getValue().getSp_expenses().contains("₩"))
+        if (!smallPostItem.getValue().getSp_expenses().contains("₩"))
             smallPostItem.getValue().setSp_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(smallPostItem.getValue().getSp_expenses())));
 
-        sp_categoryAdapter.setValue(new RouteOtherDetailCategoryItemAdapter(smallPostItem.getValue().getSp_category(), 1));
+        categoryAdapter.setValue(new RouteOtherDetailCategoryItemAdapter(smallPostItem.getValue().getSp_category(), 1));
 
         Log.d(TAG, "이미지 리스트 사이즈: " + smallPostItem.getValue().getSp_imgs().size());
 
@@ -169,16 +175,16 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
         // img list에 표시할 데이터 리스트 생성
         if (smallPostItem.getValue().getSp_imgs().size() > 0) {
 
-            for(int i = 0; i < smallPostItem.getValue().getSp_imgs().size(); i++){
+            for (int i = 0; i < smallPostItem.getValue().getSp_imgs().size(); i++) {
                 ImageSideItem item = new ImageSideItem();
                 Bundle bundle = new Bundle();
-                bundle.putString("img",  smallPostItem.getValue().getSp_imgs().get(i));
+                bundle.putString("img", smallPostItem.getValue().getSp_imgs().get(i));
 
                 item.setArguments(bundle);
                 getPostImgAdapter().addItem(item);
             }
         } else {
-            if(getPostImgAdapter().getCount() == 0){
+            if (getPostImgAdapter().getCount() == 0) {
                 ImageSideItem item = new ImageSideItem();
 
                 Bundle bundle = new Bundle();
@@ -218,7 +224,6 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
                         App.Companion.sendToast("일시적 에러로 인해 실패했습니다.");
                     }
                 }
-
             }
 
             @Override
@@ -229,13 +234,14 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
         });
     }
 
-    public void updateRecentPostCall(){
-        int i = 0;
+    // 마이 페이지의 최근 포스트를 등록하는 통신 함수
+    public void updateRecentPostCall() {
+
         routeOtherDetailAPI.updateRecentPost(App.Companion.getUser().getU_userid(), postItem.getValue().getP_id()).enqueue(new Callback<ResponseResult<Integer>>() {
             @Override
             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
-                if(response.body() != null){
-                    if(response.body().getRes_obj() == 0){
+                if (response.body() != null) {
+                    if (response.body().getRes_obj() == 0) {
                         updateRecentPostCall();
                         Log.d(TAG, "실패 -> 최근 포스트 재등록");
                     }
@@ -258,7 +264,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
 
             boolean type = ((ResponseResult<List<?>>) response.body()).getRes_obj().get(0) instanceof Post;
 
-            if(type){
+            if (type) {
                 //포스트 상세 내용
                 if (((ResponseResult<List<?>>) response.body()).getRes_type() == 1) {
                     App.Companion.sendToast("포스트 상세 보기");
@@ -266,7 +272,7 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
                 } else {
                     App.Companion.sendToast("포스트 상세 보기 실패");
                 }
-            } else{
+            } else {
                 if (((ResponseResult<List<?>>) response.body()).getRes_type() == 1) {
                     App.Companion.sendToast("스몰 포스트 상세 보기");
                     Log.d(TAG, "스몰 포스트 상세보기");
@@ -276,12 +282,9 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
                     Log.d(TAG, "스몰 포스트 상세보기 실패");
                 }
             }
-
-
         } else {
             Log.d(TAG, "스몰 포스트 상세보기 실패");
         }
-
     }
 
     @Override
@@ -289,5 +292,10 @@ public class DetailPostViewModel extends BaseObservable implements Callback {
         Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
         Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
         t.printStackTrace();
+    }
+
+    @Override
+    public void onCleared() {
+        super.onCleared();
     }
 }

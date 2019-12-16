@@ -4,12 +4,6 @@
 
     <data>
         <import type="android.widget.FrameLayout"/>
-        <import type="android.view.View"/>
-
-        <variable
-            name="title"
-            type="String" />
-
         <variable
             name="mainListVm"
             type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
@@ -19,16 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <include
-            android:id="@+id/top_action_bar"
-            layout="@layout/top_action_bar"
-            title="@{mainListVm.title}"/>
-
-        <include
-            layout="@layout/country_info"
-            countryItem="@{mainListVm.countryItem}"
-            android:visibility="@{mainListVm.countryItem == null ? View.GONE:View.VISIBLE}"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"

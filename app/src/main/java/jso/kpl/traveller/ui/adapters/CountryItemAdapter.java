@@ -10,13 +10,14 @@ import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.FavoriteCountryItemBinding;
+import jso.kpl.traveller.databinding.CountryItemBinding;
 import jso.kpl.traveller.model.Country;
 
-public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCountryItemAdapter.ViewHolder> {
+public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.ViewHolder> {
 
     String TAG = "Trav.FcAdapter.";
 
@@ -28,7 +29,7 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
     public interface OnCountryClickListener {
         void onBtnClicked(int position, int type);
 
-        void onDetailClicked(int position);
+        void onDetailClicked(int ct_no);
     }
 
     public void setOnItemClickListener(OnCountryClickListener onCountryClickListener) {
@@ -38,8 +39,11 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
     //----------------------------------------------------------------------------------------------
     private MutableLiveData<List<Country>> items;
 
-    public FavoriteCountryItemAdapter(MutableLiveData<List<Country>> list) {
-        this.items = list;
+    public CountryItemAdapter() {
+
+        items = new MutableLiveData<>();
+        items.setValue(new ArrayList<Country>());
+
     }
 
     // onCreateViewHolder() - 아이템뷰를 위한 뷰홀더 객체 생성하여 리턴
@@ -48,9 +52,9 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.favorite_country_item, parent, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.country_item, parent, false);
 
-        return new ViewHolder((FavoriteCountryItemBinding) binding);
+        return new ViewHolder((CountryItemBinding) binding);
     }
 
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시, 아이템 데이터 세팅하는 부분
@@ -68,22 +72,22 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
         return items.getValue().size();
     }
 
-    public void addItems(List<Country> list) {
-        items.getValue().addAll(list);
-
-        notifyDataSetChanged();
+    public void updateItem(Country country){
+        items.getValue().add(country);
+        notifyItemInserted(items.getValue().size() - 1);
     }
 
-    public void removeItem(Country vo) {
-        items.getValue().remove(vo);
+    public void removeItem() {
+        items.getValue().clear();
+        notifyDataSetChanged();
     }
 
     // 아이템뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private FavoriteCountryItemBinding binding;
+        private CountryItemBinding binding;
 
-        ViewHolder(final FavoriteCountryItemBinding binding) {
+        ViewHolder(final CountryItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
@@ -95,7 +99,7 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
-                            onCountryClickListener.onDetailClicked(position);
+                            onCountryClickListener.onDetailClicked(binding.getCountryItem().getCt_no());
                         }
                     }
 
@@ -107,12 +111,13 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
                 @Override
                 public void onClick(View view) {
 
+                    Log.d(TAG, "선택 포지션: " + getAdapterPosition());
                     int position = getAdapterPosition();
 
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
 
-                            Log.d(TAG, "추가 삭제: " + binding.getCountryItem().ct_is_add_ld.getValue());
+                            Log.d(TAG, "추가 삭제: " + binding.getCountryItem().is_favorite_ld.getValue());
                             //삭제
                             onCountryClickListener.onBtnClicked(position, 0);
                             Log.d(TAG, "국가 삭제");
@@ -129,12 +134,13 @@ public class FavoriteCountryItemAdapter extends RecyclerView.Adapter<FavoriteCou
                 @Override
                 public void onClick(View view) {
 
+                    Log.d(TAG, "선택 포지션: " + getAdapterPosition());
                     int position = getAdapterPosition();
 
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
 
-                            Log.d(TAG, "추가 삭제: " + binding.getCountryItem().ct_is_add_ld.getValue());
+                            Log.d(TAG, "추가 삭제: " + binding.getCountryItem().is_favorite_ld.getValue());
                             //추가
                             onCountryClickListener.onBtnClicked(position, 1);
                             Log.d(TAG, "국가 추가");

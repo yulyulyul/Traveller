@@ -4,7 +4,7 @@ import androidx.room.Entity;
 
 import java.io.Serializable;
 
-@Entity(tableName = "favorite_country_info")
+@Entity(tableName = "detail_country_info")
 public class FavoriteCountryInfoVO implements Serializable {
     private String img;
 

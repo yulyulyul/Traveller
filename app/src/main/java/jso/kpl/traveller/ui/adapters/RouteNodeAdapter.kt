@@ -14,10 +14,8 @@ import androidx.core.view.get
 import androidx.core.view.size
 import jso.kpl.traveller.App
 import jso.kpl.traveller.R
-import jso.kpl.traveller.model.Route
 import jso.kpl.traveller.model.SmallPost
 import jso.kpl.traveller.model.ViewTag
-import jso.kpl.traveller.ui.TestPage
 import jso.kpl.traveller.util.JavaUtil
 import kotlinx.android.synthetic.main.custom_node.view.*
 import kotlin.collections.ArrayList

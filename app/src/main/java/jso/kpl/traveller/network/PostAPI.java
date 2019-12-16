@@ -24,7 +24,7 @@ public interface PostAPI {
     Call<ResponseResult<Integer>> editingPost(@Part("Post") Post post, @Part ArrayList<MultipartBody.Part> imgs);
 
     @FormUrlEncoded
-    @POST("/my_page_enroll")
+    @POST("/load_enroll_post")
     Call<ResponseResult<List<ListItem>>> myPageEnroll(@Field("u_userid") int u_userid);
 
     //검색을 통해 가져오는 포스트 리스트
@@ -34,7 +34,7 @@ public interface PostAPI {
 
     //자신이 작성한 포스트 리스트를 가져온다.
     @FormUrlEncoded
-    @POST("/search_by_enroll")
+    @POST("/load_enroll_post_list")
     Call<ResponseResult<List<ListItem>>> searchByEnroll(@Field("u_userid") int u_userid, @Field("p_id") int p_id);
 
     //자신이 작성한 포스트 리스트를 가져온다.
@@ -46,5 +46,9 @@ public interface PostAPI {
     @FormUrlEncoded
     @POST("/load_recent_post")
     Call<ResponseResult<List<ListItem>>> loadRecentPost(@Field("u_userid") int u_userid);
+
+    @FormUrlEncoded
+    @POST("/load_post_list")
+    Call<ResponseResult<List<ListItem>>> loadPostList(@Field("p_id") int p_id, @Field("c_no") int c_no);
 
 }

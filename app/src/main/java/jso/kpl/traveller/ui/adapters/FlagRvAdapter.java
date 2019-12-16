@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.FlagImageBinding;
+import jso.kpl.traveller.databinding.CircleImgBinding;
 import jso.kpl.traveller.model.Country;
-import jso.kpl.traveller.ui.MyPage;
-import jso.kpl.traveller.viewmodel.MyPageViewModel;
+import jso.kpl.traveller.ui.Fragment.MyPage;
 
 public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvViewHolder> {
 
@@ -24,7 +23,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
     public OnFlagClickListener onFlagClickListener;
 
     public interface OnFlagClickListener {
-        void onFlagClicked(String country);
+        void onFlagClicked(int ct_no);
         void onAddFlagClicked();
     }
 
@@ -34,7 +33,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
 
     String TAG = "Trav.FlagRvAdapter.";
 
-    FlagImageBinding binding;
+    CircleImgBinding binding;
 
     //선호 플래그 4개 + 국기 추가 1개
     List<Country> flagList = new ArrayList<>();
@@ -49,7 +48,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
 
         LayoutInflater lif = LayoutInflater.from(parent.getContext());
 
-        binding = DataBindingUtil.inflate(lif, R.layout.flag_image, parent, false);
+        binding = DataBindingUtil.inflate(lif, R.layout.circle_img, parent, false);
 
         return new FlagRvAdapter.FlagRvViewHolder(binding);
     }
@@ -74,7 +73,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
                     onFlagClickListener.onAddFlagClicked();
                 } else {
                     //플래그 클릭
-                    onFlagClickListener.onFlagClicked(country.getCt_name());
+                    onFlagClickListener.onFlagClicked(country.getCt_no());
                 }
             }
         });
@@ -106,9 +105,9 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
 
     class FlagRvViewHolder extends RecyclerView.ViewHolder {
 
-        FlagImageBinding binding;
+        CircleImgBinding binding;
 
-        public FlagRvViewHolder(@NonNull FlagImageBinding binding) {
+        public FlagRvViewHolder(@NonNull CircleImgBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;
@@ -116,7 +115,7 @@ public class FlagRvAdapter extends RecyclerView.Adapter<FlagRvAdapter.FlagRvView
         }
 
         public void onBind(String img) {
-            binding.setFlagImg(img);
+            binding.setCircleImg(img);
             binding.executePendingBindings();
         }
     }

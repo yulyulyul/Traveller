@@ -53,7 +53,6 @@ public class WritePostType extends Fragment {
 
     public interface OnDetachFragmentClickListener {
         void onDetachFragmentClicked();
-
         void onSaveSmallPostClicked(SmallPost sp);
     }
 

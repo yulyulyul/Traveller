@@ -1,4 +1,4 @@
-package jso.kpl.traveller.ui;
+package jso.kpl.traveller.ui.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import jso.kpl.traveller.App;
@@ -23,13 +24,21 @@ import jso.kpl.traveller.databinding.MyPageBinding;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.ui.CountryList;
+import jso.kpl.traveller.ui.DetailCountryInfo;
+import jso.kpl.traveller.ui.DetailPost;
+import jso.kpl.traveller.ui.EditingPost;
+import jso.kpl.traveller.ui.MainTab;
+import jso.kpl.traveller.ui.PostType.SimplePost;
+import jso.kpl.traveller.ui.ProfileManagement;
+import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
 
 public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListener {
 
     Activity act = getActivity();
-
+    
     String TAG = "Trav.MyPage.";
 
     MyPageBinding pageBinding;
@@ -87,8 +96,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         pageBinding.setMyPageVm(myPageVM);
         pageBinding.setLifecycleOwner(this);
 
-        pageBinding.getMyPageVm().mpProfileLD.setValue(pageBinding.getMyPageVm().getHeadProfile(user));
-
+        pageBinding.getMyPageVm().mpProfileLD.setValue(user);
 
         pageBinding.getMyPageVm().flagRvAdapter.setOnFlagClickListener(this);
 
@@ -97,6 +105,14 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         loadPostCall(pageBinding.likePost, 1);
         loadPostCall(pageBinding.recentPost, 2);
         loadPostCall(pageBinding.enrollPost, 3);
+
+        pageBinding.getMyPageVm().onProfileClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileManagement.class);
+                startActivityForResult(intent,77);
+            }
+        };
 
         pageBinding.getMyPageVm().onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -118,22 +134,12 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onFlagClicked(int ct_no) {
 
-//        Log.d(TAG, "onRestart");
-//
-//        loadPostCall(pageBinding.likePost, 1);
-//        loadPostCall(pageBinding.recentPost, 2);
-    }
-
-    @Override
-    public void onFlagClicked(String country) {
-
-        Log.d(TAG, "onFlagClicked: " + country);
+        Log.d(TAG, "선택 선호 국가: " + ct_no);
 
         Intent intent = new Intent(getActivity(), RouteList.class);
-        intent.putExtra("req", new MyPageItem(new SearchReq(country, 0, 1000000000), 0));
+        intent.putExtra("req", new MyPageItem(ct_no, 4));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -141,9 +147,9 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
     @Override
     public void onAddFlagClicked() {
 
-        Intent flagIntent = new Intent(getActivity(), FavoriteCountry.class);
-        flagIntent.putExtra("type", 1);
-        startActivityForResult(flagIntent, REUTRN_FAVORITE_COUNTRY);
+        Intent intent = new Intent(getActivity(), CountryList.class);
+        intent.putExtra("type", 1);
+        startActivityForResult(intent, REUTRN_FAVORITE_COUNTRY);
 
         Log.d(TAG + "More", "선호 국가 더 보기");
     }
@@ -161,9 +167,9 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         pageBinding.getMyPageVm().onMoreCountryClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent flagIntent = new Intent(App.INSTANCE, FavoriteCountry.class);
-                flagIntent.putExtra("type", 0);
-                startActivityForResult(flagIntent, REUTRN_FAVORITE_COUNTRY);
+                Intent intent = new Intent(App.INSTANCE, CountryList.class);
+                intent.putExtra("type", 0);
+                startActivityForResult(intent, REUTRN_FAVORITE_COUNTRY);
             }
         };
 
@@ -192,7 +198,6 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
                 Log.d(TAG + "More", "선호 포스트 더 보기");
             }
         };
-
     }
 
     @Override
@@ -201,6 +206,14 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
 
         if (resultCode != getActivity().RESULT_OK)
             return;
+
+        Log.d(TAG, "onActivityResult: " + requestCode);
+
+        if(requestCode == 77){
+            pageBinding.getMyPageVm().mpProfileLD.setValue(App.Companion.getUser());
+            ((MainTab)getActivity()).replaceFragment(newInstance(App.Companion.getUser()), "myPage");
+            Log.d(TAG, "프로필:마이페이지 프래그먼트 갱신");
+        }
 
         if (requestCode == 55) {
             pageBinding.getMyPageVm().countryCall();
@@ -214,7 +227,5 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록을 하셨습니다.", Toast.LENGTH_LONG).show();
         }
     }
-
-
 }
 

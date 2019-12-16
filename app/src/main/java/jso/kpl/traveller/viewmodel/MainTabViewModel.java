@@ -36,6 +36,7 @@ public class MainTabViewModel extends ViewModel {
 
         tabs.get(0).getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.clicked));
         tabs.get(1).getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.non_clicked));
+
         return tabs;
     }
 
@@ -53,16 +54,6 @@ public class MainTabViewModel extends ViewModel {
                 //클릭하는 탭의 번호
                 final int CLICK_NO = tab.getPosition();
 
-                switch (CLICK_NO) {
-                    case 0:
-
-
-                        break;
-                    case 1:
-
-
-                        break;
-                }
             }
 
             @Override
@@ -74,12 +65,6 @@ public class MainTabViewModel extends ViewModel {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
-                if(tab.getPosition() == 0){
-
-                } else if(tab.getPosition() == 1){
-
-                }
 
             }
         };

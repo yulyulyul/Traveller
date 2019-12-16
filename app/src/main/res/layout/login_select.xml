@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -10,68 +9,179 @@
             type="jso.kpl.traveller.viewmodel.LoginSelectViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#304769"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="50dp">
+        android:background="@color/clicked">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="50dp"
+            android:layout_marginBottom="30dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/airplane"
+                android:backgroundTint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView"
+                android:layout_alignParentRight="true"
+                android:text="당신과 함께 떠나는 여행, 트레블러"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="50dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/kakaoaccount_icon" />
+            android:layout_alignParentBottom="true">
 
-        <TextView
-            android:id="@+id/btnKakaoLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:onClick="@{()->viewmodel.kakaoLogin()}"
-            android:padding="10dp"
-            android:text="카카오톡으로 시작하기" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/s_round_border_blue"
+                android:backgroundTint="@color/com_kakao_button_background_press"
+                android:onClick="@{()->viewmodel.kakaoLogin()}"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
 
-        <TextView
-            android:id="@+id/btnFacebookLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:onClick="@{()->viewmodel.facebookLogin()}"
-            android:padding="10dp"
-            android:text="페이스북으로 시작하기" />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/kakaotalk_icon"
+                    android:layout_alignParentLeft="true"/>
 
-        <TextView
-            android:id="@+id/btnGoogleLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:onClick="@{()->viewmodel.googleLogin()}"
-            android:padding="10dp"
-            android:text="구글으로 시작하기" />
+                <TextView
+                    android:id="@+id/btnKakaoLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="카카오톡 계정으로 시작하기" />
 
-        <TextView
-            android:id="@+id/btnSignup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:onClick="@{()->viewmodel.generalSignUp()}"
-            android:padding="10dp"
-            android:text="직접 가입하기" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/s_round_border_blue"
+                android:backgroundTint="@color/com_facebook_blue"
+                android:onClick="@{()->viewmodel.facebookLogin()}"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/facebookicon"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/btnFacebookLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="페이스북 계정으로 시작하기"
+                    android:textColor="@color/white"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/s_round_border_blue"
+                android:backgroundTint="@color/colorAccent"
+                android:onClick="@{()->viewmodel.googleLogin()}"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/i_gmail_icon"
+                    android:backgroundTint="@color/white"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/btnGoogleLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="구글 계정으로 시작하기"
+                    android:textColor="@color/white"
+                    android:layout_centerInParent="true"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/s_round_border_blue"
+                android:backgroundTint="@color/simple_white"
+                android:onClick="@{()->viewmodel.generalSignUp()}"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/airplane"
+                    android:backgroundTint="@color/clicked"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/btnSignup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="다른 계정으로 시작하기"
+                    android:layout_centerInParent="true"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/s_round_border_blue"
+                android:backgroundTint="@color/simple_white"
+                android:onClick="@{()->viewmodel.gotoLogin()}"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/airplane"
+                    android:backgroundTint="@color/clicked"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/tvGotoLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="로그인" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <Button
             android:layout_width="match_parent"
@@ -122,25 +232,5 @@
             android:layout_centerInParent="true"
             android:visibility="gone"></com.google.android.gms.common.SignInButton>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text=""
-            android:textColor="#ccc" />
-
-
-        <TextView
-            android:id="@+id/tvGotoLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:onClick="@{()->viewmodel.gotoLogin()}"
-            android:text="로그인하러 가기"
-            android:textColor="@android:color/white"
-
-            />
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

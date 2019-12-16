@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="myPageVm"
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
@@ -33,7 +31,6 @@
 
                     <!--프로필 파트-->
                     <LinearLayout
-                        android:id="@+id/mp_profile"
                         android:layout_width="match_parent"
                         android:layout_height="75dp"
                         android:background="@drawable/s_border_round_outside"
@@ -42,20 +39,20 @@
 
                         <!--프로필 이미지-->
                         <RelativeLayout
-                            android:id="@+id/profile_relative"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center">
 
                             <ImageView
                                 android:id="@+id/mp_profile_iv"
-                                android:layout_width="65dp"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:adjustViewBounds="true"
                                 android:layout_marginLeft="20dp"
                                 android:scaleType="fitXY"
-                                app:setCircleImg="@{myPageVm.mpProfileLD.profileUri}"
-                                android:layout_centerVertical="true"/>
+                                app:setCircleImg="@{myPageVm.mpProfileLD.u_profile_img}"
+                                android:layout_centerVertical="true"
+                                app:OnClickListener="@{myPageVm.onProfileClickListener}"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -63,7 +60,7 @@
                                 android:layout_toRightOf="@+id/mp_profile_iv"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="10dp"
-                                android:text="@{myPageVm.mpProfileLD.email}"
+                                android:text="@{myPageVm.mpProfileLD.u_nick_name}"
                                 android:textColor="@color/white"
                                 android:textSize="20dp" />
 
@@ -76,10 +73,9 @@
                         android:id="@+id/mp_route_search"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_below="@+id/mp_profile"
-                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginHorizontal="15dp"
                         android:layout_marginVertical="15dp"
-                        android:background="@drawable/s_border_square"
+                        android:background="@drawable/s_round_border_blue"
                         android:backgroundTint="@color/clicked"
                         android:clickable="true"
                         android:gravity="center"
@@ -95,8 +91,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:background="@drawable/s_border_square"
+                            android:layout_marginVertical="5dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/s_border"
                             android:clickable="false"
                             android:gravity="center"
                             android:hint="다른 여행자의 루트가 궁금하신가요?"
@@ -115,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:text="선호하는 국가"
+                            android:textSize="@dimen/middle_text_size"
                             android:textStyle="bold" />
 
                         <TextView
@@ -123,8 +121,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="전체 국가 보기"
-                            android:textSize="16dp"
+                            android:text="전체 국가 보기 >"
+                            android:textSize="@dimen/middle_text_size"
                             app:OnClickListener="@{myPageVm.onMoreCountryClickListener}"
                             app:extendTouchRange="@{10}" />
 
@@ -150,6 +148,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:text="좋아하는 포스트"
+                            android:textSize="@dimen/middle_text_size"
                             android:textStyle="bold" />
 
                         <TextView
@@ -160,8 +159,8 @@
                             android:layout_centerVertical="true"
                             android:adjustViewBounds="true"
                             android:scaleType="fitCenter"
-                            android:text="더보기"
-                            android:textSize="16dp"
+                            android:text="더보기 >"
+                            android:textSize="@dimen/middle_text_size"
                             app:extendTouchRange="@{10}"
                             android:visibility="@{myPageVm.isLikeMore? View.VISIBLE:View.GONE}"
                             app:OnClickListener="@{myPageVm.onMoreLikeClickListener}"/>
@@ -186,6 +185,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:text="최근 포스트"
+                            android:textSize="@dimen/middle_text_size"
                             android:textStyle="bold" />
 
                     </RelativeLayout>
@@ -207,6 +207,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:text="등록 포스트"
+                            android:textSize="@dimen/middle_text_size"
                             android:textStyle="bold" />
 
                         <TextView
@@ -215,8 +216,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="더보기"
-                            android:textSize="16dp"
+                            android:text="더보기 >"
+                            android:textSize="@dimen/middle_text_size"
                             app:extendTouchRange="@{10}"
                             android:visibility="@{myPageVm.isEnrollMore? View.VISIBLE:View.GONE}"
                             app:OnClickListener="@{myPageVm.onMoreEnrollClickListener}"/>

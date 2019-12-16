@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="fcVm"
-            type="jso.kpl.traveller.viewmodel.FavoriteCountryViewModel" />
+            type="jso.kpl.traveller.viewmodel.CountryListViewModel" />
 
     </data>
 
@@ -15,13 +15,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/top_action_bar"
+            layout="@layout/top_action_bar"
+            title="@{fcVm.title}"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/simple_white"
             app:setLinearRvAdapter="@{fcVm.fciAdapter}"
-            android:visibility="@{fcVm.isSuccess?View.VISIBLE:View.GONE}"/>
+            android:visibility="@{fcVm.isSuccess?View.VISIBLE:View.GONE}"
+            app:onAddScrollListener="@{fcVm.onCountryScrollListener}"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -25,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FavoriteCountryInfoViewModel extends BaseObservable {
+public class DetailCountryInfoViewModel extends BaseObservable {
 
     String TAG = "Trav.FcInfo.";
 
@@ -38,7 +38,7 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
     CountryAPI countryAPI;
     Call<ResponseResult<Integer>> call;
 
-    public FavoriteCountryInfoViewModel() {
+    public DetailCountryInfoViewModel() {
 
         countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
@@ -49,7 +49,7 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
         setRecyclerView();
     }
 
-    public void country_warningClickEvent() {
+    public void countryWarningClicked() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextCompat.startActivity(App.INSTANCE, intent, null);
@@ -104,19 +104,19 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
 
     public void loadCountryInfo(int ctNo) {
 
-        Call<ResponseResult<List<Country>>> call = countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), ctNo);
+        Call<ResponseResult<Country>> call = countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), ctNo);
 
-        call.enqueue(new Callback<ResponseResult<List<Country>>>() {
+        call.enqueue(new Callback<ResponseResult<Country>>() {
             @Override
-            public void onResponse(Call<ResponseResult<List<Country>>> call, Response<ResponseResult<List<Country>>> response) {
+            public void onResponse(Call<ResponseResult<Country>> call, Response<ResponseResult<Country>> response) {
 
                 if (response.body() != null) {
-                    ResponseResult<List<Country>> result = response.body();
+                    ResponseResult<Country> result = response.body();
 
                     if (result.getRes_type() == 1) {
-                        countryItem.setValue(result.getRes_obj().get(0));
+                        countryItem.setValue(result.getRes_obj());
                         countryItem.getValue().setCt_flag();
-                        countryItem.getValue().setCt_is_add_ld();
+                        countryItem.getValue().setIs_favorite_ld();
 
                         Log.d(TAG, "이거: " + countryItem.getValue().toString());
                     }
@@ -124,7 +124,7 @@ public class FavoriteCountryInfoViewModel extends BaseObservable {
             }
 
             @Override
-            public void onFailure(Call<ResponseResult<List<Country>>> call, Throwable t) {
+            public void onFailure(Call<ResponseResult<Country>> call, Throwable t) {
                 App.Companion.sendToast("서버 에러로 인해 로딩에 실패했습니다.");
 
                 Log.e(TAG, "onFailure: ", t);

@@ -7,6 +7,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="title"
+            type="String" />
+
+        <variable
             name="rodVm"
             type="jso.kpl.traveller.viewmodel.DetailPostViewModel" />
 
@@ -32,26 +36,10 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/header"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/clicked">
-
-                        <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:drawableLeft="@drawable/i_airplane"
-                            android:drawablePadding="15dp"
-                            android:gravity="center_vertical"
-                            android:text="트레블러"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="@dimen/title_text_size"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
+                    <include
+                        android:id="@+id/top_action_bar"
+                        layout="@layout/top_action_bar"
+                        title="@{rodVm.title}"/>
 
                     <LinearLayout
                         android:id="@+id/route_rel"
@@ -179,7 +167,7 @@
                                 android:id="@+id/recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:setLinearHorRvAdapter="@{rodVm.adapter}" />
+                                app:setLinearHorRvAdapter="@{rodVm.categoryAdapter}" />
                         </LinearLayout>
 
                         <LinearLayout

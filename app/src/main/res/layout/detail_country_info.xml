@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fvInfoVm"
+            type="jso.kpl.traveller.viewmodel.DetailCountryInfoViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/top_action_bar"
+            layout="@layout/top_action_bar" />
+
+        <include
+            android:id="@+id/country_info"
+            layout="@layout/country_info"
+            app:countryItem="@{fvInfoVm.countryItem}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/recent"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="@{fvInfoVm.layoutManager.getValue()}"
+                app:setGridRvAdapter="@{fvInfoVm.adapter}"
+                app:setGridSpan="@{3}" />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

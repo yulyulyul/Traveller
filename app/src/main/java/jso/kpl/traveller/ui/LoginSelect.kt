@@ -37,6 +37,7 @@ class LoginSelect : AppCompatActivity() {
         ls_viewmodel = ViewModelProviders.of(this).get(LoginSelectViewModel::class.java)
         ls_Binding?.viewmodel = ls_viewmodel
 
+        ls_Binding?.viewmodel?.autoLogin(this)
         initObservables()
     }
 

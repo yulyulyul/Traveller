@@ -1,12 +1,15 @@
-package jso.kpl.traveller.ui;
+package jso.kpl.traveller.ui.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,43 +18,50 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.databinding.RouteListBinding;
-import jso.kpl.traveller.databinding.TopActionBarBinding;
+import jso.kpl.traveller.databinding.AllRouteListBinding;
+
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
-public class RouteList extends AppCompatActivity {
+public class AllRouteList extends Fragment {
 
-    String TAG = "Trav.RouteList.";
+    String TAG = "Trav.AllRouteList.";
 
     MyPageItem item;
 
-    RouteListBinding binding;
+    AllRouteListBinding binding;
     RouteListViewModel routeListVm = new RouteListViewModel();
 
+    public Fragment newInstance(MyPageItem item) {
+
+        AllRouteList allRouteList = new AllRouteList();
+
+        Bundle args = new Bundle();
+        args.putSerializable("req", item);
+
+        allRouteList.setArguments(args);
+
+        return allRouteList;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        routeListVm.setFm(getSupportFragmentManager());
+        routeListVm.setFm(getActivity().getSupportFragmentManager());
 
-        binding = DataBindingUtil.setContentView(this, R.layout.route_list);
+        binding = DataBindingUtil.inflate(inflater, R.layout.all_route_list, container, false);
         binding.setMainListVm(routeListVm);
         binding.setLifecycleOwner(this);
 
-        if (getIntent() != null) {
-            item = (MyPageItem) getIntent().getSerializableExtra("req");
+        if (getArguments() != null) {
+            item = (MyPageItem) getArguments().getSerializable("req");
             binding.getMainListVm().setItem(item);
             binding.getMainListVm().searchByCondition(item);
         }
 
-        if (((MyPageItem) getIntent().getSerializableExtra("req")).getType() == 0) {
-            binding.categoryHorizontalLayout.setVisibility(View.VISIBLE);
-            binding.getMainListVm().addCategoryLayout(this, binding.categoryLayout);
-        } else {
-            binding.categoryHorizontalLayout.setVisibility(View.GONE);
-        }
+        binding.getMainListVm().addCategoryLayout(getActivity(), binding.categoryLayout);
 
         binding.getMainListVm().onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,12 +88,12 @@ public class RouteList extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (binding.getMainListVm().gt_post.isVisible()) {
+                if(binding.getMainListVm().gt_post.isVisible()){
                     int lastVisibleItemPosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
 
                     if (itemTotalCount > 16) {
-                        if (lastVisibleItemPosition == itemTotalCount) {
+                        if (lastVisibleItemPosition  == itemTotalCount ) {
                             Log.d(TAG, "마지막 그리드: ");
                             binding.getMainListVm().searchByCondition(item);
                         }
@@ -98,7 +108,7 @@ public class RouteList extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (binding.getMainListVm().vt_post != null && binding.getMainListVm().vt_post.isVisible()) {
+                if(binding.getMainListVm().vt_post != null && binding.getMainListVm().vt_post.isVisible()){
                     int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
 
@@ -112,18 +122,7 @@ public class RouteList extends AppCompatActivity {
             }
         };
 
-       // TopActionBarBinding barBinding = DataBindingUtil.findBinding(binding.topActionBar.textView);
-        binding.topActionBar.backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        return binding.getRoot();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        binding.getMainListVm().onCleared();
-    }
 }

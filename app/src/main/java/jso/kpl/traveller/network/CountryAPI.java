@@ -13,14 +13,14 @@ public interface CountryAPI {
 
     @FormUrlEncoded
     @POST("/load_country_list")
-    Call<ResponseResult<List<Country>>> loadCountryList(@Field("u_userid") int u_userid);
+    Call<ResponseResult<List<Country>>> loadCountryList(@Field("u_userid") int u_userid, @Field("ct_no") int ct_no);
 
     @FormUrlEncoded
-    @POST("/load_favorite_country")
+    @POST("/load_favorite_country_list")
     Call<ResponseResult<List<Country>>> loadFavoriteCountry(@Field("u_userid") int u_userid, @Field("is_mypage") int is_mypage);
 
     @FormUrlEncoded
-    @POST("/add_country")
+    @POST("/add_favorite_country")
     Call<ResponseResult<Integer>> addFlag(@Field("u_userid") int u_userid, @Field("ct_no") int ct_no);
 
     @FormUrlEncoded
@@ -29,5 +29,5 @@ public interface CountryAPI {
 
     @FormUrlEncoded
     @POST("load_country_info")
-    Call<ResponseResult<List<Country>>> loadCountryInfo(@Field("u_userid") int u_userid, @Field("ct_no") int ct_no);
+    Call<ResponseResult<Country>> loadCountryInfo(@Field("u_userid") int u_userid, @Field("ct_no") int ct_no);
 }

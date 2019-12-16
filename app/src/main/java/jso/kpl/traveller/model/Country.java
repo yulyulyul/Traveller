@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-//@Entity(tableName = "favorite_country")
+//@Entity(tableName = "country_list")
 public class Country implements Serializable {
 
     String TAG = "Trav.Country.";
@@ -29,21 +29,26 @@ public class Country implements Serializable {
     private String ct_currency; // 통화
     private String ct_religion; // 종교
     private String ct_flag;
-    private boolean ct_is_add;
 
-    public MutableLiveData<Boolean> ct_is_add_ld = new MutableLiveData<>();
+    private int is_favorite;
 
-    public Country(int ct_no, String ct_name, String ct_eng_name, String ct_capital, String ct_continent, String ct_language, String ct_currency, String ct_religion,  boolean ct_is_add) {
-        this.ct_no = ct_no;
-        this.ct_name = ct_name;
+    public MutableLiveData<Boolean> is_favorite_ld = new MutableLiveData<>();
+
+    public Country(String ct_eng_name) {
         this.ct_eng_name = ct_eng_name;
-        this.ct_capital = ct_capital;
-        this.ct_continent = ct_continent;
-        this.ct_language = ct_language;
-        this.ct_currency = ct_currency;
-        this.ct_religion = ct_religion;
-        this.ct_is_add_ld.setValue(ct_is_add);
     }
+
+    //    public Country(int ct_no, String ct_name, String ct_eng_name, String ct_capital, String ct_continent, String ct_language, String ct_currency, String ct_religion,  boolean is_favorite) {
+//        this.ct_no = ct_no;
+//        this.ct_name = ct_name;
+//        this.ct_eng_name = ct_eng_name;
+//        this.ct_capital = ct_capital;
+//        this.ct_continent = ct_continent;
+//        this.ct_language = ct_language;
+//        this.ct_currency = ct_currency;
+//        this.ct_religion = ct_religion;
+//        this.ct_is_add_ld.setValue(is_favorite);
+//    }
 
     public int getCt_no() {
         return ct_no;
@@ -130,21 +135,25 @@ public class Country implements Serializable {
         this.ct_flag = imgStr;
     }
 
-    public boolean isCt_is_add() {
-        return ct_is_add;
+    public int getIs_favorite() {
+        return is_favorite;
     }
 
-    public void setCt_is_add(boolean ct_is_add) {
-        this.ct_is_add = ct_is_add;
+    public void setIs_favorite(int is_favorite) {
+        this.is_favorite = is_favorite;
     }
 
-    public MutableLiveData<Boolean> getCt_is_add_ld() {
-        return ct_is_add_ld;
+    public MutableLiveData<Boolean> getIs_favorite_ld() {
+        return is_favorite_ld;
     }
 
-    public void setCt_is_add_ld() {
-        this.ct_is_add_ld = new MutableLiveData<>();
-        this.ct_is_add_ld.setValue(isCt_is_add());
+    public void setIs_favorite_ld() {
+        this.is_favorite_ld = new MutableLiveData<>();
+
+        if(getIs_favorite() == 1)
+            this.is_favorite_ld.setValue(true);
+        if(getIs_favorite() == 0)
+            this.is_favorite_ld.setValue(false);
     }
 
     @Override
@@ -160,8 +169,8 @@ public class Country implements Serializable {
                 ", ct_currency='" + ct_currency + '\'' +
                 ", ct_religion='" + ct_religion + '\'' +
                 ", ct_flag='" + ct_flag + '\'' +
-                ", ct_is_add=" + ct_is_add +
-                ", ct_is_add_ld=" + ct_is_add_ld.getValue() +
+                ", is_favorite=" + is_favorite +
+                ", ct_is_add_ld=" + is_favorite_ld +
                 '}';
     }
 }
