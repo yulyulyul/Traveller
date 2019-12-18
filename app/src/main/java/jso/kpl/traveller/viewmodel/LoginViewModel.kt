@@ -10,12 +10,14 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import jso.kpl.traveller.App
 import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
 import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.ui.MainTab
+import jso.kpl.traveller.util.JavaUtil
 import jso.kpl.traveller.util.RegexMethod
 import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
 import retrofit2.Call
@@ -71,39 +73,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     fun login() {
         progressDialog?.value = true
 
-        SHAPassword = returnSHA256(password?.get()!!)
+        SHAPassword = JavaUtil.returnSHA256(password?.get()!!)
 
         WebService.client.create(UserAPI::class.java)
             .goLogin(LoginUser(email?.get()!!, SHAPassword!!))
             .enqueue(this)
-    }
-
-    //입력받은 패스워드를 sha256으로 해시화 해서 보낸다.
-    fun returnSHA256(str: String): String? {
-
-        var SHA: String? = ""
-
-        try {
-            val sh = MessageDigest.getInstance("SHA-256")
-
-            sh.update(str.toByteArray())
-
-            val byteData = sh.digest()
-
-            val sb = StringBuffer()
-
-            for (i in byteData.indices) {
-                sb.append(Integer.toString((byteData[i].toInt() and 0xff) + 0x100, 16).substring(1))
-            }
-
-            SHA = sb.toString()
-
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-            SHA = null
-        }
-
-        return SHA
     }
 
     //ViewModel이 끝날 때 불림.(Activity LifeCycle이랑 생명주기가 다름)
@@ -128,8 +102,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                 //로그인 확인 저장 용
                 isLogin?.value = true
 
-                Log.d("Trav.Login", "이건가? "+isLogin?.value!!)
-                Toast.makeText(getApplication(), "로그인에 성공하였습니다.", Toast.LENGTH_LONG).show()
                 val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -139,20 +111,18 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
                 ContextCompat.startActivity(getApplication(), ls_goLogin, null)
             } else {
-                Toast.makeText(getApplication(), "Email 또는 Password가 틀렸습니다.", Toast.LENGTH_LONG).show()
-
+                App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
             }
         } else if(res_type == 0){
-            Toast.makeText(getApplication(), "Email 또는 Password가 틀렸습니다.", Toast.LENGTH_LONG).show()
-        }else if(res_type == -1){
-
+            App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
         }
     }
 
     //로그인 요청시 Retrofit 통신 실패시 호출..
     override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
-        Toast.makeText(getApplication(), "서버와의 통신에 실패하였습니다." + t.toString(), Toast.LENGTH_LONG)
-            .show()
+
+        App.sendToast("로그인에 실패하셨습니다.")
+
         progressDialog?.value = false
     }
 

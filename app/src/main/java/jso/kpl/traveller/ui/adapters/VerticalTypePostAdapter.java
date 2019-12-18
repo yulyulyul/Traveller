@@ -84,8 +84,7 @@ public class VerticalTypePostAdapter extends RecyclerView.Adapter<VerticalTypePo
 
     public void removeItems() {
 
-        postList = new ArrayList<>();
-
+        postList.clear();
         notifyDataSetChanged();
     }
     @Override

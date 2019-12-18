@@ -1,5 +1,10 @@
 package jso.kpl.traveller.network;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.List;
+
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
 import okhttp3.MultipartBody;
@@ -22,4 +27,10 @@ public interface ProfileAPI {
     Call<ResponseResult<Integer>> updatePwd(@Field("u_userid") int u_userid,
                                                    @Field ("current_pwd") String c_pwd,
                                                     @Field ("update_pwd") String u_pwd);
+
+    @FormUrlEncoded
+    @POST("/user_info_count")
+    Call<ResponseResult<List<Integer>>> loadUserInfo(@Field("u_userid") int u_userid);
+
+
 }

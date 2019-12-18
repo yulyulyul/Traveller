@@ -16,7 +16,6 @@ import jso.kpl.traveller.R;
 public class MainTabViewModel extends ViewModel {
 
     public MutableLiveData<Integer> TAP_POS = new MutableLiveData<>();
-
     public TabLayout.OnTabSelectedListener listener;
 
     public MainTabViewModel() {
@@ -53,14 +52,11 @@ public class MainTabViewModel extends ViewModel {
 
                 //클릭하는 탭의 번호
                 final int CLICK_NO = tab.getPosition();
-
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
                 tab.getIcon().setTint(App.INSTANCE.getResources().getColor(R.color.non_clicked));
-
             }
 
             @Override

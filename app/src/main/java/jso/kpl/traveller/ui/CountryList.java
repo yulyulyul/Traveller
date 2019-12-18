@@ -57,7 +57,7 @@ public class CountryList extends AppCompatActivity {
             onAdapterItemClicked();
         }
 
-        binding.getFcVm().onRefreshClickListener = new View.OnClickListener() {
+        binding.getFcVm().onErrClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = getIntent();

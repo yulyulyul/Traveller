@@ -73,14 +73,28 @@
                         android:textSize="18dp"
                         app:OnClickListener="@{editingPostVm.onBackClickListener}" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="Traveller"
-                        android:textColor="@color/clicked"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/i_airplane"
+                            android:backgroundTint="@color/clicked"/>
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="포스트 작성"
+                            android:textColor="@color/clicked"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
 
                     <TextView
                         android:id="@+id/post_save"
@@ -233,13 +247,26 @@
                             android:gravity="center"
                             android:minHeight="100dp"
                             android:onClick="@{()->editingPostVm.onAddSmallPostClicked()}"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:padding="10dp">
 
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/i_circle_plus_icon"
-                                android:visibility="@{editingPostVm.isClick?View.VISIBLE:View.GONE}" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="여행 일정 추가 >"
+                                android:layout_gravity="left"/>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="@{editingPostVm.isClick?View.VISIBLE:View.GONE}">
+
+                                <ImageView
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/i_circle_plus_icon" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 

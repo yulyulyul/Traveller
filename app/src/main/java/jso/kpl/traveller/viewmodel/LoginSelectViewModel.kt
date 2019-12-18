@@ -259,7 +259,6 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
             if (receiveUser != null) {
 
-                Toast.makeText(getApplication(), "로그인에 성공하였습니다.", Toast.LENGTH_LONG).show()
                 val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -269,17 +268,11 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
                 ContextCompat.startActivity(getApplication(), ls_goLogin, null)
             }
-        } else if(res_type == 0){
-            Toast.makeText(getApplication(), "Email 또는 Password가 틀렸습니다.", Toast.LENGTH_LONG).show()
-        }else if(res_type == -1){
-
         }
     }
 
     //로그인 요청시 Retrofit 통신 실패시 호출..
     override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
-        Toast.makeText(getApplication(), "서버와의 통신에 실패하였습니다." + t.toString(), Toast.LENGTH_LONG)
-            .show()
         progressDialog?.value = false
     }
 

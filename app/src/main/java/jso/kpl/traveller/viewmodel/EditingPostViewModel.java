@@ -35,6 +35,7 @@ import jso.kpl.traveller.ui.Fragment.WritePostType;
 import jso.kpl.traveller.ui.adapters.CartlistItemAdapter;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
+import jso.kpl.traveller.util.JavaUtil;
 import me.jerryhanks.timelineview.IndicatorAdapter;
 import me.jerryhanks.timelineview.interfaces.TimeLineViewCallback;
 import me.jerryhanks.timelineview.model.Status;
@@ -49,9 +50,10 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     //Cartlist---------------------------------------------------------------------------------------
     public MutableLiveData<CartlistItemAdapter> cartlistItemAdapter = new MutableLiveData<>();
     public MutableLiveData<List<Cartlist>> cartlistItem = new MutableLiveData<>();
+
     public MutableLiveData<Boolean> isCartlist = new MutableLiveData<>();
     public MutableLiveData<Boolean> noCartlist = new MutableLiveData<>();
-    public MutableLiveData<Integer> cartlistWidth = new MutableLiveData<>();
+
     public View.OnClickListener onCartlistClickListener;
     public MutableLiveData<IndicatorAdapter<Timeline>> timelineAdapter = new MutableLiveData<>();
     public MutableLiveData<List<Timeline>> timelineItem = new MutableLiveData<>();
@@ -101,7 +103,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         this.onCalendarClickListener = onCalendarClickListener;
     }
 
-    //여행 기간 [0]: Start / [1]: End / [2]: Start ~ End
+    //여행 기간 [0]: Start / [1]: End
     public MutableLiveData<String[]> travelPeriod = new MutableLiveData<>();
     public MutableLiveData<String> travelResult = new MutableLiveData<>();
 
@@ -139,8 +141,9 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
     public EditingPostViewModel() {
 
-        isClick.setValue(true);
+        travelPeriod.setValue(new String[2]);
 
+        isClick.setValue(true);
         isSmallPost.setValue(true);
 
         //Default:비공개
@@ -153,6 +156,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
         photoList.setValue(new ArrayList<Uri>());
 
+        //------------------------------------------------------------------------------------------
         isCartlist.setValue(false);
 
         cartlistAPI.cartlist(App.Companion.getUser().getU_userid()).enqueue(this);
@@ -162,8 +166,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
             public View onBindView(Timeline model, FrameLayout container, final int position) {
                 TimeLineItemBinding timeLineItemBinding = DataBindingUtil.inflate(LayoutInflater.from(App.INSTANCE), R.layout.time_line_item, container, false);
-                View view = timeLineItemBinding.getRoot();
-                return view;
+                return timeLineItemBinding.getRoot();
             }
         }));
     }
@@ -194,7 +197,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         intent.isBooking(false); // DEFAULT false
         intent.isSelect(true); // DEFAULT false
 
-        if (strings != null && !strings[0].isEmpty() && !strings[1].isEmpty()) {
+        if (JavaUtil.checkBlankString(strings[0]) && JavaUtil.checkBlankString(strings[1])) {
 
             String[] startParse = strings[0].split("-");
 
@@ -265,7 +268,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
             smallPost.setSp_category(tagList.getValue());
         }
 
-        if (travelPeriod.getValue() != null && !travelPeriod.getValue()[0].equals("")) {
+        if (JavaUtil.checkBlankString(travelPeriod.getValue()[0])) {
             smallPost.setSp_start_date(travelPeriod.getValue()[0]);
             smallPost.setSp_end_date(travelPeriod.getValue()[1]);
         }

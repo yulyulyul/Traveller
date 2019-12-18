@@ -5,28 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.Observer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.VerticalTypePostBinding;
-import jso.kpl.traveller.model.ListItem;
-import jso.kpl.traveller.model.MyPageItem;
-import jso.kpl.traveller.model.Post;
-import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class VerticalTypePost extends Fragment {
 
@@ -34,6 +20,7 @@ public class VerticalTypePost extends Fragment {
 
     VerticalTypePostBinding binding;
     RouteListViewModel routeListVm;
+
     public VerticalTypePost(RouteListViewModel routeListVm) {
         // Required empty public constructor
         this.routeListVm = routeListVm;

@@ -22,14 +22,11 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MyPageBinding;
 import jso.kpl.traveller.model.MyPageItem;
-import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.ui.CountryList;
-import jso.kpl.traveller.ui.DetailCountryInfo;
 import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.EditingPost;
 import jso.kpl.traveller.ui.MainTab;
-import jso.kpl.traveller.ui.PostType.SimplePost;
 import jso.kpl.traveller.ui.ProfileManagement;
 import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
@@ -38,16 +35,18 @@ import jso.kpl.traveller.viewmodel.MyPageViewModel;
 public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListener {
 
     Activity act = getActivity();
-    
+
     String TAG = "Trav.MyPage.";
 
     MyPageBinding pageBinding;
     //MyPage의 ViewModel
     MyPageViewModel myPageVM;
 
+    final int RETURN_PROFILE = 11;
     final int EDITING_POST = 22;
-
-    final int REUTRN_FAVORITE_COUNTRY = 55;
+    final int RETURN_FAVORITE_COUNTRY = 33;
+    final int RETURN_DETAIL_POST = 44;
+    final int RETURN_MORE = 55;
 
     final int SUB_LIKE = 2;
     final int SUB_ENROLL = 3;
@@ -70,7 +69,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if(getArguments() != null){
+        if (getArguments() != null) {
             user = (User) getArguments().getSerializable("user");
         }
     }
@@ -110,7 +109,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileManagement.class);
-                startActivityForResult(intent,77);
+                startActivityForResult(intent, RETURN_PROFILE);
             }
         };
 
@@ -118,19 +117,32 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             @Override
             public void onRefresh() {
 
+                init();
                 Log.d(TAG, "My Page 리프레쉬");
-                pageBinding.getMyPageVm().countryCall();
-                loadPostCall(pageBinding.likePost, 1);
-                loadPostCall(pageBinding.recentPost, 2);
-                loadPostCall(pageBinding.enrollPost, 3);
 
-                pageBinding.getMyPageVm().isRefresh.setValue(false);
             }
         };
 
         onMoreClicked();
 
+        pageBinding.getMyPageVm().POST_ID.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Intent intent = new Intent(getActivity(), DetailPost.class);
+                intent.putExtra("p_id", integer);
+
+                startActivityForResult(intent, RETURN_DETAIL_POST);
+            }
+        });
+
         return pageBinding.getRoot();
+    }
+
+    private void init(){
+        pageBinding.getMyPageVm().countryCall();
+        loadPostCall(pageBinding.likePost, 1);
+        loadPostCall(pageBinding.recentPost, 2);
+        loadPostCall(pageBinding.enrollPost, 3);
     }
 
     @Override
@@ -149,7 +161,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
 
         Intent intent = new Intent(getActivity(), CountryList.class);
         intent.putExtra("type", 1);
-        startActivityForResult(intent, REUTRN_FAVORITE_COUNTRY);
+        startActivityForResult(intent, RETURN_FAVORITE_COUNTRY);
 
         Log.d(TAG + "More", "선호 국가 더 보기");
     }
@@ -167,9 +179,9 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         pageBinding.getMyPageVm().onMoreCountryClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(App.INSTANCE, CountryList.class);
+                Intent intent = new Intent(getActivity(), CountryList.class);
                 intent.putExtra("type", 0);
-                startActivityForResult(intent, REUTRN_FAVORITE_COUNTRY);
+                startActivityForResult(intent, RETURN_FAVORITE_COUNTRY);
             }
         };
 
@@ -177,10 +189,9 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(App.INSTANCE, RouteList.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent intent = new Intent(getActivity(), RouteList.class);
                 intent.putExtra("req", new MyPageItem(App.Companion.getUser().getU_userid(), SUB_ENROLL));
-                App.INSTANCE.startActivity(intent);
+                startActivityForResult(intent, RETURN_MORE);
 
                 Log.d(TAG + "More", "등록한 포스트 더 보기");
             }
@@ -191,9 +202,8 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             public void onClick(View v) {
 
                 Intent intent = new Intent(App.INSTANCE, RouteList.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("req", new MyPageItem(App.Companion.getUser().getU_userid(), SUB_LIKE));
-                App.INSTANCE.startActivity(intent);
+                startActivityForResult(intent, RETURN_MORE);
 
                 Log.d(TAG + "More", "선호 포스트 더 보기");
             }
@@ -209,13 +219,28 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
 
         Log.d(TAG, "onActivityResult: " + requestCode);
 
-        if(requestCode == 77){
+        if(requestCode == RETURN_MORE){
+            loadPostCall(pageBinding.likePost, 1);
+            loadPostCall(pageBinding.recentPost, 2);
+            loadPostCall(pageBinding.enrollPost, 3);
+        }
+
+        if (requestCode == RETURN_PROFILE) {
             pageBinding.getMyPageVm().mpProfileLD.setValue(App.Companion.getUser());
-            ((MainTab)getActivity()).replaceFragment(newInstance(App.Companion.getUser()), "myPage");
+            ((MainTab) getActivity()).replaceFragment(newInstance(App.Companion.getUser()), "myPage");
             Log.d(TAG, "프로필:마이페이지 프래그먼트 갱신");
         }
 
-        if (requestCode == 55) {
+        if (requestCode == RETURN_DETAIL_POST) {
+
+            Log.d(TAG, "My Page로 복귀");
+
+            loadPostCall(pageBinding.likePost, 1);
+            loadPostCall(pageBinding.recentPost, 2);
+            loadPostCall(pageBinding.enrollPost, 3);
+        }
+
+        if (requestCode == RETURN_FAVORITE_COUNTRY) {
             pageBinding.getMyPageVm().countryCall();
             pageBinding.getMyPageVm().flagRvAdapter.notifyDataSetChanged();
         }

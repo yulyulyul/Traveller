@@ -72,6 +72,7 @@ public class MainTab extends AppCompatActivity {
         binding.getMainTabVm().TAP_POS.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+
                 if (integer == 0) {
 
                     if (allRouteList != null) {
@@ -103,13 +104,5 @@ public class MainTab extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment, String tag) {
         fm.beginTransaction().replace(binding.mainContainer.getId(), fragment, tag).commit();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d("Trav.MyTab", "onActivityResult: " + resultCode);
-        Log.d("Trav.MyTab", "onActivityResult: " + requestCode);
     }
 }

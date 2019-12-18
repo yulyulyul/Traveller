@@ -10,7 +10,12 @@ import android.view.View;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.model.ResponseResult;
@@ -53,11 +58,14 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
     //비밀번호 수정했을 때 가져오는 값
     public MutableLiveData<Integer> isRevise = new MutableLiveData<>();
 
+    public MutableLiveData<List<Integer>> cnts = new MutableLiveData<>();
+
     //0:프로필 이미지 수정 통신, 1:비밀번호 수정 통신
     int callType;
 
     public ProfileManagementViewModel() {
         userLD.setValue(App.Companion.getUser());
+        cnts.setValue(new ArrayList<Integer>());
     }
 
     public void updateCall(final int type) {
@@ -105,6 +113,29 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
         App.INSTANCE.startActivity(intent);
     }
 
+    public void userInfoCall(){
+
+        profileAPI.loadUserInfo(App.Companion.getUser().getU_userid()).enqueue(new Callback<ResponseResult<List<Integer>>>() {
+            @Override
+            public void onResponse(Call<ResponseResult<List<Integer>>> call, Response<ResponseResult<List<Integer>>> response) {
+                if(response.body() != null){
+
+                    ResponseResult<List<Integer>> result = response.body();
+
+                    if(result.getRes_type() == 1){
+                        cnts.setValue(result.getRes_obj());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseResult<List<Integer>>> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+
+    }
     @Override
     public void onCleared() {
         super.onCleared();

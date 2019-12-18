@@ -23,13 +23,18 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/i_airplane"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/title"/>
+
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/i_airplane"
             android:drawableTint="@color/white"
-            android:drawablePadding="15dp"
             android:gravity="center_vertical"
             android:text="@{title}"
             android:textColor="@color/white"

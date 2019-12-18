@@ -385,9 +385,10 @@
                             android:id="@+id/photo_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:minHeight="100dp"
                             android:orientation="horizontal"
                             android:layout_marginHorizontal="10dp"
-                            android:gravity="center">
+                            android:gravity="center_vertical">
 
                             <Button
                                 android:id="@+id/addPhoto"

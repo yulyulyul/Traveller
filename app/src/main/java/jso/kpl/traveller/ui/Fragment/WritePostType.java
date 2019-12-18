@@ -87,8 +87,6 @@ public class WritePostType extends Fragment {
         // Required empty public constructor
     }
 
-
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -215,10 +213,8 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    if (isInit) {
+                    if (isInit)
                         showGallery();
-                    }
-
                 }
             }
         });
@@ -227,9 +223,8 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    if (isInit) {
+                    if (isInit)
                         startActivityForResult(binding.getPostTypeVm().onCalendar(binding.getPostTypeVm().travelPeriod.getValue()), 33);
-                    }
                 }
             }
         });
@@ -239,9 +234,8 @@ public class WritePostType extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    if (isInit) {
+                    if (isInit)
                         showCategoryList();
-                    }
                 }
             }
         });
@@ -261,7 +255,7 @@ public class WritePostType extends Fragment {
 
                 binding.save.requestFocus();
 
-                if (binding.getPostTypeVm().inputPlace.getValue() != null && !binding.getPostTypeVm().inputPlace.getValue().equals("")) {
+                if (JavaUtil.checkBlankString(binding.getPostTypeVm().inputPlace.getValue())) {
 
                     onDetachFragmentClickListener.onSaveSmallPostClicked(binding.getPostTypeVm().saveSmallPostData());
                     onDetachFragmentClickListener.onDetachFragmentClicked();
@@ -305,7 +299,7 @@ public class WritePostType extends Fragment {
         RelativeLayout relativeLayout = new RelativeLayout(getActivity());
         relativeLayout.setLayoutParams(reParams);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(JavaUtil.dpToPx(100), ViewGroup.LayoutParams.MATCH_PARENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(JavaUtil.dpToPx(100), ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
 
 

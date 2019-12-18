@@ -127,4 +127,9 @@ public class JavaUtil {
 
         return SHA;
     }
+
+    public static Boolean checkBlankString(String str){
+
+        return (str != null && str.length() > 0);
+    }
 }

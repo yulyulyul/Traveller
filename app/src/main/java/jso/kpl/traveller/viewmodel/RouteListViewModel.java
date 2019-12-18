@@ -96,23 +96,22 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     CountryAPI countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
     Call<ResponseResult<List<ListItem>>> call;
-
     Callback callback = this;
+
+    public MutableLiveData<Integer> POST_ID = new MutableLiveData<>();
 
     public int lastPid = 0;
     public int categoryNo = 0;
 
     public MutableLiveData<Boolean> isRefresh = new MutableLiveData<>();
-
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener;
-
+    public MutableLiveData<Boolean> isOpen = new MutableLiveData<>();
     public RecyclerView.OnScrollListener onGridScrollListener;
-
     public RecyclerView.OnScrollListener onVerticalScrollListener;
-
     //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {
 
+        isOpen.setValue(true);
         isRefresh.setValue(false);
 
         postList.setValue(new ArrayList<ListItem>());
@@ -244,35 +243,44 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
                 case 4:
                     title = "선호 국가";
 
-                    Log.d(TAG, "searchByCondition: " + item.getO());
-                    countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), (int) item.getO()).enqueue(new Callback<ResponseResult<Country>>() {
-                        @Override
-                        public void onResponse(Call<ResponseResult<Country>> countryCall, Response<ResponseResult<Country>> response) {
+                    if (countryItem.getValue() != null) {
 
-                            if(response.body() != null){
+                        isOpen.setValue(true);
+                        postAPI.searchByCondition(countryItem.getValue().getCt_name(),
+                                100000000, 0, lastPid, categoryNo)
+                                .enqueue(callback);
 
-                                ResponseResult<Country> result = response.body();
+                    } else {
 
-                                if(result.getRes_type() == 1){
+                        countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), (int) item.getO()).enqueue(new Callback<ResponseResult<Country>>() {
+                            @Override
+                            public void onResponse(Call<ResponseResult<Country>> countryCall, Response<ResponseResult<Country>> response) {
 
-                                    result.getRes_obj().setCt_flag();
-                                    countryItem.setValue(result.getRes_obj());
+                                if (response.body() != null) {
 
-                                    Log.d(TAG, "onResponse: " + countryItem.getValue().getCt_name());
-                                    call = postAPI.searchByCondition(countryItem.getValue().getCt_name(), 100000000, 0, lastPid, categoryNo);
+                                    ResponseResult<Country> result = response.body();
 
-                                    call.enqueue(callback);
+                                    if (result.getRes_type() == 1) {
+
+                                        isOpen.setValue(false);
+
+                                        result.getRes_obj().setCt_flag();
+                                        countryItem.setValue(result.getRes_obj());
+
+                                        Log.d(TAG, "onResponse: " + countryItem.getValue().getCt_name());
+                                        postAPI.searchByCondition(countryItem.getValue().getCt_name(),
+                                                100000000, 0, lastPid, categoryNo)
+                                                .enqueue(callback);
+                                    }
                                 }
-
                             }
 
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseResult<Country>> call, Throwable t) {
-                            Log.e(TAG, "onFailure: ", t);
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<ResponseResult<Country>> call, Throwable t) {
+                                Log.e(TAG, "onFailure: ", t);
+                            }
+                        });
+                    }
 
                     break;
                 case 5:
@@ -295,24 +303,12 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
      */
     @Override
     public void GridItemClicked(int p_id) {
-
-        if (App.INSTANCE != null) {
-            Intent intent = new Intent(App.INSTANCE, DetailPost.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("p_id", p_id);
-            App.INSTANCE.startActivity(intent);
-        }
+        POST_ID.setValue(p_id);
     }
 
     @Override
     public void VerticalItemClicked(int p_id) {
-
-        if (App.INSTANCE != null) {
-            Intent intent = new Intent(App.INSTANCE, DetailPost.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("p_id", p_id);
-            App.INSTANCE.startActivity(intent);
-        }
+        POST_ID.setValue(p_id);
     }
     //-----------------------------------------------------------------------------------------------
 
@@ -403,6 +399,11 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
             });
         }
     }
+
+    public void onOpenListClicked() {
+        isOpen.setValue(!isOpen.getValue());
+    }
+
 
     //통신 결과-----------------------------------------------------------------------------------
 

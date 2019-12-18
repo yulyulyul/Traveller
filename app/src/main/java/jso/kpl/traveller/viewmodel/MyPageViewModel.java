@@ -2,11 +2,9 @@ package jso.kpl.traveller.viewmodel;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,7 +21,6 @@ import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
-import jso.kpl.traveller.ui.Fragment.MyPage;
 import jso.kpl.traveller.ui.PostType.EmptyPost;
 import jso.kpl.traveller.ui.PostType.SimplePost;
 import jso.kpl.traveller.ui.RouteSearch;
@@ -72,12 +69,20 @@ public class MyPageViewModel extends ViewModel {
     public View.OnClickListener onMoreCountryClickListener;
     public View.OnClickListener onMoreLikeClickListener;
 
+    public MutableLiveData<Integer> POST_ID = new MutableLiveData<>();
     //통신------------------------------------------------------------------------------------------
     CountryAPI countryAPI;
     Call<ResponseResult<List<Country>>> call;
-    //----------------------------------------------------------------------------------------------
+
+    //에러 처리---------------------------------------------------------------------------------------
+
+    public MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
+    public MutableLiveData<String> errorStr = new MutableLiveData<>();
+    public View.OnClickListener onErrClickListener;
 
     public MyPageViewModel() {
+
+        errorStr.setValue("일시적 오류입니다.");
 
         countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
@@ -113,6 +118,8 @@ public class MyPageViewModel extends ViewModel {
         call.enqueue(new Callback<ResponseResult<List<Country>>>() {
             @Override
             public void onResponse(Call<ResponseResult<List<Country>>> call, Response<ResponseResult<List<Country>>> response) {
+
+                isSuccess.setValue(true);
 
                 if (response.body() != null) {
                     ResponseResult<List<Country>> res = ((ResponseResult<List<Country>>) response.body());
@@ -165,6 +172,8 @@ public class MyPageViewModel extends ViewModel {
 
                 favCountryList.clear();
 
+                isSuccess.setValue(false);
+                errorStr.setValue("일시적 오류입니다.");
             }
         });
     }
@@ -189,6 +198,8 @@ public class MyPageViewModel extends ViewModel {
             @Override
             public void onResponse(Call call, Response response) {
 
+                isSuccess.setValue(true);
+
                 if (response.body() != null) {
 
                     ResponseResult<List<ListItem>> result = ((ResponseResult<List<ListItem>>) response.body());
@@ -199,12 +210,20 @@ public class MyPageViewModel extends ViewModel {
                         for (ListItem item : listItem) {
                             Log.d(TAG, "포스트: " + item.toString());
 
-                            SimplePost simplePost = new SimplePost(act, item);
+                            final SimplePost simplePost = new SimplePost(App.INSTANCE, item);
 
                             if (!item.getP_expenses().contains("₩"))
                                 item.setP_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(item.getP_expenses())));
 
                             layout.addView(simplePost);
+
+                            simplePost.binding.getItem().onPostClickListener = new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.d("Trav.Item", "Post: " + simplePost.binding.getItem().p_id);
+                                    POST_ID.setValue(simplePost.binding.getItem().p_id);
+                                }
+                            };
                         }
 
                         if (type == 1) {
@@ -239,18 +258,23 @@ public class MyPageViewModel extends ViewModel {
 
                     layout.addView(new EmptyPost(act, type));
                 }
+
+                isRefresh.setValue(false);
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-                Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
                 t.printStackTrace();
 
+                isRefresh.setValue(false);
                 isLikeMore.setValue(false);
                 isEnrollMore.setValue(false);
 
                 layout.addView(new EmptyPost(act, type));
+
+                isSuccess.setValue(false);
+                errorStr.setValue("일시적 오류입니다.");
             }
         });
     }

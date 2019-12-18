@@ -24,7 +24,10 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                app:OnClickListener="@{searchVm.onBackgroundClickListener}">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -59,12 +62,12 @@
                     </RelativeLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:text="루트 검색"
@@ -78,6 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:background="@android:color/transparent"
                         android:layout_marginBottom="10dp">
 
                         <TextView
@@ -114,6 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:background="@android:color/transparent"
                         android:layout_marginBottom="10dp">
 
                         <TextView

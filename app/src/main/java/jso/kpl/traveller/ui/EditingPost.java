@@ -36,6 +36,7 @@ import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
+import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.EditingPostViewModel;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -80,6 +81,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
         binding.getEditingPostVm().setRouteNodeAdapter(new RouteNodeAdapter(this, binding.routeNodeLayout));
         binding.getEditingPostVm().routeNodeAdapter.setOnNodeClickListener(this);
+        binding.getEditingPostVm().routeNodeAdapter.setOnNodeLongClickListener(this);
 
         //Editing Post 뒤로 가기 버튼 클릭 이벤트
         binding.getEditingPostVm().onBackClickListener = new View.OnClickListener() {
@@ -94,29 +96,48 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             @Override
             public void onClick(View v) {
 
-                if (binding.getEditingPostVm().inputPlace.getValue() != null &&
-                        !binding.getEditingPostVm().inputPlace.getValue().equals("") &&
+                /*
+                메인 포스트에서 작성 데이터
+                1. 국가 - 필수
+                2. 기간 - 필수
+                3. 비용(Small Post 비용 총합) - if node.cnt 0이면 null, cnt > 0이면 0원
+                4. 내용
+                5. 스몰 포스트
+                    1) 장소 - 필수
+                    2) 경비 - 안쓰면 0원
+                    3) 내용
+                    4) 포토
+                    5) 기간
+                    6) 태그
+                 */
+
+                if (JavaUtil.checkBlankString(binding.getEditingPostVm().inputPlace.getValue()) &&
+                        JavaUtil.checkBlankString(binding.getEditingPostVm().travelPeriod.getValue()[0]) &&
                         binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
 
-                    post = new Post(App.Companion.getUser().getU_nick_name(), binding.getEditingPostVm().inputPlace.getValue(), binding.getEditingPostVm().isOpen.getValue());
+                    post = new Post(App.Companion.getUser().getU_nick_name(),
+                            binding.getEditingPostVm().inputPlace.getValue(),
+                            binding.getEditingPostVm().travelPeriod.getValue()[0],
+                            binding.getEditingPostVm().travelPeriod.getValue()[1],
+                            binding.getEditingPostVm().isOpen.getValue());
 
-                    if (binding.getEditingPostVm().inputExpenses.getValue() != null){
+                    if (binding.getEditingPostVm().inputExpenses.getValue() != null) {
 
-                        if(binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0){
+                        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
                             int total_expense = 0;
 
-                            for(int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++){
+                            for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
 
                                 if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
-                                   total_expense += Integer.parseInt(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                                    total_expense += Integer.parseInt(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
                                 else
                                     total_expense += Integer.parseInt(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
                             }
 
                             post.setP_expenses(total_expense + "");
                         }
-                    } else{
-                       post.setP_expenses(0 + "");
+                    } else {
+                        post.setP_expenses(0 + "");
                     }
 
                     if (binding.getEditingPostVm().inputComment.getValue() != null)
@@ -129,8 +150,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
                     List<SmallPost> spList = binding.getEditingPostVm().routeNodeAdapter.returnList();
 
-                    for(int i = 0; i < spList.size(); i++){
-                        if(spList.get(i).getSp_expenses() != null && spList.get(i).getSp_expenses().contains("₩")){
+                    for (int i = 0; i < spList.size(); i++) {
+                        if (spList.get(i).getSp_expenses() != null && spList.get(i).getSp_expenses().contains("₩")) {
 
                             String removeS = spList.get(i).getSp_expenses().replace("₩", "").replace(",", "");
 
@@ -207,16 +228,33 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             }
         };
 
-        //Small Post 저장 버튼 활성화-----------------------------------------------------------------
+        // Post 저장 버튼 활성화-----------------------------------------------------------------
         binding.getEditingPostVm().inputPlace.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
 
-                if (s.length() > 0 && binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
+                Log.d(TAG, "onChanged: " + s);
+                Log.d(TAG, "onChanged: " + JavaUtil.checkBlankString(s));
+                Log.d(TAG, "onChanged: " + JavaUtil.checkBlankString(binding.getEditingPostVm().travelPeriod.getValue()[0]));
+
+                if (JavaUtil.checkBlankString(s) && JavaUtil.checkBlankString(binding.getEditingPostVm().travelPeriod.getValue()[0]) && binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
                     binding.postSave.setTextColor(getColor(R.color.clicked));
                 } else {
                     binding.postSave.setTextColor(getColor(R.color.non_clicked));
                 }
+            }
+        });
+
+        binding.getEditingPostVm().travelResult.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+
+                if (JavaUtil.checkBlankString(s) && JavaUtil.checkBlankString(binding.getEditingPostVm().inputPlace.getValue()) && binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
+                    binding.postSave.setTextColor(getColor(R.color.clicked));
+                } else {
+                    binding.postSave.setTextColor(getColor(R.color.non_clicked));
+                }
+
             }
         });
 
@@ -228,8 +266,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                     binding.getEditingPostVm().isSmallPost.setValue(false);
                 } else {
                     binding.getEditingPostVm().isSmallPost.setValue(true);
-                    if (binding.getEditingPostVm().inputPlace.getValue() != null
-                            && binding.getEditingPostVm().inputPlace.getValue().length() > 0) {
+                    if (JavaUtil.checkBlankString(binding.getEditingPostVm().inputPlace.getValue()) && JavaUtil.checkBlankString(binding.getEditingPostVm().travelPeriod.getValue()[0])) {
                         binding.postSave.setTextColor(getColor(R.color.clicked));
                     } else {
                         binding.postSave.setTextColor(getColor(R.color.non_clicked));
@@ -263,17 +300,17 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 String startDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_START_DATE);
                 String endDate = data.getStringExtra(AirCalendarDatePickerActivity.RESULT_SELECT_END_DATE);
 
-                if(binding.getEditingPostVm().travelPeriod.getValue() != null){
+                if (binding.getEditingPostVm().travelPeriod.getValue() != null) {
                     Log.d(TAG, "onActivityResult: Not Null");
 
-                    if(!startDate.equals("") && !startDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[0])){
+                    if (!startDate.equals("") && !startDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[0])) {
                         binding.getEditingPostVm().travelPeriod.getValue()[0] = startDate;
 
                         binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
 
                     }
 
-                    if(!endDate.equals("") && !endDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[1])){
+                    if (!endDate.equals("") && !endDate.equals(binding.getEditingPostVm().travelPeriod.getValue()[1])) {
                         binding.getEditingPostVm().travelPeriod.getValue()[1] = endDate;
 
                         binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
@@ -281,7 +318,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                     }
 
 
-                }else {
+                } else {
                     binding.getEditingPostVm().travelPeriod.setValue(new String[]{startDate, endDate});
                     binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
                 }
@@ -301,22 +338,30 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
         binding.getEditingPostVm().fragment.setValue(null);
 
 
-        long total_expense = 0;
 
-        if(binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0){
 
-            for(int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++){
+        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
+
+            long total_expense = 0;
+
+            for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
 
                 if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
                     total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
                 else
                     total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
             }
+
+            binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+        } else {
+            binding.getEditingPostVm().inputExpenses.setValue(null);
         }
 
-        binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+
     }
 
+    //스몰 포스트 임시 저장
+    // -> 메인 포스트 상태로 돌아오고 상단에 노드가 추가된다.
     @Override
     public void onSaveSmallPostClicked(SmallPost sp) {
         smallList.add(sp);
@@ -331,6 +376,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
         binding.getEditingPostVm().isClick.setValue(false);
     }
 
+    //상단 노드를 클릭하면 해당 노드를 획인 및 수정할 수 있음
     @Override
     public void onNodeClicked(@NotNull SmallPost sp, int pos) {
         Log.d(TAG, "onNodeClicked: " + sp.toString());
@@ -345,30 +391,41 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
         this.pos = pos;
     }
 
+    //상단 노드 삭제할 때
     @Override
     public void onNodeLongClicked() {
 
-        Toast.makeText(App.INSTANCE, "롱클", Toast.LENGTH_SHORT).show();
         if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() == 0) {
             binding.getEditingPostVm().isClick.setValue(true);
             binding.postSave.setTextColor(getColor(R.color.non_clicked));
         }
 
-        //노드를 삭제했을 때 메인 포스트의 경비 계산을 다신 한다.
-        long total_expense = 0;
 
-        if(binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0){
 
-            for(int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++){
 
-                if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
-                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
-                else
-                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
+
+            if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
+                //노드를 삭제했을 때 메인 포스트의 경비 계산을 다신 한다.
+                long total_expense = 0;
+
+                for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
+
+                    if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
+                        total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                    else
+                        total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
+                }
+
+                binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+            } else {
+                binding.getEditingPostVm().inputExpenses.setValue(null);
             }
-        }
 
-        binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+
+
+
+
+
 
 
     }
@@ -376,9 +433,9 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
     @Override
     public void onBackPressed() {
 
-        if(binding.getEditingPostVm().fragment.getValue() != null){
+        if (binding.getEditingPostVm().fragment.getValue() != null) {
             onDetachFragmentClicked();
-        } else{
+        } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
             alert.setMessage("저장하지 않고 나가시겠습니까?")

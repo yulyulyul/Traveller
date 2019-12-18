@@ -29,61 +29,11 @@
             android:visibility="@{fcVm.isSuccess?View.VISIBLE:View.GONE}"
             app:onAddScrollListener="@{fcVm.onCountryScrollListener}"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/simple_white"
-            android:visibility="@{fcVm.isSuccess?View.GONE:View.VISIBLE}">
-
-            <LinearLayout
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/i_sad_icon"
-                    android:backgroundTint="@color/non_clicked" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="@{fcVm.errorStr}"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="새로고침을 눌러서 화면을 갱신시킬 수 있습니다."
-                        android:textSize="15dp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <Button
-                android:layout_below="@+id/text"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/s_border_round_square"
-                OnClickListener="@{fcVm.onRefreshClickListener}"
-                android:text="새로고침"
-                android:textColor="@color/white"/>
-
-        </RelativeLayout>
+        <include
+            layout="@layout/error_result"
+            errTitle = "@{fcVm.errorStr}"
+            errListener = "@{fcVm.onErrClickListener}"
+            android:visibility="@{fcVm.isSuccess?View.GONE:View.VISIBLE}"/>
 
     </LinearLayout>
 

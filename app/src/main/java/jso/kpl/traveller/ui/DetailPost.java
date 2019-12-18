@@ -2,6 +2,7 @@ package jso.kpl.traveller.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,6 +74,7 @@ public class DetailPost extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        Log.d(TAG, "포스트 종료");
         setResult(RESULT_OK);
         binding.getRodVm().onCleared();
         finish();

@@ -29,9 +29,11 @@ public class Post implements Serializable {
 
     }
 
-    public Post(String p_author, String p_place, boolean p_is_open) {
+    public Post(String p_author, String p_place, String p_start_date, String p_end_date, boolean p_is_open) {
         this.p_author = p_author;
         this.p_place = p_place;
+        this.p_start_date = p_start_date;
+        this.p_end_date = p_end_date;
         this.p_is_open = p_is_open;
     }
 

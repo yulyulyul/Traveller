@@ -139,6 +139,8 @@ public class ProfileManagement extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        binding.getPmVm().userInfoCall();
     }
 
     // 디렉토리 생성

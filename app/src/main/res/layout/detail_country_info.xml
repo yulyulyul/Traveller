@@ -19,7 +19,8 @@
 
         <include
             android:id="@+id/top_action_bar"
-            layout="@layout/top_action_bar" />
+            layout="@layout/top_action_bar"
+            title="@{fvInfoVm.countryItem.ct_name}"/>
 
         <include
             android:id="@+id/country_info"

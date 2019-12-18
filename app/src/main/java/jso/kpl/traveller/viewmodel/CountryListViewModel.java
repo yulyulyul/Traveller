@@ -37,7 +37,7 @@ public class CountryListViewModel extends BaseObservable {
     //에러 및 없을 때
     public MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     public MutableLiveData<String> errorStr = new MutableLiveData<>();
-    public View.OnClickListener onRefreshClickListener;
+    public View.OnClickListener onErrClickListener;
 
     //통신------------------------------------------------------------------------------------------
     Call<ResponseResult<List<Country>>> call;

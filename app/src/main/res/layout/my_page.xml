@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="myPageVm"
             type="jso.kpl.traveller.viewmodel.MyPageViewModel" />
@@ -13,8 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:onRefreshListener="@{myPageVm.onRefreshListener}"
-        app:checkRefresh="@{myPageVm.isRefresh}">
+        android:visibility="@{myPageVm.isSuccess?View.VISIBLE:View.GONE}"
+        app:checkRefresh="@{myPageVm.isRefresh}"
+        app:onRefreshListener="@{myPageVm.onRefreshListener}">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,19 +50,19 @@
                                 android:id="@+id/mp_profile_iv"
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:layout_marginLeft="20dp"
-                                android:scaleType="fitXY"
-                                app:setCircleImg="@{myPageVm.mpProfileLD.u_profile_img}"
                                 android:layout_centerVertical="true"
-                                app:OnClickListener="@{myPageVm.onProfileClickListener}"/>
+                                android:layout_marginLeft="20dp"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                app:OnClickListener="@{myPageVm.onProfileClickListener}"
+                                app:setCircleImg="@{myPageVm.mpProfileLD.u_profile_img}" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_toRightOf="@+id/mp_profile_iv"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/mp_profile_iv"
                                 android:text="@{myPageVm.mpProfileLD.u_nick_name}"
                                 android:textColor="@color/white"
                                 android:textSize="20dp" />
@@ -161,9 +164,9 @@
                             android:scaleType="fitCenter"
                             android:text="더보기 >"
                             android:textSize="@dimen/middle_text_size"
-                            app:extendTouchRange="@{10}"
                             android:visibility="@{myPageVm.isLikeMore? View.VISIBLE:View.GONE}"
-                            app:OnClickListener="@{myPageVm.onMoreLikeClickListener}"/>
+                            app:OnClickListener="@{myPageVm.onMoreLikeClickListener}"
+                            app:extendTouchRange="@{10}" />
 
                     </RelativeLayout>
 
@@ -172,7 +175,7 @@
                         android:id="@+id/like_post"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
 
                     <!--최근 서브 타이틀-->
                     <RelativeLayout
@@ -194,7 +197,7 @@
                         android:id="@+id/recent_post"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
 
                     <!--등록 서브 타이틀-->
                     <RelativeLayout
@@ -218,16 +221,16 @@
                             android:layout_centerVertical="true"
                             android:text="더보기 >"
                             android:textSize="@dimen/middle_text_size"
-                            app:extendTouchRange="@{10}"
                             android:visibility="@{myPageVm.isEnrollMore? View.VISIBLE:View.GONE}"
-                            app:OnClickListener="@{myPageVm.onMoreEnrollClickListener}"/>
+                            app:OnClickListener="@{myPageVm.onMoreEnrollClickListener}"
+                            app:extendTouchRange="@{10}" />
                     </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/enroll_post"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
 
                 </LinearLayout>
 
@@ -248,5 +251,6 @@
         </RelativeLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </layout>

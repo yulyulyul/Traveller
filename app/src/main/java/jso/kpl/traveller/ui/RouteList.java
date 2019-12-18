@@ -1,12 +1,15 @@
 package jso.kpl.traveller.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,9 +17,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.RouteListBinding;
-import jso.kpl.traveller.databinding.TopActionBarBinding;
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
@@ -79,6 +82,7 @@ public class RouteList extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (binding.getMainListVm().gt_post.isVisible()) {
+
                     int lastVisibleItemPosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
 
@@ -112,7 +116,17 @@ public class RouteList extends AppCompatActivity {
             }
         };
 
-       // TopActionBarBinding barBinding = DataBindingUtil.findBinding(binding.topActionBar.textView);
+        binding.getMainListVm().POST_ID.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Log.d(TAG, "루트 리스트 포스트 아이디: " + integer);
+                Intent intent = new Intent(App.INSTANCE, DetailPost.class);
+                intent.putExtra("p_id", integer);
+                startActivityForResult(intent, 44);
+            }
+        });
+
+        // TopActionBarBinding barBinding = DataBindingUtil.findBinding(binding.topActionBar.textView);
         binding.topActionBar.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +137,28 @@ public class RouteList extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        setResult(RESULT_OK);
         binding.getMainListVm().onCleared();
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK)
+            return;
+
+        if (requestCode == 44) {
+            Log.d(TAG, "디테일 포스트 -> 루트 리스트: ");
+            binding.getMainListVm().gridAdapter.removeItems();
+            binding.getMainListVm().verticalAdapter.removeItems();
+
+            binding.getMainListVm().lastPid = 0;
+
+            binding.getMainListVm().postList.getValue().clear();
+
+            binding.getMainListVm().searchByCondition(item);
+        }
     }
 }

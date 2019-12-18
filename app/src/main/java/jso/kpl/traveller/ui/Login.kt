@@ -31,9 +31,6 @@ class Login : AppCompatActivity() {
 
         BindingLogin?.viewmodel?.isLogin?.observe(this, Observer {it ->
             if(it){
-                Log.d("Trav.Login", BindingLogin?.viewmodel?.email?.get())
-                Log.d("Trav.Login", BindingLogin?.viewmodel?.returnSHA256(BindingLogin?.viewmodel?.password?.get()!!))
-
                 BindingLogin?.viewmodel?.autoSaveLogin(this)
             }
         })

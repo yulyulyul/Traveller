@@ -1,5 +1,6 @@
 package jso.kpl.traveller.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,12 +37,12 @@ public class RouteSearch extends AppCompatActivity {
     RouteSearchBinding binding;
     RouteSearchViewModel routeSearchVm;
 
-    Context context;
+    Activity act;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        context = this;
+        act = this;
         routeSearchVm = new RouteSearchViewModel();
 
         //route search 바인딩 작업
@@ -149,7 +150,12 @@ public class RouteSearch extends AppCompatActivity {
             }
         });
 
-
+        binding.getSearchVm().onBackgroundClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JavaUtil.downKeyboard(act);
+            }
+        };
     }
 
     @Override

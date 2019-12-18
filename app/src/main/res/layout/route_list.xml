@@ -25,51 +25,75 @@
             layout="@layout/top_action_bar"
             title="@{mainListVm.title}"/>
 
-        <include
-            layout="@layout/country_info"
-            countryItem="@{mainListVm.countryItem}"
-            android:visibility="@{mainListVm.countryItem == null ? View.GONE:View.VISIBLE}"/>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"
-            app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
-            app:addOnTabSelected="@{mainListVm.onTabSelectedListener(container)}"
-            android:background="@color/simple_white"
-            app:tabIndicatorColor="@color/clicked"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="@{mainListVm.countryItem == null ? View.GONE:View.VISIBLE}">
 
-        <HorizontalScrollView
-            android:id="@+id/category_horizontal_layout"
+            <include
+                layout="@layout/country_info"
+                countryItem="@{mainListVm.countryItem}" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@{mainListVm.isOpen ? @drawable/i_down_arrow_icon : @drawable/i_up_arrow_icon}"
+                android:backgroundTint="@color/clicked"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:onClick="@{()->mainListVm.onOpenListClicked()}"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="@{mainListVm.isOpen ? View.VISIBLE : View.GONE}">
 
-            <LinearLayout
-                android:id="@+id/category_layout"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical"/>
+                app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
+                app:addOnTabSelected="@{mainListVm.onTabSelectedListener(container)}"
+                android:background="@color/simple_white"
+                app:tabIndicatorColor="@color/clicked"/>
 
-        </HorizontalScrollView>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="90"
-            app:onRefreshListener="@{mainListVm.onRefreshListener}"
-            app:checkRefresh="@{mainListVm.isRefresh}">
-
-            <FrameLayout
-                android:id="@+id/container"
+            <HorizontalScrollView
+                android:id="@+id/category_horizontal_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/simple_white"/>
+                android:layout_height="50dp"
+                android:scrollbars="none">
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <LinearLayout
+                    android:id="@+id/category_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"/>
+
+            </HorizontalScrollView>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="90"
+                app:onRefreshListener="@{mainListVm.onRefreshListener}"
+                app:checkRefresh="@{mainListVm.isRefresh}">
+
+                <FrameLayout
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/simple_white"/>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
