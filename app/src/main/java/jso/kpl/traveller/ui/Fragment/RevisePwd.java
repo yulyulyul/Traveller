@@ -38,7 +38,6 @@ public class RevisePwd extends Fragment {
         binding.setPmVm(pmVm);
         binding.setLifecycleOwner(this);
 
-
         binding.getPmVm().isRevise.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -53,7 +52,7 @@ public class RevisePwd extends Fragment {
 
                     ((ProfileManagement)getActivity()).removeFragment(RevisePwd.this);
                 } else {
-                    App.Companion.sendToast("현재 비밀번호를 틀리셨습니다.");
+                    binding.getPmVm().wrongCurrentPwd.setValue("현재 비밀번호가 틀리셨습니다.");
                 }
             }
         });

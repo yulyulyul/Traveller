@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:textSize="@dimen/subtitle_text_size"
+            android:textSize="@dimen/middle_text_size"
             android:textColor="@color/white"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp" />
@@ -38,7 +38,7 @@
             android:gravity="center_vertical"
             android:text="@{title}"
             android:textColor="@color/white"
-            android:textSize="@dimen/title_text_size"
+            android:textSize="@dimen/subtitle_text_size"
             android:textStyle="bold"
             android:layout_centerInParent="true"/>
 

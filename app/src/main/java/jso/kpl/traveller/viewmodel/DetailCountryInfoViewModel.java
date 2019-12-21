@@ -35,6 +35,15 @@ public class DetailCountryInfoViewModel extends BaseObservable {
 
     public FavoriteCountryInfoItemAdapter adapter = new FavoriteCountryInfoItemAdapter(list);
 
+    public View.OnClickListener onCountryWarningClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ContextCompat.startActivity(App.INSTANCE, intent, null);
+        }
+    };
+
     CountryAPI countryAPI;
     Call<ResponseResult<Integer>> call;
 
@@ -47,12 +56,6 @@ public class DetailCountryInfoViewModel extends BaseObservable {
     public void init() {
         // RecyclerView 세팅
         setRecyclerView();
-    }
-
-    public void countryWarningClicked() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ContextCompat.startActivity(App.INSTANCE, intent, null);
     }
 
     public Call<ResponseResult<Integer>> favoriteCountryCall (int type) {

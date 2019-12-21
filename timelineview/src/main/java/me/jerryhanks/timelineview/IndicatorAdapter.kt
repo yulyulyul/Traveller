@@ -145,7 +145,6 @@ class IndicatorAdapter<in T : TimeLine>(
         notifyItemChanged(position)
     }
 
-
     /**
      * Adds all the given item to the list
      *
@@ -169,7 +168,5 @@ class IndicatorAdapter<in T : TimeLine>(
         } else {
             notifyItemRangeChanged(index - 1, items.size)
         }
-
-
     }
 }

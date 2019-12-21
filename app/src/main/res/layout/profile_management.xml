@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="pmVm"
             type="jso.kpl.traveller.viewmodel.ProfileManagementViewModel" />
@@ -16,7 +18,7 @@
         <include
             android:id="@+id/top_action_bar"
             layout="@layout/top_action_bar"
-            app:title="@{pmVm.title}"/>
+            app:title="@{pmVm.title}" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -38,11 +40,11 @@
 
                         <ImageView
                             android:id="@+id/profile_iv"
+                            OnClickListener="@{pmVm.onImgClickListener}"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_centerInParent="true"
                             android:layout_margin="10dp"
-                            OnClickListener="@{pmVm.onImgClickListener}"
                             app:setCircleImg="@{pmVm.userLD.u_profile_img}" />
 
                     </RelativeLayout>
@@ -55,12 +57,12 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="개인 정보"
-                            android:textSize="@dimen/subtitle_text_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"
                             android:background="@color/clicked"
-                            android:padding="10dp"/>
+                            android:padding="10dp"
+                            android:text="개인 정보"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/subtitle_text_size"
+                            android:textStyle="bold" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -72,16 +74,70 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
                                 android:text="닉네임"
                                 android:textSize="@dimen/subtitle_text_size" />
 
                             <TextView
+                                android:id="@+id/reviseNick"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:text="@{pmVm.userLD.u_nick_name}"
-                                android:textSize="@dimen/middle_text_size" />
+                                android:layout_centerVertical="true"
+                                android:background="@color/white"
+                                android:onClick="@{(view) -> pmVm.onReviseClicked(view)}"
+                                android:text="@{pmVm.isNick ? @string/cancel : pmVm.userLD.u_nick_name}"
+                                android:textColor="@color/clicked"
+                                android:textSize="@dimen/subtitle_text_size" />
                         </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="vertical"
+                            android:visibility="@{pmVm.isNick ? View.VISIBLE : View.GONE}">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:hintTextColor="@color/clicked">
+
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/update_nick"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="수정 닉네임"
+                                    android:nextFocusDown="@id/update_btn"
+                                    android:text="@={pmVm.updateNick}"/>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{pmVm.wrongUpdateNick}"
+                                    android:textColor="@color/colorAccent"
+                                    android:visibility="@{pmVm.wrongUpdateNick == null ? View.GONE : View.VISIBLE }"/>
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <Button
+                                android:id="@+id/update_nick_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="center"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/s_round_border_blue"
+                                android:backgroundTint="@color/clicked"
+                                android:clickable="true"
+                                OnClickListener="@{pmVm.onUpdateNickListener}"
+                                android:text="수정"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/subtitle_text_size" />
+
+                        </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -92,6 +148,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
                                 android:text="이메일"
                                 android:textSize="@dimen/subtitle_text_size" />
 
@@ -99,8 +156,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
                                 android:text="@{pmVm.userLD.u_email}"
-                                android:textSize="@dimen/middle_text_size" />
+                                android:textSize="@dimen/subtitle_text_size" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -112,13 +170,107 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                OnClickListener="@{pmVm.onLoadRevisePwdClickListener}"
-                                android:text="비밀번호 수정"
-                                android:textSize="@dimen/subtitle_text_size"
-                                android:textColor="@color/clicked"/>
+                                android:text="비밀번호"
+                                android:textSize="@dimen/subtitle_text_size" />
+
+                            <TextView
+                                android:id="@+id/revisePwd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:focusableInTouchMode="true"
+                                android:background="@color/white"
+                                android:onClick="@{(view) -> pmVm.onReviseClicked(view)}"
+                                android:text="@{pmVm.isPwd ? @string/cancel : @string/revise}"
+                                android:textColor="@color/clicked"
+                                android:textSize="@dimen/subtitle_text_size" />
 
                         </RelativeLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="vertical"
+                            android:visibility="@{pmVm.isPwd ? View.VISIBLE : View.GONE}">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:hintTextColor="@color/clicked">
+
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="현재 비밀번호"
+                                    android:inputType="textPassword"
+                                    android:nextFocusDown="@id/update_pwd"
+                                    android:text="@={pmVm.currentPwd}"
+                                    setFocusComplete="@{pmVm.currentPwdFocus}" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{pmVm.wrongCurrentPwd}"
+                                    android:textColor="@color/colorAccent"
+                                    android:visibility="@{pmVm.wrongCurrentPwd == null ? View.GONE : View.VISIBLE }"
+                                    android:layout_marginBottom="5dp"/>
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:hintTextColor="@color/clicked">
+
+                                <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/update_pwd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="수정 비밀번호"
+                                    android:inputType="textPassword"
+                                    android:nextFocusDown="@id/update_btn"
+                                    android:text="@={pmVm.updatePwd}"
+                                    setFocusComplete="@{pmVm.updatePwdFocus}"/>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{pmVm.wrongUpdatePwd}"
+                                    android:textColor="@color/colorAccent"
+                                    android:visibility="@{pmVm.wrongUpdatePwd== null ? View.GONE : View.VISIBLE }"
+                                    android:layout_marginBottom="5dp"/>
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <Button
+                                android:id="@+id/update_pwd_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="center"
+                                android:layout_margin="15dp"
+                                android:background="@drawable/s_round_border_blue"
+                                android:backgroundTint="@color/clicked"
+                                android:clickable="true"
+                                android:onClick="@{()->pmVm.onUpdatePwdClicked()}"
+                                android:text="수정"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/subtitle_text_size" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:onClick="@{()->pmVm.onLogoutClicked()}"
+                            android:text="로그아웃"
+                            android:textSize="@dimen/subtitle_text_size" />
 
                     </LinearLayout>
 
@@ -131,12 +283,12 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="활동 정보"
-                            android:textSize="@dimen/subtitle_text_size"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"
                             android:background="@color/clicked"
-                            android:padding="10dp"/>
+                            android:padding="10dp"
+                            android:text="활동 정보"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/subtitle_text_size"
+                            android:textStyle="bold" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -204,25 +356,21 @@
 
                     </LinearLayout>
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="로그아웃"
-                        android:textSize="@dimen/subtitle_text_size"
-                        android:textColor="@color/white"
-                        android:background="@color/clicked"
-                        android:padding="10dp"
-                        android:layout_marginVertical="10dp"
-                        android:onClick="@{()->pmVm.onLogoutClicked()}" />
+                        android:background="@color/colorAccent">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="탈퇴"
-                        android:textSize="@dimen/subtitle_text_size"
-                        android:textColor="@color/white"
-                        android:background="@color/clicked"
-                        android:padding="10dp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="탈퇴"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/subtitle_text_size" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

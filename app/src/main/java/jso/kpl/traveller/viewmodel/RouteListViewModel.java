@@ -2,6 +2,7 @@ package jso.kpl.traveller.viewmodel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.MutableLiveData;
@@ -33,7 +35,6 @@ import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
-import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.Fragment.GridTypePost;
 import jso.kpl.traveller.ui.Fragment.VerticalTypePost;
 import jso.kpl.traveller.ui.adapters.GridTypePostAdapter;
@@ -108,6 +109,16 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public MutableLiveData<Boolean> isOpen = new MutableLiveData<>();
     public RecyclerView.OnScrollListener onGridScrollListener;
     public RecyclerView.OnScrollListener onVerticalScrollListener;
+
+    public View.OnClickListener onCountryWarningClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ContextCompat.startActivity(App.INSTANCE, intent, null);
+        }
+    };
+
     //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {
 
@@ -404,6 +415,11 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
         isOpen.setValue(!isOpen.getValue());
     }
 
+    public void countryWarningClicked() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ContextCompat.startActivity(App.INSTANCE, intent, null);
+    }
 
     //통신 결과-----------------------------------------------------------------------------------
 

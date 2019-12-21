@@ -45,12 +45,6 @@ public class DetailCountryInfo extends AppCompatActivity {
             }
         });
 
-        binding.countryInfo.countryWarning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.getFvInfoVm().countryWarningClicked();
-            }
-        });
     }
 
     @Override

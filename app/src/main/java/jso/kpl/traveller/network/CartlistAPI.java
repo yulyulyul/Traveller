@@ -2,7 +2,7 @@ package jso.kpl.traveller.network;
 
 import java.util.List;
 
-import jso.kpl.traveller.model.Cartlist;
+import jso.kpl.traveller.model.CartListItem;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.Timeline;
 import retrofit2.Call;
@@ -14,7 +14,7 @@ public interface CartlistAPI {
 
     @FormUrlEncoded
     @POST("/load_cartlist")
-    Call<ResponseResult<List<Cartlist>>> cartlist(@Field("u_userid") int u_userid);
+    Call<ResponseResult<List<CartListItem>>> cartlist(@Field("u_userid") int u_userid);
 
     @FormUrlEncoded
     @POST("/load_cartlist_timeline")

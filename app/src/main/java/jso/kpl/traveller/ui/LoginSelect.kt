@@ -39,6 +39,8 @@ class LoginSelect : AppCompatActivity() {
 
         ls_Binding?.viewmodel?.autoLogin(this)
         initObservables()
+
+
     }
 
     private fun initObservables() {

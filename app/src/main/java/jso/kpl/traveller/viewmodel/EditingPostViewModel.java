@@ -25,7 +25,7 @@ import java.util.List;
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.TimeLineItemBinding;
-import jso.kpl.traveller.model.Cartlist;
+import jso.kpl.traveller.model.CartListItem;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
 import jso.kpl.traveller.model.Timeline;
@@ -47,9 +47,9 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
     String TAG = "Trav.EditingPostVm";
 
-    //Cartlist---------------------------------------------------------------------------------------
+    //CartListItem---------------------------------------------------------------------------------------
     public MutableLiveData<CartlistItemAdapter> cartlistItemAdapter = new MutableLiveData<>();
-    public MutableLiveData<List<Cartlist>> cartlistItem = new MutableLiveData<>();
+    public MutableLiveData<List<CartListItem>> cartlistItem = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> isCartlist = new MutableLiveData<>();
     public MutableLiveData<Boolean> noCartlist = new MutableLiveData<>();
@@ -166,7 +166,8 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
             public View onBindView(Timeline model, FrameLayout container, final int position) {
                 TimeLineItemBinding timeLineItemBinding = DataBindingUtil.inflate(LayoutInflater.from(App.INSTANCE), R.layout.time_line_item, container, false);
-                return timeLineItemBinding.getRoot();
+                View view = timeLineItemBinding.getRoot();
+                return view;
             }
         }));
     }
@@ -317,7 +318,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public void onResponse(Call call, Response response) {
         Log.d(TAG + "통신 성공", "성공적으로 전송");
 
-        ResponseResult<List<Cartlist>> cartlistRes = ((ResponseResult<List<Cartlist>>) response.body());
+        ResponseResult<List<CartListItem>> cartlistRes = ((ResponseResult<List<CartListItem>>) response.body());
 
         if (cartlistRes.getRes_type() == -1) {
 
@@ -326,10 +327,10 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
             Log.d(TAG, "카트리스트 없음");
         } else {
             noCartlist.setValue(false);
-            List<Cartlist> cartlist = cartlistRes.getRes_obj();
-            Log.d(TAG, cartlist.toString());
-            cartlistItem.setValue(new ArrayList<Cartlist>());
-            cartlistItem.getValue().addAll(cartlist);
+            List<CartListItem> cartListItem = cartlistRes.getRes_obj();
+            Log.d(TAG, cartListItem.toString());
+            cartlistItem.setValue(new ArrayList<CartListItem>());
+            cartlistItem.getValue().addAll(cartListItem);
             Log.d(TAG, cartlistItem.getValue().toString());
 
             cartlistItemAdapter.setValue(new CartlistItemAdapter(cartlistItem));

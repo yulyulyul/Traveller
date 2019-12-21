@@ -7,12 +7,16 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import java.io.File;
 import java.security.MessageDigest;
@@ -21,6 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import jso.kpl.traveller.App;
+import jso.kpl.traveller.interfaces.DialogYNInterface;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.ui.CustomDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class JavaUtil {
 
@@ -95,7 +105,7 @@ public class JavaUtil {
         });
     }
 
-    public static void downKeyboard( Activity activity) {
+    public static void downKeyboard(Activity activity) {
 
         InputMethodManager mInputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         mInputMethodManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
@@ -128,8 +138,28 @@ public class JavaUtil {
         return SHA;
     }
 
-    public static Boolean checkBlankString(String str){
+    public static Boolean checkBlankString(String str) {
 
         return (str != null && str.length() > 0);
+    }
+
+    public static String travelPeriod(String startDate, String endDate){
+
+        String[] starts = startDate.split("-");
+        String[] ends = endDate.split("-");
+
+        String result = startDate + " ~ ";
+
+        for(int i = 0; i <starts.length; i++){
+            if(!starts[i].equals(ends[i])){
+
+                if(i == 2)
+                    result += ends[i];
+                else
+                    result += ends[i]+ "-";
+            }
+        }
+
+        return result;
     }
 }

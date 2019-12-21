@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -105,6 +106,9 @@ public class RouteList extends AppCompatActivity {
                 if (binding.getMainListVm().vt_post != null && binding.getMainListVm().vt_post.isVisible()) {
                     int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
+
+                    Log.d(TAG, "2. 최상단 보이는 노드의 인덱스: " +
+                            ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
 
                     if (itemTotalCount > 16) {
                         if (lastVisibleItemPosition == itemTotalCount) {

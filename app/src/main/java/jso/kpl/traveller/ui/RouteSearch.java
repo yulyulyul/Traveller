@@ -50,10 +50,7 @@ public class RouteSearch extends AppCompatActivity {
         binding.setSearchVm(routeSearchVm);
         binding.setLifecycleOwner(this);
 
-
         JavaUtil.onTouchDownKey(binding.searchToolbar, binding.searchPlace, binding.searchExpenses);
-
-
 
         //max min 노드가 움직이는 값을 가져오는 이벤트 함수
         binding.crystalRangeSeekBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {

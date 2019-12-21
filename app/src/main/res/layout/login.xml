@@ -74,8 +74,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:backgroundTint="#00FFFF"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/s_round_border_blue">
 
                 <TextView
                     android:id="@+id/btn_login"
@@ -88,7 +88,7 @@
                     android:onClick="@{()->viewmodel.login()}"
                     android:text="로그인"
                     android:textSize="@dimen/subtitle_text_size"
-                    android:textColor="@color/colorWhite"/>
+                    android:textColor="@color/clicked"/>
 
             </LinearLayout>
 

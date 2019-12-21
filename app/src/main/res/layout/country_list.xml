@@ -27,7 +27,7 @@
             android:background="@color/simple_white"
             app:setLinearRvAdapter="@{fcVm.fciAdapter}"
             android:visibility="@{fcVm.isSuccess?View.VISIBLE:View.GONE}"
-            app:onAddScrollListener="@{fcVm.onCountryScrollListener}"/>
+            app:onAddScrollListener="@{fcVm.onCountryScrollListener}" />
 
         <include
             layout="@layout/error_result"

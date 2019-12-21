@@ -5,6 +5,11 @@
 
     <data>
         <import type="android.view.View" />
+
+        <variable
+            name="onCountryWarningClickListener"
+            type="android.view.View.OnClickListener" />
+
         <variable
             name="countryItem"
             type="jso.kpl.traveller.model.Country" />
@@ -66,7 +71,8 @@
                         android:text="@string/country_warning"
                         android:textColor="@color/white"
                         android:textSize="15dp"
-                        android:padding="10dp"/>
+                        android:padding="10dp"
+                        app:OnClickListener="@{onCountryWarningClickListener}"/>
 
                 </LinearLayout>
 

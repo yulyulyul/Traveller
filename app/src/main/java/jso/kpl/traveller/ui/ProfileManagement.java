@@ -6,12 +6,14 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,17 +57,12 @@ public class ProfileManagement extends AppCompatActivity {
         binding.setPmVm(pmVm);
         binding.setLifecycleOwner(this);
 
-        binding.getPmVm().onReviseClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-
-            }
-        };
-
         binding.getPmVm().onImgClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                JavaUtil.downKeyboard(ProfileManagement.this);
+
                 PermissionCheck permissionCheck = new PermissionCheck(ProfileManagement.this, new Activity());
 
                 permissionCheck.setPermissionListener_camera(new PermissionListener() {
@@ -121,14 +118,10 @@ public class ProfileManagement extends AppCompatActivity {
             }
         };
 
-        binding.getPmVm().onLoadRevisePwdClickListener = new View.OnClickListener() {
+        binding.getPmVm().onUpdateNickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(revisePwd == null)
-                    revisePwd = new RevisePwd();
-
-                getSupportFragmentManager().beginTransaction().add(binding.container.getId(), revisePwd, "revise_pwd").commit();
+                binding.getPmVm().updateCall(2);
             }
         };
 
@@ -141,6 +134,31 @@ public class ProfileManagement extends AppCompatActivity {
         });
 
         binding.getPmVm().userInfoCall();
+
+        binding.getPmVm().isRevise.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(integer == 1){
+
+                    SharedPreferences sp = App.INSTANCE.getSharedPreferences("auto_login", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+
+                    editor.putString("u_pwd", JavaUtil.returnSHA256(binding.getPmVm().updatePwd.getValue()));
+
+                    editor.commit();
+
+                    App.Companion.sendToast("성공적으로 비밀번호를 수정하셨습니다.");
+
+                    getCurrentFocus().clearFocus();
+
+                    JavaUtil.downKeyboard(ProfileManagement.this);
+
+                } else {
+                    binding.getPmVm().wrongCurrentPwd.setValue("현재 비밀번호가 틀리셨습니다.");
+                }
+            }
+        });
+
     }
 
     // 디렉토리 생성
@@ -201,7 +219,7 @@ public class ProfileManagement extends AppCompatActivity {
                 break;
         }
     }
-
+    
     @Override
     public void onBackPressed() {
         if(revisePwd != null){

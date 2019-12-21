@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -14,20 +15,6 @@
         android:background="@color/white">
 
         <LinearLayout
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="회원 정보 수정"
-                android:textSize="@dimen/title_text_size" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_below="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +23,9 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:hintTextColor="@color/clicked"
+                android:backgroundTint="@color/clicked">
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:layout_width="match_parent"
@@ -50,7 +39,8 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:hintTextColor="@color/clicked">
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/update_pwd"
@@ -60,13 +50,6 @@
                     android:text="@={pmVm.updatePwd}"
                     android:inputType="textPassword"
                     android:nextFocusDown="@id/update_btn"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:text="영소문 숫자 조합 8자 이상 특수문자는 !@#$%^*만 사용 가능"
-                    android:textSize="10dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

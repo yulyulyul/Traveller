@@ -9,6 +9,13 @@
 
     </style>
 
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@color/clicked</item>
+        <item name="colorAccent">@color/clicked</item>
+        <item name="colorControlNormal">@color/clicked</item>
+        <item name="colorControlActivated">@color/clicked</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

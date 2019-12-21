@@ -34,7 +34,8 @@
 
             <include
                 layout="@layout/country_info"
-                countryItem="@{mainListVm.countryItem}" />
+                countryItem="@{mainListVm.countryItem}"
+                app:onCountryWarningClickListener="@{mainListVm.onCountryWarningClickListener}"/>
 
             <ImageView
                 android:layout_width="30dp"

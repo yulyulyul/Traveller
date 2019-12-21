@@ -25,7 +25,8 @@
         <include
             android:id="@+id/country_info"
             layout="@layout/country_info"
-            app:countryItem="@{fvInfoVm.countryItem}"/>
+            app:countryItem="@{fvInfoVm.countryItem}"
+            app:onCountryWarningClickListener="@{fvInfoVm.onCountryWarningClickListener}"/>
 
         <LinearLayout
             android:layout_width="match_parent"

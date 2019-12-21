@@ -56,6 +56,10 @@ public class MyPageViewModel extends ViewModel {
         this.onEditingPostClickListener = onEditingPostClickListener;
     }
 
+    public MutableLiveData<Boolean> isLike = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isEnroll = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isRecent = new MutableLiveData<>();
+
     public MutableLiveData<Boolean> isLikeMore = new MutableLiveData<>();
     public MutableLiveData<Boolean> isEnrollMore = new MutableLiveData<>();
 
@@ -85,6 +89,10 @@ public class MyPageViewModel extends ViewModel {
         errorStr.setValue("일시적 오류입니다.");
 
         countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
+
+        isEnroll.setValue(true);
+        isLike.setValue(true);
+        isRecent.setValue(true);
 
         isLikeMore.setValue(false);
         isEnrollMore.setValue(false);
@@ -227,6 +235,9 @@ public class MyPageViewModel extends ViewModel {
                         }
 
                         if (type == 1) {
+
+                            isLike.setValue(true);
+
                             if (listItem.size() > 1) {
                                 isLikeMore.setValue(true);
                                 Log.d(TAG, "좋아요 포스트 더보기 2: " + isLikeMore.getValue());
@@ -235,7 +246,12 @@ public class MyPageViewModel extends ViewModel {
                                 Log.d(TAG, "좋아요 포스트 더보기 1 이하: " + isLikeMore.getValue());
                             }
 
+                        } else if(type == 2){
+                            isRecent.setValue(true);
                         } else if (type == 3) {
+
+                            isEnroll.setValue(true);
+
                             if (listItem.size() > 1) {
                                 isEnrollMore.setValue(true);
                                 Log.d(TAG, "등록 포스트 더보기 2: " + isEnrollMore.getValue());
@@ -247,16 +263,23 @@ public class MyPageViewModel extends ViewModel {
 
                     } else if (result.getRes_type() == 0) {
 
-                        isLikeMore.setValue(false);
-                        isEnrollMore.setValue(false);
-
-                        layout.addView(new EmptyPost(act, type));
+                        if (type == 1) {
+                            isLike.setValue(false);
+                        } else if(type == 2){
+                            isRecent.setValue(false);
+                        } else if (type == 3) {
+                            isEnroll.setValue(false);
+                        }
                     }
                 } else {
-                    isLikeMore.setValue(false);
-                    isEnrollMore.setValue(false);
 
-                    layout.addView(new EmptyPost(act, type));
+                    if (type == 1) {
+                        isLike.setValue(false);
+                    } else if(type == 2){
+                        isRecent.setValue(false);
+                    } else if (type == 3) {
+                        isEnroll.setValue(false);
+                    }
                 }
 
                 isRefresh.setValue(false);
@@ -268,10 +291,14 @@ public class MyPageViewModel extends ViewModel {
                 t.printStackTrace();
 
                 isRefresh.setValue(false);
-                isLikeMore.setValue(false);
-                isEnrollMore.setValue(false);
 
-                layout.addView(new EmptyPost(act, type));
+                if (type == 1) {
+                    isLike.setValue(false);
+                } else if(type == 2){
+                    isRecent.setValue(false);
+                } else if (type == 3) {
+                    isEnroll.setValue(false);
+                }
 
                 isSuccess.setValue(false);
                 errorStr.setValue("일시적 오류입니다.");

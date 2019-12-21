@@ -1,22 +1,17 @@
 package jso.kpl.traveller.model;
 
-public class Cartlist {
-    int p_id;
-    String p_place;
-    String p_expenses;
-    String p_period;
-    String sp_imgs;
-    String p_category;
+import java.util.List;
 
-    public Cartlist(int p_id, String p_place, String p_expenses, String p_period, String sp_imgs, String p_category) {
-        this.p_id = p_id;
-        this.p_place = p_place;
-        this.p_expenses = p_expenses;
-        this.p_period = p_period;
-        this.sp_imgs = sp_imgs;
-        this.p_category = p_category;
-    }
+public class CartListItem {
+    public int p_id;
+    public String p_place;
+    public String p_expenses;
+    public String p_period;
+    public String sp_imgs;
+    public String p_category;
 
+   // List<String> sp_imgss;
+    
     public int getP_id() {
         return p_id;
     }
@@ -67,7 +62,7 @@ public class Cartlist {
 
     @Override
     public String toString() {
-        return "Cartlist{" +
+        return "CartListItem{" +
                 "p_id=" + p_id +
                 ", p_place='" + p_place + '\'' +
                 ", p_expenses='" + p_expenses + '\'' +

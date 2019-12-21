@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -38,9 +37,8 @@ import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
-import javax.security.auth.callback.Callback
 
-class LoginSelectViewModel(application: Application) : AndroidViewModel(application), retrofit2.Callback<ResponseResult<User>>{
+class LoginSelectViewModel(application: Application) : AndroidViewModel(application){
 
     // 카카오로 시작하기 버튼을 눌렀을때 view(Login.kt)에 변화를 알려주는 객체
     var iskakaoLogin: MutableLiveData<Boolean>? = null
@@ -66,8 +64,6 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
     var callback : retrofit2.Callback<ResponseResult<User>> ?= null
 
     init {
-
-        callback = this
 
         progressDialog = SingleLiveEvent<Boolean>()
 
@@ -238,43 +234,50 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
         val email = sp.getString("u_email", "")
         val pwd = sp.getString("u_pwd", "")
 
+
         if(!email.equals("") && !pwd.equals("")){
             WebService.client.create(UserAPI::class.java)
                 .goLogin(LoginUser(email, pwd))
-                .enqueue(callback)
+                .enqueue(object : retrofit2.Callback<ResponseResult<User>> {
+                    // 로그인 요청시 Retrofit 결과 리턴받는 곳.
+                    override fun onResponse(call: Call<ResponseResult<User>>?,
+                                            response: Response<ResponseResult<User>>?
+                    ) {
+                        progressDialog?.value = false
+
+                        var res_type:Int? = response?.body()?.res_type
+
+                        if(res_type == 1){
+                            receiveUser = response?.body()?.res_obj
+                            Log.d(LoginViewModel.TAG + "응답 객체 : ", receiveUser?.toString())
+
+                            if (receiveUser != null) {
+
+                                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
+
+                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                                ls_goLogin.putExtra("user", receiveUser);
+
+                                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
+
+                                act.overridePendingTransition(0, 0);
+                            }
+                        }
+                    }
+
+                    //로그인 요청시 Retrofit 통신 실패시 호출..
+                    override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
+                        progressDialog?.value = false
+                    }
+                })
+
+
         }
     }
 
-    // 로그인 요청시 Retrofit 결과 리턴받는 곳.
-    override fun onResponse(call: Call<ResponseResult<User>>?,
-                            response: Response<ResponseResult<User>>?
-    ) {
-        progressDialog?.value = false
 
-        var res_type:Int? = response?.body()?.res_type
-
-        if(res_type == 1){
-            receiveUser = response?.body()?.res_obj
-            Log.d(LoginViewModel.TAG + "응답 객체 : ", receiveUser?.toString())
-
-            if (receiveUser != null) {
-
-                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
-
-                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                ls_goLogin.putExtra("user", receiveUser);
-
-                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
-            }
-        }
-    }
-
-    //로그인 요청시 Retrofit 통신 실패시 호출..
-    override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
-        progressDialog?.value = false
-    }
 
     companion object {
         val TAG: String = "Trav.LoginSelectVm"

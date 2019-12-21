@@ -412,4 +412,10 @@ public class BindingAdapters {
         swipeRefreshLayout.setRefreshing(isRefresh);
     }
 
+    //포커스 완료 바인딩 어댑터
+    @BindingAdapter("setFocusComplete")
+    public static void bindFocusComplete(View v, View.OnFocusChangeListener listener) {
+        v.setOnFocusChangeListener(listener);
+    }
+
 }

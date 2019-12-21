@@ -10,14 +10,12 @@ import android.view.View;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import jso.kpl.traveller.App;
+import jso.kpl.traveller.R;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.ProfileAPI;
@@ -51,21 +49,64 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
     public MutableLiveData<String> currentPwd = new MutableLiveData<>();
     public MutableLiveData<String> updatePwd = new MutableLiveData<>();
 
+    public MutableLiveData<String> updateNick = new MutableLiveData<>();
+
     //비밀번호 수정 버튼, 프로필 이미지 수정 버튼
-    public View.OnClickListener onReviseClickListener;
+    public View.OnClickListener onUpdateNickListener;
     public View.OnClickListener onImgClickListener;
 
     //비밀번호 수정했을 때 가져오는 값
     public MutableLiveData<Integer> isRevise = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isPwd = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isNick = new MutableLiveData<>();
 
     public MutableLiveData<List<Integer>> cnts = new MutableLiveData<>();
 
+    public View.OnFocusChangeListener currentPwdFocus, updatePwdFocus;
+
+    public MutableLiveData<String> wrongCurrentPwd = new MutableLiveData<>();
+    public MutableLiveData<String> wrongUpdatePwd = new MutableLiveData<>();
+    public MutableLiveData<String> wrongUpdateNick = new MutableLiveData<>();
+
     //0:프로필 이미지 수정 통신, 1:비밀번호 수정 통신
-    int callType;
+    public int callType;
 
     public ProfileManagementViewModel() {
         userLD.setValue(App.Companion.getUser());
         cnts.setValue(new ArrayList<Integer>());
+
+        isNick.setValue(false);
+        isPwd.setValue(false);
+
+        currentPwdFocus = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (RegexMethod.isPasswordValid((currentPwd.getValue()))) {
+                        Log.d(TAG, "현재 비밀번호 패스");
+                    } else {
+                        wrongCurrentPwd.setValue("* 영소문 숫자 조합 8자 이상 특수문자는 !@#$%^*만 사용 가능");
+                    }
+                } else {
+                    wrongCurrentPwd.setValue(null);
+                }
+            }
+        };
+
+        updatePwdFocus = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (RegexMethod.isPasswordValid((updatePwd.getValue()))) {
+                        Log.d(TAG, "수정 비밀번호 패스");
+                    } else {
+                        wrongUpdatePwd.setValue("* 영소문 숫자 조합 8자 이상 특수문자는 !@#$%^*만 사용 가능");
+                    }
+                } else {
+                    wrongUpdatePwd.setValue(null);
+                }
+            }
+        };
     }
 
     public void updateCall(final int type) {
@@ -73,26 +114,64 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
         callType = type;
 
         if (type == 0) {
+
+            isNick.setValue(false);
+            updateNick.setValue(null);
+
+            isPwd.setValue(false);
+            currentPwd.setValue(null);
+            updateNick.setValue(null);
+
             File imgFile = new File(Uri.parse(userLD.getValue().getU_profile_img()).getPath());
             //******multipart/form-data는 파일 형식의 파싱법
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imgFile);
             imgBody = MultipartBody.Part.createFormData("u_profile_img", imgFile.getName(), requestFile);
 
             profileAPI.updateProfileImg(userLD.getValue().getU_userid(), imgBody).enqueue(this);
-        } else{
-            if(!RegexMethod.isPasswordValid(currentPwd.getValue())){
-                App.Companion.sendToast("현재 비밀번호 형식이 틀립니다.");
-            } else if(!RegexMethod.isPasswordValid(updatePwd.getValue())){
-                App.Companion.sendToast("수정 패스워드 형식이 틀립니다.");
-            } else{
+        } else if(type == 1) {
+            if (RegexMethod.isPasswordValid(currentPwd.getValue()) && RegexMethod.isPasswordValid(updatePwd.getValue())) {
                 profileAPI.updatePwd(App.Companion.getUser().getU_userid(),
                         JavaUtil.returnSHA256(currentPwd.getValue()),
                         JavaUtil.returnSHA256(updatePwd.getValue())).enqueue(this);
             }
+        } else {
+            if(RegexMethod.isNickValid(updateNick.getValue())){
+                profileAPI.updateNick(App.Companion.getUser().getU_userid(), updateNick.getValue()).enqueue(this);
+            } else {
+                wrongUpdateNick.setValue("* 자음 + 모음 한글, 영어, 숫자 조합");
+            }
         }
     }
 
-    public View.OnClickListener onLoadRevisePwdClickListener;
+    public void onReviseClicked(View view) {
+
+        Log.d(TAG, "onReviseClicked: 스바련아 실행 웨 안되냐 ");
+        
+        switch (view.getId()) {
+
+            case R.id.reviseNick:
+
+                if (isPwd.getValue())
+                    isPwd.setValue(!isPwd.getValue());
+
+                isNick.setValue(!isNick.getValue());
+                Log.d(TAG, "onReviseClicked: 닉네임");
+
+                break;
+
+            case R.id.revisePwd:
+
+                if (isNick.getValue())
+                    isNick.setValue(!isNick.getValue());
+
+                isPwd.setValue(!isPwd.getValue());
+                Log.d(TAG, "onReviseClicked: 비밀번호");
+
+                break;
+
+        }
+
+    }
 
     public void onUpdatePwdClicked() {
         updateCall(1);
@@ -113,19 +192,17 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
         App.INSTANCE.startActivity(intent);
     }
 
-    public void userInfoCall(){
+    public void userInfoCall() {
 
         profileAPI.loadUserInfo(App.Companion.getUser().getU_userid()).enqueue(new Callback<ResponseResult<List<Integer>>>() {
             @Override
             public void onResponse(Call<ResponseResult<List<Integer>>> call, Response<ResponseResult<List<Integer>>> response) {
-                if(response.body() != null){
-
+                if (response.body() != null) {
                     ResponseResult<List<Integer>> result = response.body();
 
-                    if(result.getRes_type() == 1){
+                    if (result.getRes_type() == 1) {
                         cnts.setValue(result.getRes_obj());
                     }
-
                 }
             }
 
@@ -136,6 +213,7 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
         });
 
     }
+
     @Override
     public void onCleared() {
         super.onCleared();
@@ -150,26 +228,43 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
 
             if (result.getRes_type() == 1) {
 
-                if(callType == 0){
+                if (callType == 0) {
                     App.Companion.getUser().setU_profile_img((String) result.getRes_obj());
                     userLD.setValue(App.Companion.getUser());
-                } else {
+                } else if(callType == 1) {
                     isRevise.setValue((Integer) result.getRes_obj());
+
+                    currentPwd.setValue(null);
+                    updatePwd.setValue(null);
+                    isPwd.setValue(false);
+                } else {
+                    isNick.setValue(false);
+                    updateNick.setValue(null);
+
+                    App.Companion.sendToast("성공적으로 닉네임 수정에 성공하셨습니다.");
                 }
 
-            } else if(result.getRes_type() == 0) {
+            } else if (result.getRes_type() == 0) {
 
-                if(callType == 0)
+                if (callType == 0)
                     App.Companion.sendToast("이미지 등록에 실패했습니다.");
-                else
+                else if(callType == 1){
                     App.Companion.sendToast("비밀번호 변경에 실패하셨습니다.");
+                    isRevise.setValue((Integer) result.getRes_obj());
+                } else{
+                    App.Companion.sendToast("닉네임 변경에 실패하셨습니다.");
+                }
+
             }
 
         } else {
-            if(callType == 0)
+            if (callType == 0)
                 App.Companion.sendToast("이미지 등록에 실패했습니다.");
-            else
+            else if(callType == 1)
                 App.Companion.sendToast("비밀번호 변경에 실패하셨습니다.");
+            else
+                App.Companion.sendToast("닉네임 변경에 실패하셨습니다.");
+
         }
 
     }
@@ -177,5 +272,12 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
     @Override
     public void onFailure(Call call, Throwable t) {
         Log.e(TAG, "onFailure: ", t);
+
+        if (callType == 0)
+            App.Companion.sendToast("이미지 등록에 실패했습니다.");
+        else if(callType == 1)
+            App.Companion.sendToast("비밀번호 변경에 실패하셨습니다.");
+        else
+            App.Companion.sendToast("닉네임 변경에 실패하셨습니다.");
     }
 }

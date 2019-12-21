@@ -60,6 +60,7 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시, 아이템 데이터 세팅하는 부분
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         final Country country = items.getValue().get(position);
         country.setCt_flag();
 

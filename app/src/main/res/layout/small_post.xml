@@ -22,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/s_border"
-            android:backgroundTint="#45A1F5"
-            android:backgroundTintMode="multiply">
+            android:backgroundTint="@color/clicked">
 
             <TextView
                 android:id="@+id/textView"
@@ -63,7 +62,6 @@
                     android:id="@+id/spVp"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@color/non_clicked"
                     app:setViewPagerAdapter="@{smallPostVm.postImgAdapter}" />
 
                 <LinearLayout
