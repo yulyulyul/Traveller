@@ -23,8 +23,6 @@ public class RouteSearchViewModel extends ViewModel {
 
     String TAG = "Trav.RouteSearchViewModel.";
 
-    Application app;
-
     //국가, 선택(최소, 최대)금액
     public MutableLiveData<SearchReq> srLD = new MutableLiveData<>();
 
@@ -46,9 +44,11 @@ public class RouteSearchViewModel extends ViewModel {
 
     public View.OnClickListener onBackgroundClickListener;
 
+    public MutableLiveData<Boolean> isInit = new MutableLiveData<>();
+
     public RouteSearchViewModel() {
 
-        this.app = (Application) App.INSTANCE;
+        isInit.setValue(false);
 
         //국가와 seek bar의 초기값
         srLD.setValue(new SearchReq("", 0, 1000000));
@@ -57,7 +57,6 @@ public class RouteSearchViewModel extends ViewModel {
         seekBarMax.setValue(CurrencyChange.moneyFormatToWon(srLD.getValue().getSr_max_cost()));
         seekBarMin.setValue(CurrencyChange.moneyFormatToWon(srLD.getValue().getSr_min_cost()));
 
-        costRange.setValue("초기화");
         Log.d(TAG + "Constructor", ": RouteSearchViewModel");
     }
 
@@ -66,6 +65,8 @@ public class RouteSearchViewModel extends ViewModel {
         inputMaxCost.setValue("");
         seekBarMax.setValue(CurrencyChange.moneyFormatToWon(1000000));
         seekBarMin.setValue(CurrencyChange.moneyFormatToWon(0));
+
+        isInit.setValue(true);
     }
 
     //최종 검색 조건 이벤트
@@ -77,7 +78,7 @@ public class RouteSearchViewModel extends ViewModel {
         if(srLD.getValue().getSr_country() != null){
             if(srLD.getValue().getSr_country().length() > 0){
 
-                if(!costRange.getValue().equals("초기화")){
+                if(costRange.getValue() != null){
 
                     String[] str = costRange.getValue().replace("₩", "").replace(",", "").trim().split(" ~ ");
 
@@ -90,20 +91,20 @@ public class RouteSearchViewModel extends ViewModel {
 
                 Log.d(TAG, "onSearchClicked: " + srLD.getValue().toString());
                 //최종 검색 조건을 가지고 이동
-                Intent goToResult = new Intent(app, RouteList.class);
+                Intent goToResult = new Intent(App.INSTANCE, RouteList.class);
 
                 goToResult.putExtra("req", new MyPageItem(srLD.getValue(), 0));
                 goToResult.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                app.startActivity(goToResult);
+                App.INSTANCE.startActivity(goToResult);
 
                 return 1;
             }else{
-                Toast.makeText(app, "국가란이 비어있습니다." ,Toast.LENGTH_LONG).show();
+                Toast.makeText(App.INSTANCE, "국가란이 비어있습니다." ,Toast.LENGTH_LONG).show();
                 return 0;
             }
         }
         else{
-            Toast.makeText(app, "국가란이 비어있습니다." ,Toast.LENGTH_LONG).show();
+            Toast.makeText(App.INSTANCE, "국가란이 비어있습니다." ,Toast.LENGTH_LONG).show();
             return 0;
         }
     }

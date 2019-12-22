@@ -66,6 +66,8 @@ public class CountryList extends AppCompatActivity {
                 startActivity(intent);
             }
         };
+
+        binding.recyclerView.setItemAnimator(null);
     }
 
     //선호 국가 클릭 및 상세보기 클릭 이벤트
@@ -80,8 +82,10 @@ public class CountryList extends AppCompatActivity {
                 final Country country = binding.getFcVm().countryList.getValue().get(position);
 
                 if (type == 0) {
+                    Log.d(TAG, "선호 국가 삭제: " + position);
                     call = countryAPI.deleteFavoriteCountry(App.Companion.getUser().getU_userid(), country.getCt_no());
                 } else {
+                    Log.d(TAG, "선호 국가 추가: " + position);
                     call = countryAPI.addFlag(App.Companion.getUser().getU_userid(), country.getCt_no());
                 }
 

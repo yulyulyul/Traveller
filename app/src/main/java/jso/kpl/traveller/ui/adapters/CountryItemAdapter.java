@@ -17,7 +17,7 @@ import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.CountryItemBinding;
 import jso.kpl.traveller.model.Country;
 
-public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.ViewHolder> {
+public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.ItemViewHolder> {
 
     String TAG = "Trav.FcAdapter.";
 
@@ -48,23 +48,26 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
 
     // onCreateViewHolder() - 아이템뷰를 위한 뷰홀더 객체 생성하여 리턴
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         binding = DataBindingUtil.inflate(inflater, R.layout.country_item, parent, false);
 
-        return new ViewHolder((CountryItemBinding) binding);
+        return new ItemViewHolder((CountryItemBinding) binding);
     }
 
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시, 아이템 데이터 세팅하는 부분
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
 
         final Country country = items.getValue().get(position);
         country.setCt_flag();
 
         holder.binding.setCountryItem(country);
+
+        holder.addRemoveCountry(position);
+
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴
@@ -84,20 +87,22 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
     }
 
     // 아이템뷰를 저장하는 뷰홀더 클래스
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private CountryItemBinding binding;
 
-        ViewHolder(final CountryItemBinding binding) {
+        public ItemViewHolder(final CountryItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+        }
+
+        public void addRemoveCountry(final int position){
 
             // 국가 디테일 보기
-            this.binding.relativeParent.setOnClickListener(new View.OnClickListener() {
+            binding.relativeParent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
                             onCountryClickListener.onDetailClicked(binding.getCountryItem().getCt_no());
@@ -108,12 +113,9 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
             });
 
             //국가 추가 또는 제거
-            this.binding.removeCountryBtn.setOnClickListener(new View.OnClickListener() {
+            binding.removeCountryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Log.d(TAG, "선택 포지션: " + getAdapterPosition());
-                    int position = getAdapterPosition();
 
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
@@ -123,6 +125,7 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
                             onCountryClickListener.onBtnClicked(position, 0);
                             Log.d(TAG, "국가 삭제");
 
+                            notifyItemChanged(position);
                         }
                     }
 
@@ -131,12 +134,9 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
             });
 
             //국가 추가 또는 제거
-            this.binding.addCountryBtn.setOnClickListener(new View.OnClickListener() {
+            binding.addCountryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Log.d(TAG, "선택 포지션: " + getAdapterPosition());
-                    int position = getAdapterPosition();
 
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
@@ -146,10 +146,14 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
                             onCountryClickListener.onBtnClicked(position, 1);
                             Log.d(TAG, "국가 추가");
 
+                            notifyItemChanged(position);
                         }
                     }
                 }
             });
+
         }
     }
+
+
 }

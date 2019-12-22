@@ -50,13 +50,18 @@ public class RouteSearch extends AppCompatActivity {
         binding.setSearchVm(routeSearchVm);
         binding.setLifecycleOwner(this);
 
-        JavaUtil.onTouchDownKey(binding.searchToolbar, binding.searchPlace, binding.searchExpenses);
+       // JavaUtil.onTouchDownKey(binding.searchToolbar, binding.searchPlace, binding.searchExpenses);
 
         //max min 노드가 움직이는 값을 가져오는 이벤트 함수
         binding.crystalRangeSeekBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
             @Override
             public void valueChanged(Number minValue, Number maxValue) {
                 Log.d(TAG, "valueChanged: " + maxValue);
+
+                if(getCurrentFocus() != null){
+                    JavaUtil.downKeyboard(act);
+                    getCurrentFocus().clearFocus();
+                }
 
                 binding.getSearchVm().costRange.setValue(
                         CurrencyChange.moneyFormatToWon(Integer.parseInt(minValue.toString()))
@@ -96,6 +101,22 @@ public class RouteSearch extends AppCompatActivity {
                 Log.d(TAG, "현재 맥스 코스트: " + binding.getSearchVm().srLD.getValue().getSr_max_cost());
             }
         });
+        binding.getSearchVm().isInit.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    binding.crystalRangeSeekBar.apply();
+                    binding.getSearchVm().isInit.setValue(false);
+
+                    if(getCurrentFocus() != null){
+                        JavaUtil.downKeyboard(act);
+                        getCurrentFocus().clearFocus();
+                    }
+
+                }
+            }
+        });
+
 
         binding.getSearchVm().inputMaxCost.observe(this, new Observer<String>() {
             @Override
@@ -139,18 +160,19 @@ public class RouteSearch extends AppCompatActivity {
                                         + CurrencyChange.moneyFormatToWon(100000)
                         );
                     }
-
-                } else{
-                    binding.getSearchVm().costRange.setValue("초기화");
                 }
-
             }
         });
 
         binding.getSearchVm().onBackgroundClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JavaUtil.downKeyboard(act);
+
+                if(getCurrentFocus() != null){
+                    JavaUtil.downKeyboard(act);
+                    getCurrentFocus().clearFocus();
+                }
+
             }
         };
     }

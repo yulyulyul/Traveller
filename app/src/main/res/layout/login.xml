@@ -75,7 +75,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="@drawable/s_round_border_blue">
+                android:background="@drawable/s_round_border_blue"
+                android:enabled="@{viewmodel.btnSelected}"
+                android:onClick="@{()->viewmodel.login()}">
 
                 <TextView
                     android:id="@+id/btn_login"
@@ -84,8 +86,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    android:enabled="@{viewmodel.btnSelected}"
-                    android:onClick="@{()->viewmodel.login()}"
                     android:text="로그인"
                     android:textSize="@dimen/subtitle_text_size"
                     android:textColor="@color/clicked"/>

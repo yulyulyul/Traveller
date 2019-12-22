@@ -377,6 +377,9 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             layout.addView(tv);
 
+            if(i == 0)
+                layout.getChildAt(0).setBackgroundResource(R.drawable.s_border_round_square);
+
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

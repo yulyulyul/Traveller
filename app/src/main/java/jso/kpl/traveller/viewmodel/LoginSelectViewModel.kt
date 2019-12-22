@@ -234,7 +234,6 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
         val email = sp.getString("u_email", "")
         val pwd = sp.getString("u_pwd", "")
 
-
         if(!email.equals("") && !pwd.equals("")){
             WebService.client.create(UserAPI::class.java)
                 .goLogin(LoginUser(email, pwd))
@@ -255,14 +254,15 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
                                 val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
-                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                           //     ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
                                 ls_goLogin.putExtra("user", receiveUser);
 
                                 ContextCompat.startActivity(getApplication(), ls_goLogin, null)
 
-                                act.overridePendingTransition(0, 0);
+                               // act.overridePendingTransition(0, 0);
+                                act.finish()
                             }
                         }
                     }
