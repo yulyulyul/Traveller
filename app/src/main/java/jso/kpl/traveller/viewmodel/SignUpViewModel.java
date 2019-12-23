@@ -80,8 +80,7 @@ public class SignUpViewModel extends BaseObservable implements Callback {
     public SignUpViewModel(Context context) {
         this.context = context;
 
-        String imageUri = "android.resource://jso.kpl.traveller/drawable/i_blank_person_icon";
-        photoUpdate.setValue(imageUri);
+        photoUpdate.setValue("i_blank_person_icon");
     }
 
     //디바이스 초기 값, 속성: 유니크, 디바이스 초기화할 때 바뀐다고 함

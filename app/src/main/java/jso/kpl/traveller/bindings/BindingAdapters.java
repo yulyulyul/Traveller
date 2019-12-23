@@ -177,11 +177,15 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("f_")){
-            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
-        } else{
+        if(imgUri != null && imgUri.contains("file:///"))
+            path = imgUri;
+        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
-        }
+        else
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
+
+
+        Log.d("Trav.img", "setImg: " + path);
 
         Glide.with(iv.getContext())
                 .load(path)
@@ -195,14 +199,14 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("f_")){
-            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
-        } else{
+        if(imgUri != null && imgUri.contains("file:///"))
+            path = imgUri;
+        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
-        }
+        else
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
 
-
-        Log.d("Trav.CircleImg", "Path: ");
+        Log.d("Trav.img", "onBindCircleImage: " + path);
 
         RequestOptions options
                 = RequestOptions.bitmapTransform(new CircleCrop()).error(R.drawable.i_blank_person_icon);
@@ -218,12 +222,14 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("f_")){
-            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
-        } else{
+        if(imgUri != null && imgUri.contains("file:///"))
+            path = imgUri;
+        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
-        }
+        else
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
 
+        Log.d("Trav.img", "onBindFitCenterImage: " + path);
         RequestOptions options
                 = RequestOptions.bitmapTransform(new FitCenter()).error(R.drawable.i_empty_image_icon);
 

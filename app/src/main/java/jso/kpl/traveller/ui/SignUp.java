@@ -18,6 +18,8 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 
 import jso.kpl.traveller.App;
@@ -180,6 +182,7 @@ public class SignUp extends AppCompatActivity {
             case 0:
                 try {
                     Uri tmpUri = data.getData();
+
                     svm.photoUpdate.setValue(JavaUtil.getImageFullPath(this, tmpUri).toString());
                     Log.d(TAG +"앨범", "앨범이미지 주소: " + svm.photoUpdate.getValue());
 
