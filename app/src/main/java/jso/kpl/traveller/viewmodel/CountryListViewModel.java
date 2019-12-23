@@ -98,7 +98,12 @@ public class CountryListViewModel extends BaseObservable {
                     }
 
                     if (countryList.getValue() != null) {
-                        ct_no = countryList.getValue().get(countryList.getValue().size() - 1).getCt_no();
+
+                        if(countryList.getValue().size() > 0)
+                            ct_no = countryList.getValue().get(countryList.getValue().size() - 1).getCt_no();
+                        else
+                            ct_no = 0;
+
                         Log.d(TAG, "불러온 마지막 번호: " + ct_no);
                     }
 
