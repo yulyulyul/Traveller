@@ -43,13 +43,16 @@
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:hint="이메일"
                     android:inputType="textEmailAddress"
                     android:onTextChanged="@{viewmodel::onEmailChanged}"
                     android:text="@={viewmodel.email}"
-                    android:textColor="@color/colorWhite"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+                    android:textColor="@color/colorWhite">
+
+                    <requestFocus />
+                </androidx.appcompat.widget.AppCompatEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password Label -->
