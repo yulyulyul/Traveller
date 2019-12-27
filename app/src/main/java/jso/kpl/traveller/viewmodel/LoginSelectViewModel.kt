@@ -228,55 +228,55 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    fun autoLogin(act:Activity){
-        val sp = act.getSharedPreferences("auto_login", Activity.MODE_PRIVATE)
-
-        val email = sp.getString("u_email", "")
-        val pwd = sp.getString("u_pwd", "")
-
-        if(!email.equals("") && !pwd.equals("")){
-            WebService.client.create(UserAPI::class.java)
-                .goLogin(LoginUser(email, pwd))
-                .enqueue(object : retrofit2.Callback<ResponseResult<User>> {
-                    // 로그인 요청시 Retrofit 결과 리턴받는 곳.
-                    override fun onResponse(call: Call<ResponseResult<User>>?,
-                                            response: Response<ResponseResult<User>>?
-                    ) {
-                        progressDialog?.value = false
-
-                        var res_type:Int? = response?.body()?.res_type
-
-                        if(res_type == 1){
-                            receiveUser = response?.body()?.res_obj
-                            Log.d(LoginViewModel.TAG + "응답 객체 : ", receiveUser?.toString())
-
-                            if (receiveUser != null) {
-
-                                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
-
-                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                                ls_goLogin.putExtra("user", receiveUser);
-
-                                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
-
-                                act.overridePendingTransition(R.anim.enter_silde_left, R.anim.exit_silde_right)
-
-                               act.finish()
-                            }
-                        }
-                    }
-
-                    //로그인 요청시 Retrofit 통신 실패시 호출..
-                    override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
-                        progressDialog?.value = false
-                        act.finish()
-                    }
-                })
-
-
-        }
-    }
+//    fun autoLogin(act:Activity){
+//        val sp = act.getSharedPreferences("auto_login", Activity.MODE_PRIVATE)
+//
+//        val email = sp.getString("u_email", "")
+//        val pwd = sp.getString("u_pwd", "")
+//
+//        if(!email.equals("") && !pwd.equals("")){
+//            WebService.client.create(UserAPI::class.java)
+//                .goLogin(LoginUser(email, pwd))
+//                .enqueue(object : retrofit2.Callback<ResponseResult<User>> {
+//                    // 로그인 요청시 Retrofit 결과 리턴받는 곳.
+//                    override fun onResponse(call: Call<ResponseResult<User>>?,
+//                                            response: Response<ResponseResult<User>>?
+//                    ) {
+//                        progressDialog?.value = false
+//
+//                        var res_type:Int? = response?.body()?.res_type
+//
+//                        if(res_type == 1){
+//                            receiveUser = response?.body()?.res_obj
+//                            Log.d(LoginViewModel.TAG + "응답 객체 : ", receiveUser?.toString())
+//
+//                            if (receiveUser != null) {
+//
+//                                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
+//
+//                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//
+//                                ls_goLogin.putExtra("user", receiveUser);
+//
+//                                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
+//
+//                                act.overridePendingTransition(R.anim.enter_silde_left, R.anim.exit_silde_right)
+//
+//                               act.finish()
+//                            }
+//                        }
+//                    }
+//
+//                    //로그인 요청시 Retrofit 통신 실패시 호출..
+//                    override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
+//                        progressDialog?.value = false
+//                        act.finish()
+//                    }
+//                })
+//
+//
+//        }
+//    }
 
 
 
