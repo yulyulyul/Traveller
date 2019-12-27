@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.EditingPost">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -20,536 +18,470 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <!--상단바(뒤로가기 + 저장하기)-->
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="10">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/timeline"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="@{editingPostVm.isCartlist?View.VISIBLE:View.GONE}">
-
-                <me.jerryhanks.timelineview.TimeLineView
-                    android:id="@+id/timelineView"
-                    android:layout_width="30dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:setTimelineAdapter="@{editingPostVm.timelineAdapter}">
-
-                </me.jerryhanks.timelineview.TimeLineView>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/upper_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:weightSum="10">
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true">
 
-                <!--상단바(뒤로가기 + 저장하기)-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="취소"
+                    android:textSize="18dp"
+                    app:OnClickListener="@{editingPostVm.onBackClickListener}" />
 
-                <RelativeLayout
-                    android:id="@+id/upper_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:visibility="@{editingPostVm.isCartlist ? View.GONE:View.VISIBLE}">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:text="취소"
-                        android:textSize="18dp"
-                        app:OnClickListener="@{editingPostVm.onBackClickListener}" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/i_airplane"
-                            android:backgroundTint="@color/clicked"/>
-
-                        <TextView
-                            android:id="@+id/title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="포스트 작성"
-                            android:textColor="@color/clicked"
-                            android:textSize="20dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/i_airplane"
+                        android:backgroundTint="@color/clicked" />
 
                     <TextView
-                        android:id="@+id/post_save"
+                        android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:clickable="false"
-                        android:text="완료"
-                        android:textColor="@color/non_clicked"
+                        android:text="포스트 작성"
+                        android:textColor="@color/clicked"
                         android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:visibility="@{editingPostVm.isSmallPost?View.VISIBLE:View.GONE}"
-                        app:OnClickListener="@{editingPostVm.onSaveClickListener}" />
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/post_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:clickable="false"
+                    android:text="완료"
+                    android:textColor="@color/non_clicked"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:visibility="@{editingPostVm.isSmallPost?View.VISIBLE:View.GONE}"
+                    app:OnClickListener="@{editingPostVm.onSaveClickListener}" />
 
-                <!--카트리스트 상단바-->
+            </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/catelist_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/clicked"
-                    android:visibility="@{editingPostVm.isCartlist ? View.VISIBLE:View.GONE}">
+            <FrameLayout
+                android:id="@+id/frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/upper_toolbar">
 
-                    <TextView
-                        android:id="@+id/place"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@id/toolbar_cancel"
-                        android:gravity="center"
-                        android:text="@{editingPostVm.timelineSelect != 0 ? editingPostVm.timelineItem.get(editingPostVm.timelineSelect).sp_place : editingPostVm.timelineItem.get(0).sp_place}"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"/>
-
-                    <TextView
-                        android:id="@+id/toolbar_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:onClick="@{() -> editingPostVm.onCatelistCancelClicked()}"
-                        android:text="닫기"
-                        android:textSize="20dp"
-                        android:textColor="@color/white"/>
-
-                </RelativeLayout>
-
-                <!--노드 파트-->
-
-                <ScrollView
-                    android:id="@+id/middle"
+                <LinearLayout
+                    android:id="@+id/timeline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/upper_toolbar"
-                    android:layout_weight="9"
-                    android:fillViewport="true">
+                    android:orientation="vertical"
+                    android:visibility="@{editingPostVm.isCartlist?View.VISIBLE:View.GONE}">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:weightSum="10">
+                        android:layout_height="wrap_content">
 
-                        <!--카트리스트 컨텐츠-->
-
-                        <RelativeLayout
-                            android:id="@+id/cartlist_content"
-                            android:layout_width="match_parent"
+                        <me.jerryhanks.timelineview.TimeLineView
+                            android:id="@+id/timelineView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:background="@color/colorWhite"
-                            android:minHeight="100dp"
-                            android:orientation="vertical"
-                            android:visibility="@{editingPostVm.isCartlist ? View.VISIBLE:View.GONE}">
+                            android:layout_gravity="center"
+                            android:layout_marginHorizontal="10dp"
+                            app:layout_constrainedWidth="false"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:setTimelineAdapter="@{editingPostVm.timelineAdapter}" />
 
-                            <TextView
-                                android:id="@+id/cartlist_cost_txt"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_above="@id/cartlist_period_txt"
-                                android:layout_alignLeft="@id/cartlist_period_txt"
-                                android:text="비용 : " />
+                        <TextView
+                            android:id="@+id/toolbar_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="50dp"
+                            android:background="@android:drawable/ic_menu_close_clear_cancel"
+                            android:onClick="@{() -> editingPostVm.onCatelistCancelClicked()}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/timelineView"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:id="@+id/cartlist_cost"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignTop="@id/cartlist_cost_txt"
-                                android:layout_marginLeft="3dp"
-                                android:layout_toRightOf="@id/cartlist_cost_txt"
-                                android:text="@{editingPostVm.timelineSelect != 0 ? editingPostVm.timelineItem.get(editingPostVm.timelineSelect).sp_expenses : editingPostVm.timelineItem.get(0).sp_expenses}" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            <TextView
-                                android:id="@+id/cartlist_period_txt"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="false"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_marginBottom="15dp"
-                                android:text="여행 날짜 : " />
+                </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/cartlist_period"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignTop="@id/cartlist_period_txt"
-                                android:layout_marginLeft="3dp"
-                                android:layout_toRightOf="@id/cartlist_period_txt"
-                                android:text="@{editingPostVm.timelineSelect != 0 ? editingPostVm.timelineItem.get(editingPostVm.timelineSelect).sp_period : editingPostVm.timelineItem.get(0).sp_period}" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/cartlist_category_txt"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/cartlist_period_txt"
-                                android:layout_alignLeft="@id/cartlist_cost_txt"
-                                android:text="카테고리 : " />
-
-                            <TextView
-                                android:id="@+id/cartlist_category"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignTop="@id/cartlist_category_txt"
-                                android:layout_marginLeft="3dp"
-                                android:layout_toRightOf="@id/cartlist_category_txt"
-                                android:text="@{editingPostVm.timelineSelect != 0 ? editingPostVm.timelineItem.get(editingPostVm.timelineSelect).sp_category : editingPostVm.timelineItem.get(0).sp_category}" />
-
-                            <ImageView
-                                android:id="@+id/cartlist_img"
-                                android:layout_width="wrap_content"
-                                android:layout_height="70dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="15dp"
-                                app:setFitCenterImg="@{editingPostVm.timelineSelect != 0 ? editingPostVm.timelineItem.get(editingPostVm.timelineSelect).sp_imgs : editingPostVm.timelineItem.get(0).sp_imgs}" />
-
-                        </RelativeLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
                         <LinearLayout
-                            android:id="@+id/routeNodeLayout"
+                            android:id="@+id/content"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:background="@color/simple_white"
-                            android:gravity="center"
-                            android:onClick="@{()->editingPostVm.onAddSmallPostClicked()}"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorWhite"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:weightSum="10"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:marginLeft="@{editingPostVm.isCartlist ? 90 : 0}"
+                            app:marginTop="@{editingPostVm.isCartlist ? 370 : 0}">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:visibility="@{editingPostVm.isClick?View.VISIBLE:View.GONE}">
+                            <!--노드 파트-->
 
-                                <ImageView
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:background="@drawable/i_circle_plus_icon" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <FrameLayout
-                            android:id="@+id/container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="6"
-                            app:setFragmentManger="@{editingPostVm.fm}"
-                            app:setInitFragment="@{editingPostVm.fragment}">
-
-                            <LinearLayout
+                            <ScrollView
+                                android:id="@+id/middle"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
-
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:orientation="vertical">
-
-
-                                    <RelativeLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
-
-                                        <TextView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:gravity="center"
-                                            android:text="여행 일정"
-                                            android:textColor="#808080"
-                                            android:textSize="20dp"
-                                            android:textStyle="bold" />
-
-                                    </RelativeLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginVertical="5dp"
-                                        android:orientation="vertical"
-                                        android:paddingHorizontal="20dp"
-                                        android:paddingVertical="10dp"
-                                        android:focusable="true"
-                                        android:focusableInTouchMode="true">
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:text="국가"
-                                            android:textColor="@color/clicked"
-                                            android:textSize="@dimen/middle_text_size"
-                                            android:textStyle="bold" />
-
-                                        <EditText
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginHorizontal="10dp"
-                                            android:background="@android:color/transparent"
-                                            android:hint="여행 국가를 입력해주세요."
-                                            android:maxLength="85"
-                                            android:nextFocusDown="@id/edit_expenses"
-                                            android:padding="5dp"
-                                            android:singleLine="true"
-                                            android:text="@={editingPostVm.inputPlace}"
-                                            android:textSize="20dp" />
-
-                                    </LinearLayout>
-
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1dp"
-                                        android:layout_marginVertical="5dp"
-                                        android:background="#80808080" />
-
-                                </LinearLayout>
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/upper_toolbar"
+                                android:layout_weight="9"
+                                android:fillViewport="true">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginVertical="5dp"
-                                    android:orientation="vertical">
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:weightSum="10">
 
                                     <LinearLayout
+                                        android:id="@+id/routeNodeLayout"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:layout_weight="4"
+                                        android:background="@color/simple_white"
+                                        android:gravity="center"
+                                        android:onClick="@{()->editingPostVm.onAddSmallPostClicked()}"
                                         android:orientation="vertical"
-                                        android:paddingHorizontal="20dp"
-                                        android:paddingVertical="10dp">
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:text="경비"
-                                            android:textColor="@color/black"
-                                            android:textSize="@dimen/middle_text_size"
-                                            android:textStyle="bold" />
-
-                                        <EditText
-                                            android:id="@+id/edit_expenses"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginHorizontal="10dp"
-                                            android:background="@android:color/transparent"
-                                            android:focusable="false"
-                                            android:hint="총 경비 합산"
-                                            android:inputType="number"
-                                            android:maxLength="15"
-                                            android:nextFocusDown="@id/edit_comment"
-                                            android:padding="5dp"
-                                            android:singleLine="true"
-                                            android:text="@={editingPostVm.inputExpenses}"
-                                            android:textSize="20dp"
-                                            app:onChangeMoney="@{null}" />
-
-
-                                    </LinearLayout>
-
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1dp"
-                                        android:layout_marginVertical="5dp"
-                                        android:background="#80808080" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginVertical="5dp"
-                                    android:orientation="vertical">
-
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical"
-                                        android:paddingHorizontal="20dp"
-                                        android:paddingVertical="10dp">
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:text="기간"
-                                            android:textColor="@color/black"
-                                            android:textSize="@dimen/middle_text_size"
-                                            android:textStyle="bold" />
+                                        android:padding="10dp">
 
                                         <LinearLayout
-                                            android:layout_width="match_parent"
+                                            android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginHorizontal="10dp"
-                                            android:orientation="vertical"
-                                            app:OnClickListener="@{editingPostVm.onCalendarClickListener}">
+                                            android:visibility="@{editingPostVm.isClick?View.VISIBLE:View.GONE}">
 
-                                            <TextView
-                                                android:id="@+id/text_calendar"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:background="@android:color/transparent"
-                                                android:focusable="true"
-                                                android:hint="여행 기간을 설정해주세요."
-                                                android:nextFocusDown="@id/edit_comment"
-                                                android:padding="5dp"
-                                                android:singleLine="true"
-                                                android:text="@={editingPostVm.travelResult}"
-                                                android:textSize="20dp" />
+                                            <ImageView
+                                                android:layout_width="50dp"
+                                                android:layout_height="50dp"
+                                                android:background="@drawable/i_circle_plus_icon" />
 
                                         </LinearLayout>
 
                                     </LinearLayout>
 
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1dp"
-                                        android:layout_marginVertical="5dp"
-                                        android:background="#80808080" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginVertical="5dp"
-                                    android:orientation="vertical">
-
-                                    <LinearLayout
+                                    <FrameLayout
+                                        android:id="@+id/container"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:orientation="vertical"
-                                        android:paddingHorizontal="20dp"
-                                        android:paddingVertical="10dp">
+                                        android:layout_weight="6"
+                                        app:setFragmentManger="@{editingPostVm.fm}"
+                                        app:setInitFragment="@{editingPostVm.fragment}">
 
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:text="내용"
-                                            android:textColor="@color/black"
-                                            android:textSize="@dimen/middle_text_size"
-                                            android:textStyle="bold" />
-
-                                        <EditText
-                                            android:id="@+id/edit_comment"
+                                        <LinearLayout
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginHorizontal="10dp"
-                                            android:background="@android:color/transparent"
-                                            android:focusable="true"
-                                            android:hint="내용을 입력해주세요. (200자 제한)"
-                                            android:maxLength="200"
-                                            android:padding="5dp"
-                                            android:text="@={editingPostVm.inputComment}"
-                                            android:textSize="20dp"
-                                            app:setDontEnter="@{null}" />
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
 
-                                    </LinearLayout>
 
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1dp"
-                                        android:layout_marginVertical="5dp"
-                                        android:background="#80808080" />
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="10dp"
+                                                android:orientation="vertical">
+
+
+                                                <RelativeLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content">
+
+                                                    <TextView
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:gravity="center"
+                                                        android:text="여행 일정"
+                                                        android:textColor="#808080"
+                                                        android:textSize="20dp"
+                                                        android:textStyle="bold" />
+
+                                                </RelativeLayout>
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:focusable="true"
+                                                    android:focusableInTouchMode="true"
+                                                    android:orientation="vertical"
+                                                    android:paddingHorizontal="20dp"
+                                                    android:paddingVertical="10dp">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginLeft="10dp"
+                                                        android:text="국가"
+                                                        android:textColor="@color/clicked"
+                                                        android:textSize="@dimen/middle_text_size"
+                                                        android:textStyle="bold" />
+
+                                                    <EditText
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginHorizontal="10dp"
+                                                        android:background="@android:color/transparent"
+                                                        android:hint="여행 국가를 입력해주세요."
+                                                        android:maxLength="85"
+                                                        android:nextFocusDown="@id/edit_expenses"
+                                                        android:padding="5dp"
+                                                        android:singleLine="true"
+                                                        android:text="@={editingPostVm.inputPlace}"
+                                                        android:textSize="20dp" />
+
+                                                </LinearLayout>
+
+                                                <View
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="1dp"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:background="#80808080" />
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginVertical="5dp"
+                                                android:orientation="vertical">
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="vertical"
+                                                    android:paddingHorizontal="20dp"
+                                                    android:paddingVertical="10dp">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginLeft="10dp"
+                                                        android:text="경비"
+                                                        android:textColor="@color/black"
+                                                        android:textSize="@dimen/middle_text_size"
+                                                        android:textStyle="bold" />
+
+                                                    <EditText
+                                                        android:id="@+id/edit_expenses"
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginHorizontal="10dp"
+                                                        android:background="@android:color/transparent"
+                                                        android:focusable="false"
+                                                        android:hint="총 경비 합산"
+                                                        android:inputType="number"
+                                                        android:maxLength="15"
+                                                        android:nextFocusDown="@id/edit_comment"
+                                                        android:padding="5dp"
+                                                        android:singleLine="true"
+                                                        android:text="@={editingPostVm.inputExpenses}"
+                                                        android:textSize="20dp"
+                                                        app:onChangeMoney="@{null}" />
+
+
+                                                </LinearLayout>
+
+                                                <View
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="1dp"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:background="#80808080" />
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginVertical="5dp"
+                                                android:orientation="vertical">
+
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="vertical"
+                                                    android:paddingHorizontal="20dp"
+                                                    android:paddingVertical="10dp">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginLeft="10dp"
+                                                        android:text="기간"
+                                                        android:textColor="@color/black"
+                                                        android:textSize="@dimen/middle_text_size"
+                                                        android:textStyle="bold" />
+
+                                                    <LinearLayout
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginHorizontal="10dp"
+                                                        android:orientation="vertical"
+                                                        app:OnClickListener="@{editingPostVm.onCalendarClickListener}">
+
+                                                        <TextView
+                                                            android:id="@+id/text_calendar"
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="wrap_content"
+                                                            android:background="@android:color/transparent"
+                                                            android:focusable="true"
+                                                            android:hint="여행 기간을 설정해주세요."
+                                                            android:nextFocusDown="@id/edit_comment"
+                                                            android:padding="5dp"
+                                                            android:singleLine="true"
+                                                            android:text="@={editingPostVm.travelResult}"
+                                                            android:textSize="20dp" />
+
+                                                    </LinearLayout>
+
+                                                </LinearLayout>
+
+                                                <View
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="1dp"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:background="#80808080" />
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginVertical="5dp"
+                                                android:orientation="vertical">
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="vertical"
+                                                    android:paddingHorizontal="20dp"
+                                                    android:paddingVertical="10dp">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginLeft="10dp"
+                                                        android:text="내용"
+                                                        android:textColor="@color/black"
+                                                        android:textSize="@dimen/middle_text_size"
+                                                        android:textStyle="bold" />
+
+                                                    <EditText
+                                                        android:id="@+id/edit_comment"
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginHorizontal="10dp"
+                                                        android:background="@android:color/transparent"
+                                                        android:focusable="true"
+                                                        android:hint="내용을 입력해주세요. (200자 제한)"
+                                                        android:maxLength="200"
+                                                        android:padding="5dp"
+                                                        android:text="@={editingPostVm.inputComment}"
+                                                        android:textSize="20dp"
+                                                        app:setDontEnter="@{null}" />
+
+                                                </LinearLayout>
+
+                                                <View
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="1dp"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:background="#80808080" />
+
+                                            </LinearLayout>
+
+                                        </LinearLayout>
+
+                                    </FrameLayout>
 
                                 </LinearLayout>
+
+                            </ScrollView>
+
+                            <!--작성 파트-->
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:visibility="@{editingPostVm.isSmallPost?View.VISIBLE:View.GONE}">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:onClick="@{()->editingPostVm.onOpenClicked()}"
+                                    android:paddingVertical="5dp"
+                                    android:paddingLeft="5dp"
+                                    android:weightSum="10">
+
+                                    <ImageView
+                                        android:layout_width="30dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_gravity="center"
+                                        android:layout_toLeftOf="@+id/str_is_open"
+                                        android:adjustViewBounds="true"
+                                        android:background="@{editingPostVm.isOpen ? @drawable/i_click_circle_icon:@drawable/i_non_click_circle_icon}"
+                                        android:backgroundTint="@{editingPostVm.isOpen? @color/clicked:@color/non_clicked}"
+                                        android:scaleType="fitCenter" />
+
+                                    <TextView
+                                        android:id="@+id/str_is_open"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_gravity="center"
+                                        android:layout_marginLeft="5dp"
+                                        android:ems="3"
+                                        android:text="@{editingPostVm.isOpen? @string/open:@string/close}"
+                                        android:textColor="@{editingPostVm.isOpen? @color/clicked:@color/non_clicked}" />
+
+                                </RelativeLayout>
 
                             </LinearLayout>
 
-                        </FrameLayout>
+                        </LinearLayout>
 
-                    </LinearLayout>
-
-                </ScrollView>
-
-                <!--작성 파트-->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:visibility="@{editingPostVm.isSmallPost?View.VISIBLE:View.GONE}">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:onClick="@{()->editingPostVm.onOpenClicked()}"
-                        android:paddingVertical="5dp"
-                        android:paddingLeft="5dp"
-                        android:weightSum="10">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:layout_toLeftOf="@+id/str_is_open"
-                            android:adjustViewBounds="true"
-                            android:background="@{editingPostVm.isOpen ? @drawable/i_click_circle_icon:@drawable/i_non_click_circle_icon}"
-                            android:backgroundTint="@{editingPostVm.isOpen? @color/clicked:@color/non_clicked}"
-                            android:scaleType="fitCenter" />
-
-                        <TextView
-                            android:id="@+id/str_is_open"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
-                            android:ems="3"
-                            android:text="@{editingPostVm.isOpen? @string/open:@string/close}"
-                            android:textColor="@{editingPostVm.isOpen? @color/clicked:@color/non_clicked}" />
-
-                    </RelativeLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </FrameLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation"

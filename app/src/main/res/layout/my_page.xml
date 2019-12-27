@@ -67,6 +67,18 @@
                                 android:textColor="@color/white"
                                 android:textSize="20dp" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginHorizontal="20dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="5dp"
+                                android:onClick="@{()->myPageVm.onLogoutClicked()}"
+                                android:text="로그아웃"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/subtitle_text_size" />
+
                         </RelativeLayout>
 
                     </LinearLayout>

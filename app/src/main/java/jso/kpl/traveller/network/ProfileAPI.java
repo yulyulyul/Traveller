@@ -20,18 +20,24 @@ public interface ProfileAPI {
     @Multipart
     @POST("/update_profileImg")
     Call<ResponseResult<String>> updateProfileImg(@Part("u_userid") int u_userid,
-                                        @Part MultipartBody.Part imgBody);
+                                                  @Part MultipartBody.Part imgBody);
+
+    @FormUrlEncoded
+    @POST("/update_user_info")
+    Call<ResponseResult<Integer>> updateUserInfo(@Field("u_userid") int u_userid,
+                                                 @Field("update_nick_name") String u_nick_name,
+                                                 @Field("update_pwd") String u_pwd);
 
     @FormUrlEncoded
     @POST("/update_pwd")
     Call<ResponseResult<Integer>> updatePwd(@Field("u_userid") int u_userid,
-                                                   @Field ("current_pwd") String c_pwd,
-                                                    @Field ("update_pwd") String u_pwd);
+                                            @Field("current_pwd") String c_pwd,
+                                            @Field("update_pwd") String u_pwd);
 
     @FormUrlEncoded
     @POST("/update_nick")
     Call<ResponseResult<Integer>> updateNick(@Field("u_userid") int u_userid,
-                                            @Field ("update_nick") String u_nick);
+                                             @Field("update_nick") String u_nick);
 
     @FormUrlEncoded
     @POST("/user_info_count")

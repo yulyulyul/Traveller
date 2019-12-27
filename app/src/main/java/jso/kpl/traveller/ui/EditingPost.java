@@ -71,7 +71,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
         //EditingPost의 ViewModel
         editingPostVm = new EditingPostViewModel();
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.editing_post);
 
         binding.setEditingPostVm(editingPostVm);
@@ -316,8 +315,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
 
                     }
-
-
                 } else {
                     binding.getEditingPostVm().travelPeriod.setValue(new String[]{startDate, endDate});
                     binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
@@ -336,8 +333,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 .addToBackStack(null).commit();
 
         binding.getEditingPostVm().fragment.setValue(null);
-
-
 
 
         if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
@@ -399,42 +394,30 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             binding.getEditingPostVm().isClick.setValue(true);
             binding.postSave.setTextColor(getColor(R.color.non_clicked));
         }
+        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
+            //노드를 삭제했을 때 메인 포스트의 경비 계산을 대신 한다.
+            long total_expense = 0;
 
+            for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
 
-
-
-
-            if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
-                //노드를 삭제했을 때 메인 포스트의 경비 계산을 다신 한다.
-                long total_expense = 0;
-
-                for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
-
-                    if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
-                        total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
-                    else
-                        total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
-                }
-
-                binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
-            } else {
-                binding.getEditingPostVm().inputExpenses.setValue(null);
+                if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                else
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
             }
 
-
-
-
-
-
-
-
+            binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+        } else {
+            binding.getEditingPostVm().inputExpenses.setValue(null);
+        }
     }
 
     @Override
     public void onBackPressed() {
-
         if (binding.getEditingPostVm().fragment.getValue() != null) {
             onDetachFragmentClicked();
+        } else if (binding.getEditingPostVm().isCartlist.getValue()) {
+            binding.getEditingPostVm().isCartlist.setValue(false);
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 

@@ -16,20 +16,22 @@
         android:fitsSystemWindows="true">
 
         <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="24dp"
             android:paddingTop="56dp"
             android:paddingRight="24dp">
 
             <TextView
+                android:id="@+id/travller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="트래블러"
-                android:textSize="50dp"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:text="트래블러"
+                android:textColor="@color/white"
+                android:textSize="50dp" />
 
             <!-- Email Label -->
             <com.google.android.material.textfield.TextInputLayout
@@ -77,11 +79,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
                 android:background="@drawable/s_round_border_blue"
                 android:enabled="@{viewmodel.btnSelected}"
-                android:onClick="@{()->viewmodel.login()}">
+                android:gravity="center"
+                android:onClick="@{()->viewmodel.login()}"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/btn_login"
@@ -91,16 +93,19 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
                     android:text="로그인"
-                    android:textSize="@dimen/subtitle_text_size"
-                    android:textColor="@color/clicked"/>
+                    android:textColor="@color/clicked"
+                    android:textSize="@dimen/subtitle_text_size" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="비밀번호 찾기"
-                android:gravity="center" />
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="비밀번호를 잊으셨나요?"
+                android:textColor="@color/colorWhite"
+                android:textSize="15dp" />
 
         </LinearLayout>
     </ScrollView>

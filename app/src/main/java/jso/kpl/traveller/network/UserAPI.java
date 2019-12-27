@@ -15,7 +15,7 @@ import retrofit2.http.Part;
 public interface UserAPI {
 
     //로그인
-    @POST("login")
+    @POST("/login")
     Call<ResponseResult<User>> goLogin(@Body LoginUser lu_obj);
 
     //회원가입

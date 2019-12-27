@@ -1,19 +1,12 @@
 package jso.kpl.traveller.ui;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +14,14 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.gun0912.tedpermission.PermissionListener;
 
@@ -30,10 +31,18 @@ import java.util.List;
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.ProfileManagementBinding;
+import jso.kpl.traveller.model.LoginUser;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.network.UserAPI;
+import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.RevisePwd;
 import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.util.PermissionCheck;
 import jso.kpl.traveller.viewmodel.ProfileManagementViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileManagement extends AppCompatActivity {
 
@@ -46,6 +55,8 @@ public class ProfileManagement extends AppCompatActivity {
     String absolutePath;
 
     RevisePwd revisePwd;
+
+    UserAPI userAPI = WebService.INSTANCE.getClient().create(UserAPI.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +139,6 @@ public class ProfileManagement extends AppCompatActivity {
         binding.topActionBar.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 onBackPressed();
             }
         });
@@ -138,7 +148,7 @@ public class ProfileManagement extends AppCompatActivity {
         binding.getPmVm().isRevise.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if(integer == 1){
+                if (integer == 1) {
 
                     SharedPreferences sp = App.INSTANCE.getSharedPreferences("auto_login", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
@@ -159,6 +169,41 @@ public class ProfileManagement extends AppCompatActivity {
             }
         });
 
+        binding.pwdCheckBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String inputPwd = JavaUtil.returnSHA256(binding.inputPwd.getText().toString());
+                userAPI.goLogin(new LoginUser(App.Companion.getUser().getU_email(), inputPwd)).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        ResponseResult<User> user = ((ResponseResult<User>) response.body());
+
+                        if (user.getRes_type() == 1) {
+                            binding.pwdCheck.setVisibility(View.GONE);
+                            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(binding.pwdCheck.getWindowToken(), 0);
+                        } else {
+                            binding.inputPwdTxt.setText("비밀번호를 다시 입력해주세요.");
+                            binding.inputPwdTxt.setTextColor(Color.RED);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+                        t.printStackTrace();
+                    }
+                });
+            }
+        });
+
+        binding.linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(binding.linear.getWindowToken(), 0);
+            }
+        });
     }
 
     // 디렉토리 생성
@@ -183,7 +228,7 @@ public class ProfileManagement extends AppCompatActivity {
         return imgFilePath;
     }
 
-    public void removeFragment(Fragment fragment){
+    public void removeFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().detach(fragment).remove(fragment).commit();
     }
 
@@ -219,10 +264,10 @@ public class ProfileManagement extends AppCompatActivity {
                 break;
         }
     }
-    
+
     @Override
     public void onBackPressed() {
-        if(revisePwd != null){
+        if (revisePwd != null) {
             getSupportFragmentManager().beginTransaction()
                     .detach(revisePwd)
                     .remove(revisePwd)

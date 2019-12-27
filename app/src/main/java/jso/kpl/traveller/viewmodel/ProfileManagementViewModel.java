@@ -143,7 +143,7 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
         }
     }
 
-    public void onReviseClicked(View view) {
+    /*public void onReviseClicked(View view) {
 
         Log.d(TAG, "onReviseClicked: 스바련아 실행 웨 안되냐 ");
         
@@ -171,25 +171,16 @@ public class ProfileManagementViewModel extends ViewModel implements Callback {
 
         }
 
-    }
+    }*/
 
     public void onUpdatePwdClicked() {
         updateCall(1);
         Log.d(TAG, "비밀번호 변경");
     }
 
-    public void onLogoutClicked() {
-        SharedPreferences sp = App.INSTANCE.getSharedPreferences("auto_login", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
-        editor.remove("auto_login");
-        editor.clear();
-        editor.commit();
-
-        Intent intent = new Intent(App.INSTANCE, LoginSelect.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        App.INSTANCE.startActivity(intent);
+    public void onUpdateUserInfo() {
+        updateCall(1);
+        Log.d(TAG, "비밀번호 변경");
     }
 
     public void userInfoCall() {

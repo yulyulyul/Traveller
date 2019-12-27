@@ -15,8 +15,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.BindingAdapter;
@@ -177,9 +179,9 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("file:///"))
+        if (imgUri != null && imgUri.contains("file:///"))
             path = imgUri;
-        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+        else if (imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
         else
             path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
@@ -199,9 +201,9 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("file:///"))
+        if (imgUri != null && imgUri.contains("file:///"))
             path = imgUri;
-        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+        else if (imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
         else
             path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
@@ -222,9 +224,9 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("file:///"))
+        if (imgUri != null && imgUri.contains("file:///"))
             path = imgUri;
-        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+        else if (imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
         else
             path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
@@ -393,13 +395,28 @@ public class BindingAdapters {
         view.setLayoutParams(layoutParams);
     }
 
+    // 동적 padding 조절
+    @BindingAdapter({"marginLeft", "marginTop"})
+    public static void setMargin(View view, int left, int top) {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+        layoutParams.topMargin = top;
+        layoutParams.leftMargin = left;
+        view.setLayoutParams(layoutParams);
+    }
+
+    // 동적 margin 조절
+    @BindingAdapter({"paddingLeft", "paddingTop"})
+    public static void setPadding(View view, int left, int top) {
+        view.setPadding(left, top, 0, 0);
+    }
+
     @BindingAdapter({"setTimelineAdapter"})
     public static void onBindTimelineAdapter(TimeLineView timelineView, IndicatorAdapter adapter) {
         timelineView.setIndicatorAdapter(adapter);
     }
 
     @BindingAdapter("setViewPagerAdapter")
-    public static void onBindVpAdapter(ViewPager vp, PagerAdapter adapter){
+    public static void onBindVpAdapter(ViewPager vp, PagerAdapter adapter) {
 
         vp.setAdapter(adapter);
         vp.setClipToPadding(false);
@@ -408,7 +425,7 @@ public class BindingAdapters {
         float d = App.INSTANCE.getResources().getDisplayMetrics().density;
         int margin = (int) (dpValue * d);
         vp.setPadding(margin, 0, margin, 0);
-        vp.setPageMargin(margin/2);
+        vp.setPageMargin(margin / 2);
     }
 
     @BindingAdapter({"onRefreshListener", "checkRefresh"})

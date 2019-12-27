@@ -241,12 +241,12 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
 
         if (inputExpenses.getValue() != null && !inputExpenses.getValue().equals("")) {
 
-            if(inputExpenses.getValue().contains("₩"))
+            if (inputExpenses.getValue().contains("₩"))
                 smallPost.setSp_expenses(inputExpenses.getValue());
             else
                 smallPost.setSp_expenses(CurrencyChange.moneyFormatToWon(Long.parseLong(inputExpenses.getValue())));
 
-        }else{
+        } else {
             smallPost.setSp_expenses(CurrencyChange.moneyFormatToWon(0));
         }
 
@@ -359,9 +359,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                     timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
                                         public View onBindView(Timeline model, FrameLayout container, final int position) {
                                             TimeLineItemBinding timeLineItemBinding = DataBindingUtil.inflate(LayoutInflater.from(App.INSTANCE), R.layout.time_line_item, container, false);
-
                                             timeLineItemBinding.setTL(model);
-
                                             timeLineItemBinding.content.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
@@ -391,6 +389,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                             });
                             isCartlist.setValue(true); // 카트리스트 타임라인뷰 보이기
                             onCartlistClickListener.onClick(view); // 네비게이션바 닫기
+
                             //cartlistWidth.setValue(200);
                         }
                     });
