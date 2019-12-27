@@ -1,12 +1,6 @@
 package jso.kpl.traveller.model;
 
-import android.util.Log;
-import android.widget.ImageView;
-
-import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
-
-import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,28 +21,23 @@ public class Country implements Serializable {
     private String ct_continent; // 대륙
     private String ct_language; // 언어
     private String ct_currency; // 통화
-    private String ct_religion; // 종교
+    private String ct_latlng;
+
+    private String ct_bg;
     private String ct_flag;
 
     private int is_favorite;
 
+    private String r_name;
+    private String r_eng_name;
+    private String r_explain;
+    private String r_img;
+
     public MutableLiveData<Boolean> is_favorite_ld = new MutableLiveData<>();
 
-    public Country(String ct_eng_name) {
-        this.ct_eng_name = ct_eng_name;
+    public Country(String add_flag) {
+        this.ct_eng_name = add_flag;
     }
-
-    //    public Country(int ct_no, String ct_name, String ct_eng_name, String ct_capital, String ct_continent, String ct_language, String ct_currency, String ct_religion,  boolean is_favorite) {
-//        this.ct_no = ct_no;
-//        this.ct_name = ct_name;
-//        this.ct_eng_name = ct_eng_name;
-//        this.ct_capital = ct_capital;
-//        this.ct_continent = ct_continent;
-//        this.ct_language = ct_language;
-//        this.ct_currency = ct_currency;
-//        this.ct_religion = ct_religion;
-//        this.ct_is_add_ld.setValue(is_favorite);
-//    }
 
     public int getCt_no() {
         return ct_no;
@@ -106,12 +95,26 @@ public class Country implements Serializable {
         this.ct_currency = ct_currency;
     }
 
-    public String getCt_religion() {
-        return ct_religion;
+    public String getCt_latlng() {
+        return ct_latlng;
     }
 
-    public void setCt_religion(String ct_religion) {
-        this.ct_religion = ct_religion;
+    public void setCt_latlng(String ct_latlng) {
+        this.ct_latlng = ct_latlng;
+    }
+
+    public String getCt_bg() {
+        return ct_bg;
+    }
+
+    public void setCt_bg() {
+
+        String imgStr = "pr_" + getCt_eng_name().toLowerCase();
+
+        if (imgStr.contains(" "))
+            imgStr = imgStr.replace(" ", "_");
+
+        this.ct_bg = imgStr;
     }
 
     public String getCt_flag() {
@@ -119,20 +122,28 @@ public class Country implements Serializable {
     }
 
     //국가 국기 이미지 drawable에 있는 이름과 맞추기
-    public void setCt_flag(){
-
-        Log.d(TAG, "최초 국가 영어 이름: " + getCt_eng_name());
+    public void setCt_flag() {
 
         String imgStr = "f_" + getCt_eng_name().toLowerCase();
 
-        Log.d(TAG, "소문자화 국가 영어 이름: " + imgStr);
-        if(imgStr.contains(" ")){
+        if (imgStr.contains(" "))
             imgStr = imgStr.replace(" ", "_");
 
-            Log.d(TAG, "띄어진 국가 영어 이름: " + imgStr);
-        }
-
         this.ct_flag = imgStr;
+    }
+
+    public String getR_img() {
+        return r_img;
+    }
+
+    public void setR_img() {
+
+        String imgStr = getR_eng_name().toLowerCase();
+
+        if (imgStr.contains(" "))
+            imgStr = imgStr.replace(" ", "_");
+
+        this.r_img = imgStr;
     }
 
     public int getIs_favorite() {
@@ -150,27 +161,51 @@ public class Country implements Serializable {
     public void setIs_favorite_ld() {
         this.is_favorite_ld = new MutableLiveData<>();
 
-        if(getIs_favorite() == 1)
+        if (getIs_favorite() == 1)
             this.is_favorite_ld.setValue(true);
-        if(getIs_favorite() == 0)
+        if (getIs_favorite() == 0)
             this.is_favorite_ld.setValue(false);
+    }
+
+    public String getR_name() {
+        return r_name;
+    }
+
+    public void setR_name(String r_name) {
+        this.r_name = r_name;
+    }
+
+    public String getR_eng_name() {
+        return r_eng_name;
+    }
+
+    public void setR_eng_name(String r_eng_name) {
+        this.r_eng_name = r_eng_name;
+    }
+
+    public String getR_explain() {
+        return r_explain;
+    }
+
+    public void setR_explain(String r_explain) {
+        this.r_explain = r_explain;
     }
 
     @Override
     public String toString() {
         return "Country{" +
-                "TAG='" + TAG + '\'' +
-                ", ct_no=" + ct_no +
+                "ct_no=" + ct_no +
                 ", ct_name='" + ct_name + '\'' +
                 ", ct_eng_name='" + ct_eng_name + '\'' +
                 ", ct_capital='" + ct_capital + '\'' +
                 ", ct_continent='" + ct_continent + '\'' +
                 ", ct_language='" + ct_language + '\'' +
                 ", ct_currency='" + ct_currency + '\'' +
-                ", ct_religion='" + ct_religion + '\'' +
-                ", ct_flag='" + ct_flag + '\'' +
+                ", ct_latlng='" + ct_latlng + '\'' +
+                ", r_name='" + r_name + '\'' +
+                ", r_eng_name='" + r_eng_name + '\'' +
+                ", r_explain='" + r_explain + '\'' +
                 ", is_favorite=" + is_favorite +
-                ", ct_is_add_ld=" + is_favorite_ld +
                 '}';
     }
 }

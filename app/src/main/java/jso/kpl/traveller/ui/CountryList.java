@@ -37,6 +37,7 @@ public class CountryList extends AppCompatActivity {
     CountryAPI countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
     int type = 0;
+    int pos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,6 @@ public class CountryList extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         if (getIntent() != null) {
-
             type = getIntent().getIntExtra("type", 0);
             binding.getFcVm().countryCall(type);
 
@@ -134,13 +134,12 @@ public class CountryList extends AppCompatActivity {
 
             // 상세 정보 페이지 전환
             @Override
-            public void onDetailClicked(int ct_no) {
+            public void onDetailClicked(int position, int ct_no) {
 
                 Intent intent = new Intent(App.INSTANCE, DetailCountryInfo.class);
-
                 intent.putExtra("ct_no", ct_no);
-
                 startActivityForResult(intent, 22);
+                pos = position;
             }
         });
 
@@ -185,10 +184,15 @@ public class CountryList extends AppCompatActivity {
         else {
             if (requestCode == 22) {
 
-                binding.getFcVm().countryList.getValue().clear();
-                binding.getFcVm().fciAdapter.removeItem();
+                binding.getFcVm().countryList.getValue().get(pos).is_favorite_ld.setValue(data.getBooleanExtra("is_favorite", false));
 
-                binding.getFcVm().countryCall(type);
+                Log.d(TAG, "onActivityResult: " + binding.getFcVm().countryList.getValue().get(pos).is_favorite_ld.getValue());
+
+                binding.getFcVm().fciAdapter.notifyItemChanged(pos);
+//                binding.getFcVm().countryList.getValue().clear();
+//                binding.getFcVm().fciAdapter.removeItem();
+//
+//                binding.getFcVm().countryCall(type);
             }
         }
     }

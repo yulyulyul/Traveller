@@ -144,7 +144,8 @@
                             android:text="@={searchVm.inputMaxCost}"
                             android:textSize="20dp"
                             app:onChangeMoney="@{null}"
-                            android:nextFocusDown="@id/crystal_range_seek_bar"/>
+                            android:nextFocusDown="@id/crystal_range_seek_bar"
+                            app:setFocusComplete="@{searchVm.onFocusChangeListener}"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"

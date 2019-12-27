@@ -115,5 +115,9 @@ dependencies {
 
     //타임라인 뷰
     implementation project(':timelineview')
+
+    //구글 지도
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

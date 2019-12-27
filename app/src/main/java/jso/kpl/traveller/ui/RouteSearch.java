@@ -133,8 +133,8 @@ public class RouteSearch extends AppCompatActivity {
                         maxCost = Integer.parseInt(s);
                     }
 
-                    //입력값이 만원 이하이면 max값을 10000원으로 고정
-                    if (maxCost > 100000){
+                    //입력값이 백만원 이하이면 max값을 1000000원으로 고정
+                    if (maxCost > 1000000){
                         //시크바의 맥스 코스트에 입력
                         binding.crystalRangeSeekBar.setMaxValue(maxCost);
 
@@ -149,15 +149,15 @@ public class RouteSearch extends AppCompatActivity {
 
                     }else {
                         //시크바의 맥스 코스트에 입력
-                        binding.crystalRangeSeekBar.setMaxValue(100000);
+                        binding.crystalRangeSeekBar.setMaxValue(1000000);
 
                         //시크바의 맥스트 코스트 텍스트
-                        binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(100000));
+                        binding.getSearchVm().seekBarMax.setValue(CurrencyChange.moneyFormatToWon(1000000));
 
                         binding.getSearchVm().costRange.setValue(
                                 CurrencyChange.moneyFormatToWon(0)
                                         + " ~ "
-                                        + CurrencyChange.moneyFormatToWon(100000)
+                                        + CurrencyChange.moneyFormatToWon(1000000)
                         );
                     }
                 }

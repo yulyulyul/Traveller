@@ -40,7 +40,7 @@ class LoginSelect : AppCompatActivity() {
         ls_Binding?.viewmodel?.autoLogin(this)
         initObservables()
 
-
+        window.setWindowAnimations(android.R.style.Animation_Toast)
     }
 
     private fun initObservables() {

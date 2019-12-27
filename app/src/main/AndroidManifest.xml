@@ -20,7 +20,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.ProfileManagement"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_api" />
+
+        <activity android:name=".ui.ProfileManagement" />
         <activity android:name=".ui.MainTab" />
         <activity
             android:name=".ui.EditingPost"
@@ -45,6 +50,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_key" />
+
         <activity
             android:name=".ui.LoginSelect"
             android:theme="@style/AppTheme.NoActionBar"
@@ -58,7 +64,7 @@
         <activity
             android:name=".ui.Login"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name="com.yongbeom.aircalendar.AirCalendarDatePickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" /> <!-- 파일 경로 보안 처리 -->

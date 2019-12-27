@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
@@ -35,6 +38,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -169,6 +174,35 @@ public class BindingAdapters {
     @BindingAdapter({"setFragmentManager", "setInitFragment"})
     public static void onBindFragment(FrameLayout frameLayout, FragmentManager fm, Fragment fragment) {
         fm.beginTransaction().add(frameLayout.getId(), fragment).commit();
+    }
+
+    //이미지뷰에 이미지를 넣는 바인딩 어댑터, 매개변수는 String 형식으로 받는다.
+    @BindingAdapter({"setBgImg"})
+    public static void onBindBgImg(final View v, String imgUri) {
+
+        String path;
+
+        if(imgUri != null && imgUri.contains("file:///"))
+            path = imgUri;
+        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+            path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
+        else
+            path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
+
+
+        Log.d("Trav.img", "setImg: " + path);
+
+        Glide.with(v.getContext())
+                .load(path)
+                .apply(new RequestOptions().placeholder(R.drawable.i_blank_person_icon).error(R.drawable.i_blank_person_icon))
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            v.setBackground(resource);
+                        }
+                    }
+                });
     }
 
     //이미지뷰에 이미지를 넣는 바인딩 어댑터, 매개변수는 String 형식으로 받는다.
@@ -404,7 +438,7 @@ public class BindingAdapters {
         vp.setAdapter(adapter);
         vp.setClipToPadding(false);
 
-        int dpValue = 16;
+        int dpValue = 20;
         float d = App.INSTANCE.getResources().getDisplayMetrics().density;
         int margin = (int) (dpValue * d);
         vp.setPadding(margin, 0, margin, 0);

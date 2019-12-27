@@ -3,6 +3,7 @@ package jso.kpl.traveller.network;
 import java.util.List;
 
 import jso.kpl.traveller.model.Country;
+import jso.kpl.traveller.model.PostSideItem;
 import jso.kpl.traveller.model.ResponseResult;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -30,4 +31,8 @@ public interface CountryAPI {
     @FormUrlEncoded
     @POST("load_country_info")
     Call<ResponseResult<Country>> loadCountryInfo(@Field("u_userid") int u_userid, @Field("ct_no") int ct_no);
+
+    @FormUrlEncoded
+    @POST("load_relative_post")
+    Call<ResponseResult<List<PostSideItem>>> loadRelativePost(@Field("u_userid") int u_userid, @Field("p_place") String p_place);
 }

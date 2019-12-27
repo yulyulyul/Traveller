@@ -24,6 +24,7 @@ import jso.kpl.traveller.databinding.MyPageBinding;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.ui.CountryList;
+import jso.kpl.traveller.ui.DetailCountryInfo;
 import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.EditingPost;
 import jso.kpl.traveller.ui.MainTab;
@@ -100,10 +101,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         pageBinding.getMyPageVm().flagRvAdapter.setOnFlagClickListener(this);
 
         //초기 값
-        pageBinding.getMyPageVm().countryCall();
-        loadPostCall(pageBinding.likePost, 1);
-        loadPostCall(pageBinding.recentPost, 2);
-        loadPostCall(pageBinding.enrollPost, 3);
+        init();
 
         pageBinding.getMyPageVm().onProfileClickListener = new View.OnClickListener() {
             @Override
@@ -116,6 +114,8 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         pageBinding.getMyPageVm().onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+                pageBinding.getMyPageVm().mpProfileLD.setValue(App.Companion.getUser());
 
                 init();
                 Log.d(TAG, "My Page 리프레쉬");
@@ -138,7 +138,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         return pageBinding.getRoot();
     }
 
-    private void init(){
+    private void init() {
         pageBinding.getMyPageVm().countryCall();
         loadPostCall(pageBinding.likePost, 1);
         loadPostCall(pageBinding.recentPost, 2);
@@ -150,10 +150,12 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
 
         Log.d(TAG, "선택 선호 국가: " + ct_no);
 
-        Intent intent = new Intent(getActivity(), RouteList.class);
-        intent.putExtra("req", new MyPageItem(ct_no, 4));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        Intent intent = new Intent(App.INSTANCE, DetailCountryInfo.class);
+
+        intent.putExtra("ct_no", ct_no);
+
+        startActivityForResult(intent, RETURN_FAVORITE_COUNTRY);
+
     }
 
     @Override
@@ -219,7 +221,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
 
         Log.d(TAG, "onActivityResult: " + requestCode);
 
-        if(requestCode == RETURN_MORE){
+        if (requestCode == RETURN_MORE) {
             loadPostCall(pageBinding.likePost, 1);
             loadPostCall(pageBinding.recentPost, 2);
             loadPostCall(pageBinding.enrollPost, 3);
@@ -241,7 +243,8 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         }
 
         if (requestCode == RETURN_FAVORITE_COUNTRY) {
-            pageBinding.getMyPageVm().countryCall();
+            Log.d(TAG, "리셋 페이버릿 컨트리");
+            init();
             pageBinding.getMyPageVm().flagRvAdapter.notifyDataSetChanged();
         }
 

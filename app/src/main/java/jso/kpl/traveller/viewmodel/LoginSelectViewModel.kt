@@ -254,15 +254,15 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
                                 val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
-                           //     ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
                                 ls_goLogin.putExtra("user", receiveUser);
 
                                 ContextCompat.startActivity(getApplication(), ls_goLogin, null)
 
-                               // act.overridePendingTransition(0, 0);
-                                act.finish()
+                                act.overridePendingTransition(R.anim.enter_silde_left, R.anim.exit_silde_right)
+
+                               act.finish()
                             }
                         }
                     }
@@ -270,6 +270,7 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
                     //로그인 요청시 Retrofit 통신 실패시 호출..
                     override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
                         progressDialog?.value = false
+                        act.finish()
                     }
                 })
 

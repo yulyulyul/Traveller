@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
@@ -60,13 +61,33 @@ public class RouteSearchViewModel extends ViewModel {
         Log.d(TAG + "Constructor", ": RouteSearchViewModel");
     }
 
+    public View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+
+            Log.d(TAG, "onFocusChange: 포커스");
+            if(!hasFocus){
+                if(((EditText) v).getText().toString().equals("₩0") || ((EditText) v).getText().toString().equals("0")){
+                    Log.d(TAG, "onFocusChange: 포커스 아웃");
+
+                    ((EditText) v).setText(null);
+                }
+                Log.d(TAG, "포커스 아웃");
+            } else{
+                Log.d(TAG, "포커스 인");
+            }
+        }
+    };
+
     public void onResetClicked(){
-        srLD.setValue(new SearchReq("", 0, 1000000));
-        inputMaxCost.setValue("");
-        seekBarMax.setValue(CurrencyChange.moneyFormatToWon(1000000));
-        seekBarMin.setValue(CurrencyChange.moneyFormatToWon(0));
 
         isInit.setValue(true);
+
+        inputMaxCost.setValue("");
+        srLD.setValue(new SearchReq("", 0, 1000000));
+
+        seekBarMax.setValue(CurrencyChange.moneyFormatToWon(1000000));
+        seekBarMin.setValue(CurrencyChange.moneyFormatToWon(0));
     }
 
     //최종 검색 조건 이벤트

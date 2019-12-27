@@ -29,7 +29,7 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
     public interface OnCountryClickListener {
         void onBtnClicked(int position, int type);
 
-        void onDetailClicked(int ct_no);
+        void onDetailClicked(int position, int ct_no);
     }
 
     public void setOnItemClickListener(OnCountryClickListener onCountryClickListener) {
@@ -105,7 +105,7 @@ public class CountryItemAdapter extends RecyclerView.Adapter<CountryItemAdapter.
 
                     if (position != RecyclerView.NO_POSITION) {
                         if (onCountryClickListener != null) {
-                            onCountryClickListener.onDetailClicked(binding.getCountryItem().getCt_no());
+                            onCountryClickListener.onDetailClicked(position, binding.getCountryItem().getCt_no());
                         }
                     }
 

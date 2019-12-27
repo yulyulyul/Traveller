@@ -47,7 +47,7 @@ public class MyPageViewModel extends ViewModel {
     //[My Page - View Type: Flag]의 리사이클러 뷰의 adapter
     public FlagRvAdapter flagRvAdapter;
 
-    List<Country> favCountryList;
+    public List<Country> favCountryList;
 
     public View.OnClickListener onProfileClickListener;
     public View.OnClickListener onEditingPostClickListener;

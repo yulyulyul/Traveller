@@ -27,19 +27,5 @@ public class SimplePost extends LinearLayout {
         binding = DataBindingUtil.inflate(inflater, R.layout.simple_post, this, true);
 
         binding.setItem(item);
-
-//        binding.getItem().onPostClickListener = new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Log.d("Trav.Item", "Post: " + binding.getItem().toString());
-//////
-//////                Intent intent = new Intent(getContext(), DetailPost.class);
-//////                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//////                intent.putExtra("p_id", item.getP_id());
-//////
-//////                getContext().startActivity(intent);
-//            }
-//        };
     }
 }

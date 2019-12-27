@@ -1,5 +1,6 @@
 package jso.kpl.traveller.ui.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +19,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.AllRouteListBinding;
 
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
+import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
 public class AllRouteList extends Fragment {
@@ -121,6 +125,16 @@ public class AllRouteList extends Fragment {
                 }
             }
         };
+
+        binding.getMainListVm().POST_ID.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Log.d(TAG, "루트 리스트 포스트 아이디: " + integer);
+                Intent intent = new Intent(App.INSTANCE, DetailPost.class);
+                intent.putExtra("p_id", integer);
+                startActivityForResult(intent, 44);
+            }
+        });
 
         return binding.getRoot();
     }

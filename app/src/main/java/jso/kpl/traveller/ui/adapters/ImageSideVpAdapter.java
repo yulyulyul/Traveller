@@ -1,5 +1,7 @@
 package jso.kpl.traveller.ui.adapters;
 
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,9 +18,19 @@ public class ImageSideVpAdapter extends FragmentStatePagerAdapter {
         super(fm, behavior);
     }
 
+    public void removeItem(){
+        fragments.clear();
+        notifyDataSetChanged();
+    }
+
     public void addItem(Fragment fragment){
         fragments.add(fragment);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 
     @NonNull
@@ -31,4 +43,7 @@ public class ImageSideVpAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return fragments.size();
     }
+
+
+
 }
