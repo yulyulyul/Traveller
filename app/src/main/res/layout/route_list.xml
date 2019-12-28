@@ -25,34 +25,10 @@
             layout="@layout/top_action_bar"
             title="@{mainListVm.title}"/>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="@{mainListVm.countryItem == null ? View.GONE:View.VISIBLE}">
-
-            <include
-                layout="@layout/country_info"
-                countryItem="@{mainListVm.countryItem}"
-                app:onCountryWarningClickListener="@{mainListVm.onCountryWarningClickListener}"/>
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@{mainListVm.isOpen ? @drawable/i_down_arrow_icon : @drawable/i_up_arrow_icon}"
-                android:backgroundTint="@color/clicked"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:onClick="@{()->mainListVm.onOpenListClicked()}"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="@{mainListVm.isOpen ? View.VISIBLE : View.GONE}">
+            android:orientation="vertical">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"

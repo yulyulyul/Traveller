@@ -70,8 +70,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public GridTypePost gt_post;
     public VerticalTypePost vt_post;
 
-    public MutableLiveData<Country> countryItem = new MutableLiveData<>();
-
     //검색 결과 리스트
     public MutableLiveData<ListItem> postLD = new MutableLiveData<>();
 
@@ -94,7 +92,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
     //통신 관련 -------------------------------------------------------------------------------------
     PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);
-    CountryAPI countryAPI = WebService.INSTANCE.getClient().create(CountryAPI.class);
 
     Call<ResponseResult<List<ListItem>>> call;
     Callback callback = this;
@@ -106,23 +103,14 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
     public MutableLiveData<Boolean> isRefresh = new MutableLiveData<>();
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener;
-    public MutableLiveData<Boolean> isOpen = new MutableLiveData<>();
+
     public RecyclerView.OnScrollListener onGridScrollListener;
     public RecyclerView.OnScrollListener onVerticalScrollListener;
 
-    public View.OnClickListener onCountryWarningClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ContextCompat.startActivity(App.INSTANCE, intent, null);
-        }
-    };
 
     //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {
 
-        isOpen.setValue(true);
         isRefresh.setValue(false);
 
         postList.setValue(new ArrayList<ListItem>());
@@ -377,16 +365,6 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
                 }
             });
         }
-    }
-
-    public void onOpenListClicked() {
-        isOpen.setValue(!isOpen.getValue());
-    }
-
-    public void countryWarningClicked() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.0404.go.kr/dev/country.mofa?group_idx=&stext=" + countryItem.getValue().getCt_name()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ContextCompat.startActivity(App.INSTANCE, intent, null);
     }
 
     //통신 결과-----------------------------------------------------------------------------------
