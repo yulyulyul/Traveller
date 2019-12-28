@@ -85,6 +85,7 @@ public class MainTab extends AppCompatActivity {
                 } else if (integer == 1) {
 
                     if (allRouteList == null) {
+
                         allRouteList = new AllRouteList();
 
                         fm.beginTransaction()

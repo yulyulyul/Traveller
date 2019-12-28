@@ -47,6 +47,11 @@ public interface PostAPI {
     @POST("/load_recent_post")
     Call<ResponseResult<List<ListItem>>> loadRecentPost(@Field("u_userid") int u_userid);
 
+    //자신의 카트리스트를 가져온다.
+    @FormUrlEncoded
+    @POST("/load_cart_list_post")
+    Call<ResponseResult<List<ListItem>>> loadCartList(@Field("u_userid") int u_userid, @Field("p_id") int p_id, @Field("is_mypage") int is_mypage);
+
     @FormUrlEncoded
     @POST("/load_post_list")
     Call<ResponseResult<List<ListItem>>> loadPostList(@Field("p_id") int p_id, @Field("c_no") int c_no);

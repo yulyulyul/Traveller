@@ -27,4 +27,9 @@ public interface UserAPI {
     @POST("/signup")
     Call<ResponseResult<User>> goSignUp(@Part("User") User user,
                                         @Part MultipartBody.Part imgBody);
+
+    //mypage 카트리스트 뷰 추가 및 삭제
+    @FormUrlEncoded
+    @POST("/update_user_cart_list")
+    Call<ResponseResult<Integer>> updateCartListView(@Field("u_userid") int u_userid, @Field("u_is_cart") int u_is_cart);
 }

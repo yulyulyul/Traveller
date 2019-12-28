@@ -59,9 +59,11 @@ public class MyPageViewModel extends ViewModel {
     public MutableLiveData<Boolean> isLike = new MutableLiveData<>();
     public MutableLiveData<Boolean> isEnroll = new MutableLiveData<>();
     public MutableLiveData<Boolean> isRecent = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isCart = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> isLikeMore = new MutableLiveData<>();
     public MutableLiveData<Boolean> isEnrollMore = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isCartMore = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> isClick = new MutableLiveData<>();
 
@@ -72,8 +74,12 @@ public class MyPageViewModel extends ViewModel {
     public View.OnClickListener onMoreEnrollClickListener;
     public View.OnClickListener onMoreCountryClickListener;
     public View.OnClickListener onMoreLikeClickListener;
+    public View.OnClickListener onMoreCartClickListener;
 
     public MutableLiveData<Integer> POST_ID = new MutableLiveData<>();
+
+    public View.OnClickListener onAddOptionViewListener;
+
     //통신------------------------------------------------------------------------------------------
     CountryAPI countryAPI;
     Call<ResponseResult<List<Country>>> call;
@@ -93,9 +99,11 @@ public class MyPageViewModel extends ViewModel {
         isEnroll.setValue(true);
         isLike.setValue(true);
         isRecent.setValue(true);
+        isCart.setValue(false);
 
         isLikeMore.setValue(false);
         isEnrollMore.setValue(false);
+        isCartMore.setValue(false);
 
         flagRvAdapter = new FlagRvAdapter();
 
@@ -199,6 +207,8 @@ public class MyPageViewModel extends ViewModel {
             call = postAPI.loadRecentPost(App.Companion.getUser().getU_userid());
         else if (type == 3)
             call = postAPI.myPageEnroll(App.Companion.getUser().getU_userid());
+        else if(type == 4)
+            call = postAPI.loadCartList(App.Companion.getUser().getU_userid(), 0,1);
         else
             call = null;
 
@@ -259,6 +269,16 @@ public class MyPageViewModel extends ViewModel {
                                 isEnrollMore.setValue(false);
                                 Log.d(TAG, "등록 포스트 더보기 1 이하: " + isEnrollMore.getValue());
                             }
+                        } else if(type == 4){
+                            isEnroll.setValue(true);
+
+                            if (listItem.size() > 1) {
+                                isCartMore.setValue(true);
+                                Log.d(TAG, "카트 포스트 더보기 2: " + isEnrollMore.getValue());
+                            } else {
+                                isCartMore.setValue(false);
+                                Log.d(TAG, "카트 포스트 더보기 1 이하: " + isEnrollMore.getValue());
+                            }
                         }
 
                     } else if (result.getRes_type() == 0) {
@@ -269,6 +289,8 @@ public class MyPageViewModel extends ViewModel {
                             isRecent.setValue(false);
                         } else if (type == 3) {
                             isEnroll.setValue(false);
+                        } else if (type == 4){
+                            isCart.setValue(false);
                         }
                     }
                 } else {
@@ -279,6 +301,8 @@ public class MyPageViewModel extends ViewModel {
                         isRecent.setValue(false);
                     } else if (type == 3) {
                         isEnroll.setValue(false);
+                    } else {
+                        isCart.setValue(false);
                     }
                 }
 
@@ -298,6 +322,8 @@ public class MyPageViewModel extends ViewModel {
                     isRecent.setValue(false);
                 } else if (type == 3) {
                     isEnroll.setValue(false);
+                } else {
+                    isCart.setValue(false);
                 }
 
                 isSuccess.setValue(false);

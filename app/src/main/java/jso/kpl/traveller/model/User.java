@@ -19,6 +19,8 @@ public class User implements Serializable {
     @SerializedName("u_profile_img")
     String u_profile_img;
 
+    int u_is_cart;
+
     public User(String u_email, String u_pwd, String u_nick_name, String u_device) {
         this.u_email = u_email;
         this.u_pwd = u_pwd;
@@ -81,6 +83,14 @@ public class User implements Serializable {
 
     public void setU_profile_img(String u_profile_img) {
         this.u_profile_img = u_profile_img;
+    }
+
+    public int getU_is_cart() {
+        return u_is_cart;
+    }
+
+    public void setU_is_cart(int u_is_cart) {
+        this.u_is_cart = u_is_cart;
     }
 
     @Override

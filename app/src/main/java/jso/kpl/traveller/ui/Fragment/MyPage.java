@@ -23,6 +23,7 @@ import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MyPageBinding;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.ui.AddOptionView;
 import jso.kpl.traveller.ui.CountryList;
 import jso.kpl.traveller.ui.DetailCountryInfo;
 import jso.kpl.traveller.ui.DetailPost;
@@ -48,9 +49,11 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
     final int RETURN_FAVORITE_COUNTRY = 33;
     final int RETURN_DETAIL_POST = 44;
     final int RETURN_MORE = 55;
+    final int RETURN_ADD = 66;
 
     final int SUB_LIKE = 2;
     final int SUB_ENROLL = 3;
+    final int SUB_CART = 4;
 
     User user;
 
@@ -135,6 +138,27 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             }
         });
 
+        pageBinding.getMyPageVm().onAddOptionViewListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), AddOptionView.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(intent, 66);
+            }
+        };
+
+        pageBinding.getMyPageVm().isCart.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    loadPostCall(pageBinding.cartPost, 4);
+                } else {
+                    pageBinding.cartPost.removeAllViews();
+                }
+            }
+        });
+
         return pageBinding.getRoot();
     }
 
@@ -143,6 +167,11 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         loadPostCall(pageBinding.likePost, 1);
         loadPostCall(pageBinding.recentPost, 2);
         loadPostCall(pageBinding.enrollPost, 3);
+
+        if (App.Companion.getUser().getU_is_cart() == 1) {
+            pageBinding.getMyPageVm().isCart.setValue(true);
+        } else
+            pageBinding.getMyPageVm().isCart.setValue(false);
     }
 
     @Override
@@ -153,9 +182,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         Intent intent = new Intent(App.INSTANCE, DetailCountryInfo.class);
 
         intent.putExtra("ct_no", ct_no);
-
         startActivityForResult(intent, RETURN_FAVORITE_COUNTRY);
-
     }
 
     @Override
@@ -210,6 +237,19 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
                 Log.d(TAG + "More", "선호 포스트 더 보기");
             }
         };
+
+        pageBinding.getMyPageVm().onMoreCartClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(App.INSTANCE, RouteList.class);
+                intent.putExtra("req", new MyPageItem(App.Companion.getUser().getU_userid(), SUB_CART));
+                startActivityForResult(intent, RETURN_MORE);
+
+                Log.d(TAG + "More", "선호 포스트 더 보기");
+            }
+        };
+
     }
 
     @Override
@@ -225,6 +265,11 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             loadPostCall(pageBinding.likePost, 1);
             loadPostCall(pageBinding.recentPost, 2);
             loadPostCall(pageBinding.enrollPost, 3);
+
+            if (App.Companion.getUser().getU_is_cart() == 1)
+                pageBinding.getMyPageVm().isCart.setValue(true);
+            else
+                pageBinding.getMyPageVm().isCart.setValue(false);
         }
 
         if (requestCode == RETURN_PROFILE) {
@@ -240,6 +285,11 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             loadPostCall(pageBinding.likePost, 1);
             loadPostCall(pageBinding.recentPost, 2);
             loadPostCall(pageBinding.enrollPost, 3);
+
+            if (App.Companion.getUser().getU_is_cart() == 1)
+                pageBinding.getMyPageVm().isCart.setValue(true);
+            else
+                pageBinding.getMyPageVm().isCart.setValue(false);
         }
 
         if (requestCode == RETURN_FAVORITE_COUNTRY) {
@@ -253,6 +303,18 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
             pageBinding.enrollPost.removeAllViews();
             pageBinding.getMyPageVm().postCall(act, pageBinding.enrollPost, 3);
             Toast.makeText(App.INSTANCE, "성공적으로 포스트 등록을 하셨습니다.", Toast.LENGTH_LONG).show();
+        }
+
+//        //뷰 추가
+        if (requestCode == RETURN_ADD) {
+
+            int VIEW_TYPE = data.getIntExtra("add_view", 0);
+
+            if (VIEW_TYPE == 1) {
+                pageBinding.getMyPageVm().isCart.setValue(true);
+            } else {
+                pageBinding.getMyPageVm().isCart.setValue(false);
+            }
         }
     }
 }

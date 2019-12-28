@@ -53,20 +53,25 @@ public class AllRouteList extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        Log.d(TAG, "1");
+
         routeListVm.setFm(getActivity().getSupportFragmentManager());
 
         binding = DataBindingUtil.inflate(inflater, R.layout.all_route_list, container, false);
         binding.setMainListVm(routeListVm);
         binding.setLifecycleOwner(this);
 
+        Log.d(TAG, "2");
         if (getArguments() != null) {
             item = (MyPageItem) getArguments().getSerializable("req");
-            binding.getMainListVm().setItem(item);
+       //     binding.getMainListVm().setItem(item);
             binding.getMainListVm().searchByCondition(item);
+            Log.d(TAG, "3");
         }
 
+        Log.d(TAG, "4");
         binding.getMainListVm().addCategoryLayout(getActivity(), binding.categoryLayout);
-
+        Log.d(TAG, "5");
         binding.getMainListVm().onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -92,6 +97,7 @@ public class AllRouteList extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                Log.d(TAG, "6");
                 if(binding.getMainListVm().gt_post.isVisible()){
                     int lastVisibleItemPosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
@@ -112,6 +118,7 @@ public class AllRouteList extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                Log.d(TAG, "7");
                 if(binding.getMainListVm().vt_post != null && binding.getMainListVm().vt_post.isVisible()){
                     int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
@@ -129,6 +136,7 @@ public class AllRouteList extends Fragment {
         binding.getMainListVm().POST_ID.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+                Log.d(TAG, "8");
                 Log.d(TAG, "루트 리스트 포스트 아이디: " + integer);
                 Intent intent = new Intent(App.INSTANCE, DetailPost.class);
                 intent.putExtra("p_id", integer);

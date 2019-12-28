@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -62,7 +63,7 @@ public class StartScreen extends AppCompatActivity {
 
                                     startActivity(intent);
 
-                                    overridePendingTransition(R.anim.enter_silde_left, R.anim.exit_silde_right);
+                                    overridePendingTransition(R.anim.enter_fade_in, R.anim.exit_fade_out);
 
                                     finish();
                                 }
@@ -72,6 +73,8 @@ public class StartScreen extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ResponseResult<User>> call, Throwable t) {
                             finish();
+                            Log.d("Trav.Start", "onFailure: " + t.getMessage());
+
                         }
 
                     });
@@ -79,7 +82,7 @@ public class StartScreen extends AppCompatActivity {
             Intent intent = new Intent(this, LoginSelect.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            overridePendingTransition(R.anim.enter_silde_left, R.anim.exit_silde_right);
+            overridePendingTransition(R.anim.enter_fade_in, R.anim.exit_fade_out);
 
             finish();
         }

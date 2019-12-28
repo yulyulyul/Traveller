@@ -81,7 +81,6 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     fun gotoLogin() {
 
-      //  val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Fragment.MyPage::class.java)
         val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Login::class.java)
         ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         ContextCompat.startActivity(getApplication(), ls_goLogin, null)
@@ -260,7 +259,7 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 //
 //                                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
 //
-//                                act.overridePendingTransition(R.anim.enter_silde_left, R.anim.exit_silde_right)
+//                                act.overridePendingTransition(R.anim.enter_fade_in, R.anim.exit_fade_out)
 //
 //                               act.finish()
 //                            }

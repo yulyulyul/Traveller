@@ -217,6 +217,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
     public void searchByCondition(MyPageItem item) {
 
+        Log.d(TAG, "searchByCondition");
         if (item != null) {
 
             final int no = item.getType();
@@ -239,7 +240,7 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
                     title = "좋아요 포스트";
 
                     Log.d(TAG, "searchByCondition-LIKE");
-                    call = postAPI.loadLikePost(1, 0, 0);
+                    call = postAPI.loadLikePost(App.Companion.getUser().getU_userid(), lastPid, 0);
                     call.enqueue(callback);
                     break;
                 case 3:
@@ -252,47 +253,9 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
                     break;
 
                 case 4:
-                    title = "선호 국가";
-
-                    if (countryItem.getValue() != null) {
-
-                        isOpen.setValue(true);
-                        postAPI.searchByCondition(countryItem.getValue().getCt_name(),
-                                100000000, 0, lastPid, categoryNo)
-                                .enqueue(callback);
-
-                    } else {
-
-                        countryAPI.loadCountryInfo(App.Companion.getUser().getU_userid(), (int) item.getO()).enqueue(new Callback<ResponseResult<Country>>() {
-                            @Override
-                            public void onResponse(Call<ResponseResult<Country>> countryCall, Response<ResponseResult<Country>> response) {
-
-                                if (response.body() != null) {
-
-                                    ResponseResult<Country> result = response.body();
-
-                                    if (result.getRes_type() == 1) {
-
-                                        isOpen.setValue(false);
-
-                                        result.getRes_obj().setCt_flag();
-                                        countryItem.setValue(result.getRes_obj());
-
-                                        Log.d(TAG, "onResponse: " + countryItem.getValue().getCt_name());
-                                        postAPI.searchByCondition(countryItem.getValue().getCt_name(),
-                                                100000000, 0, lastPid, categoryNo)
-                                                .enqueue(callback);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseResult<Country>> call, Throwable t) {
-                                Log.e(TAG, "onFailure: ", t);
-                            }
-                        });
-                    }
-
+                    title = "카트 리스트";
+                    call = postAPI.loadCartList(App.Companion.getUser().getU_userid(), lastPid, 0);
+                    call.enqueue(callback);
                     break;
                 case 5:
                     title = "포스트 리스트";
@@ -307,6 +270,8 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
 
             Log.d(TAG, "searchByCondition: Null");
         }
+
+
     }
 
     /*
