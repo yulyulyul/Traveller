@@ -13,6 +13,7 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.network.CartlistAPI;
 import jso.kpl.traveller.network.RouteOtherDetailAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.ImageSideItem;
@@ -44,6 +45,8 @@ public class DetailPostViewModel extends ViewModel implements Callback {
     //카트 리스트 체크 라이브 데이터
     public MutableLiveData<Boolean> isCart = new MutableLiveData<>();
 
+    public CartlistAPI cartlistAPI;
+
     //--------------------
     // 포스트 하위 모든 이미지들을 보여주는 객체
     public ImageSideVpAdapter postImgAdapter;
@@ -60,6 +63,8 @@ public class DetailPostViewModel extends ViewModel implements Callback {
     RouteOtherDetailAPI routeOtherDetailAPI = WebService.INSTANCE.getClient().create(RouteOtherDetailAPI.class);
 
     public DetailPostViewModel() {
+
+        cartlistAPI = WebService.INSTANCE.getClient().create(CartlistAPI.class);
         isLike.setValue(false);
         isCart.setValue(false);
     }
@@ -77,8 +82,45 @@ public class DetailPostViewModel extends ViewModel implements Callback {
     //----------------------------------------------------------------------------------------------
 
     public void onAddCartPost() {
-        Toast.makeText(App.INSTANCE, "카트리스트입니다. 현재 공사 중입니다.", Toast.LENGTH_SHORT).show();
-        isCart.setValue(!isCart.getValue());
+
+        Call<ResponseResult<Integer>> call;
+
+        //isCart true일 떄 삭제
+        if(isCart.getValue()){
+            call = cartlistAPI.removeCartList(App.Companion.getUser().getU_userid(), postItem.getValue().getP_id());
+        }else {
+            call = cartlistAPI.addCartList(App.Companion.getUser().getU_userid(), postItem.getValue().getP_id());
+        }
+
+        call.enqueue(new Callback<ResponseResult<Integer>>() {
+            @Override
+            public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
+
+                if(response.body() != null){
+                    ResponseResult<Integer> result = response.body();
+
+                    if(result.getRes_type() == 1){
+                        isCart.setValue(!isCart.getValue());
+                    } else {
+                        App.Companion.sendToast("카트 리스트에 추가 실패");
+                    }
+
+                }  else{
+
+                    App.Companion.sendToast("카트 리스트에 추가 실패");
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
+
+                App.Companion.sendToast("카트 리스트에 추가 실패");
+
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
     }
 
     //좋아요 누를 때 클릭 이벤트

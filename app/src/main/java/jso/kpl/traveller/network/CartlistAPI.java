@@ -13,6 +13,14 @@ import retrofit2.http.POST;
 public interface CartlistAPI {
 
     @FormUrlEncoded
+    @POST("/add_cart_list")
+    Call<ResponseResult<Integer>> addCartList(@Field("u_userid") int u_userid, @Field("p_id") int p_id);
+
+    @FormUrlEncoded
+    @POST("/delete_cart_list")
+    Call<ResponseResult<Integer>> removeCartList(@Field("u_userid") int u_userid, @Field("p_id") int p_id);
+
+    @FormUrlEncoded
     @POST("/load_cartlist")
     Call<ResponseResult<List<CartListItem>>> cartlist(@Field("u_userid") int u_userid);
 
