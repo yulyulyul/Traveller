@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".ui.SearchResultList"></activity>
         <activity android:name=".ui.StartScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,9 +33,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_map_api" />
 
-
-        <activity android:name=".ui.AddOptionView"
-            android:theme="@style/Transparent"/>
+        <activity
+            android:name=".ui.AddOptionView"
+            android:theme="@style/Transparent" />
         <activity android:name=".ui.ProfileManagement" />
         <activity android:name=".ui.MainTab" />
         <activity
@@ -64,8 +65,7 @@
         <activity
             android:name=".ui.LoginSelect"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ui.Login"
             android:theme="@style/AppTheme.NoActionBar"

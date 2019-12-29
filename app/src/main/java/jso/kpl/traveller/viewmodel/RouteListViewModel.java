@@ -107,6 +107,9 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public RecyclerView.OnScrollListener onGridScrollListener;
     public RecyclerView.OnScrollListener onVerticalScrollListener;
 
+    public MutableLiveData<Boolean> isUser = new MutableLiveData();
+    public MutableLiveData<Boolean> isLike = new MutableLiveData();
+    public MutableLiveData<Boolean> isCart = new MutableLiveData();
 
     //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {

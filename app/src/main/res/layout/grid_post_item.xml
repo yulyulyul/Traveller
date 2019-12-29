@@ -3,12 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="gridItemVm"
             type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -17,12 +20,21 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
             android:layout_gravity="center"
+            android:adjustViewBounds="true"
             android:cropToPadding="true"
+            android:scaleType="fitXY"
             app:setImg="@{gridItemVm.postLD.sp_imgs}" />
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/user"
+            android:backgroundTint="@color/white"
+            android:visibility="@{gridItemVm.isUser ? View.VISIBLE : View.GONE}" />
+
+    </RelativeLayout>
 
 </layout>

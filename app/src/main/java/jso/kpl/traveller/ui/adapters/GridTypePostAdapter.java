@@ -67,6 +67,15 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
         holder.onBind(item);
 
+        if (App.Companion.getUser().getU_userid() == item.getU_userid()) {
+            holder.binding.getGridItemVm().isUser.setValue(true);
+            Log.d(TAG, "onBindViewHolder: 트루");
+        } else {
+            holder.binding.getGridItemVm().isUser.setValue(false);
+            Log.d(TAG, "onBindViewHolder: 폴스");
+        }
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +87,7 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
     public void addItem(ListItem item) {
 
-        if(postList == null)
+        if (postList == null)
             postList = new ArrayList<>();
 
         postList.add(item);
@@ -88,7 +97,7 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
     public void addItems(List<ListItem> items) {
 
-        if(postList == null)
+        if (postList == null)
             postList = new ArrayList<>();
 
         postList.addAll(items);

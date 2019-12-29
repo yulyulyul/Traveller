@@ -64,7 +64,7 @@ public class AllRouteList extends Fragment {
         Log.d(TAG, "2");
         if (getArguments() != null) {
             item = (MyPageItem) getArguments().getSerializable("req");
-       //     binding.getMainListVm().setItem(item);
+           binding.getMainListVm().setItem(item);
             binding.getMainListVm().searchByCondition(item);
             Log.d(TAG, "3");
         }

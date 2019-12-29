@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.widget.FrameLayout"/>
-        <import type="android.view.View"/>
+
+        <import type="android.widget.FrameLayout" />
+
+        <import type="android.view.View" />
 
         <variable
             name="title"
@@ -23,7 +25,13 @@
         <include
             android:id="@+id/top_action_bar"
             layout="@layout/top_action_bar"
-            title="@{mainListVm.title}"/>
+            title="@{mainListVm.title}" />
+
+        <LinearLayout
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,23 +42,25 @@
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
-                app:addOnTabSelected="@{mainListVm.onTabSelectedListener(container)}"
                 android:background="@color/simple_white"
-                app:tabIndicatorColor="@color/clicked"/>
+                app:addOnTabSelected="@{mainListVm.onTabSelectedListener(container)}"
+                app:setTabLayout="@{mainListVm.getTabs(tabLayout)}"
+                app:tabIndicatorColor="@color/clicked" />
 
             <HorizontalScrollView
                 android:id="@+id/category_horizontal_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginVertical="5dp"
+                android:background="@color/simple_white"
                 android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/category_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal" />
 
             </HorizontalScrollView>
 
@@ -59,14 +69,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="90"
-                app:onRefreshListener="@{mainListVm.onRefreshListener}"
-                app:checkRefresh="@{mainListVm.isRefresh}">
+                app:checkRefresh="@{mainListVm.isRefresh}"
+                app:onRefreshListener="@{mainListVm.onRefreshListener}">
 
                 <FrameLayout
                     android:id="@+id/container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/simple_white"/>
+                    android:background="@color/simple_white" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -74,5 +84,5 @@
 
     </LinearLayout>
 
-    
+
 </layout>
