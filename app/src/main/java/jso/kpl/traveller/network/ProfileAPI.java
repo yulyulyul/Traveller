@@ -37,5 +37,8 @@ public interface ProfileAPI {
     @POST("/user_info_count")
     Call<ResponseResult<List<Integer>>> loadUserInfo(@Field("u_userid") int u_userid);
 
+    @FormUrlEncoded
+    @POST("/user_info_test_count")
+    Call<ResponseResult<List<Integer>>> loadUserInfoTest(@Field("u_userid") int u_userid);
 
 }

@@ -262,6 +262,9 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         Log.d(TAG, "onActivityResult: " + requestCode);
 
         if (requestCode == RETURN_MORE) {
+
+            pageBinding.getMyPageVm().mpProfileLD.setValue(App.Companion.getUser());
+
             loadPostCall(pageBinding.likePost, 1);
             loadPostCall(pageBinding.recentPost, 2);
             loadPostCall(pageBinding.enrollPost, 3);

@@ -28,10 +28,11 @@
             title="@{mainListVm.title}" />
 
         <LinearLayout
-            android:id="@+id/test"
+            android:id="@+id/add_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:layout_marginBottom="2dp"
+            android:orientation="vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +52,7 @@
                 android:id="@+id/category_horizontal_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginVertical="5dp"
+                android:layout_marginVertical="2dp"
                 android:background="@color/simple_white"
                 android:scrollbars="none">
 

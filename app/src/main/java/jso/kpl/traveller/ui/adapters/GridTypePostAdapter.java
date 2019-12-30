@@ -67,32 +67,12 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
 
         holder.onBind(item);
 
-        if (App.Companion.getUser().getU_userid() == item.getU_userid()) {
-            holder.binding.getGridItemVm().isUser.setValue(true);
-            Log.d(TAG, "onBindViewHolder: 트루");
-        } else {
-            holder.binding.getGridItemVm().isUser.setValue(false);
-            Log.d(TAG, "onBindViewHolder: 폴스");
-        }
-
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onGridItemClickListener.GridItemClicked(item.getP_id());
             }
         });
-
-    }
-
-    public void addItem(ListItem item) {
-
-        if (postList == null)
-            postList = new ArrayList<>();
-
-        postList.add(item);
-
-        notifyItemInserted(postList.size() - 1);
     }
 
     public void addItems(List<ListItem> items) {
@@ -134,15 +114,21 @@ public class GridTypePostAdapter extends RecyclerView.Adapter<GridTypePostAdapte
             super(binding.getRoot());
 
             this.binding = binding;
-            binding.setGridItemVm(new RouteListViewModel());
-            binding.setLifecycleOwner(new RouteList());
         }
 
         public void onBind(ListItem item) {
 
             item.setSp_imgs(item.getSp_imgs());
 
-            binding.getGridItemVm().postLD.setValue(item);
+            binding.setItem(item.getSp_imgs());
+
+            if (App.Companion.getUser().getU_userid() == item.getU_userid()) {
+                binding.setIsUser(true);
+                Log.d(TAG, "onBindViewHolder: 트루");
+            } else {
+                binding.setIsUser(false);
+                Log.d(TAG, "onBindViewHolder: 폴스");
+            }
         }
     }
 }

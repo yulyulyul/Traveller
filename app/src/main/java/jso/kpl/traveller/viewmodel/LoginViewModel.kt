@@ -46,7 +46,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     init {
         btnSelected = ObservableBoolean(false)
-        email = ObservableField("test@gmail.com")
+        email = ObservableField("search_result@gmail.com")
         password = ObservableField("1q2w3e4r")
         muUser = MutableLiveData<User>()
         progressDialog = SingleLiveEvent<Boolean>()

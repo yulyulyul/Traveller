@@ -7,8 +7,13 @@
         <import type="android.view.View" />
 
         <variable
-            name="gridItemVm"
-            type="jso.kpl.traveller.viewmodel.RouteListViewModel" />
+            name="item"
+            type="String" />
+
+        <variable
+            name="isUser"
+            type="Boolean" />
+
     </data>
 
     <RelativeLayout
@@ -24,7 +29,7 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:scaleType="fitXY"
-            app:setImg="@{gridItemVm.postLD.sp_imgs}" />
+            app:setImg="@{item}" />
 
         <ImageView
             android:layout_width="20dp"
@@ -33,7 +38,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/user"
             android:backgroundTint="@color/white"
-            android:visibility="@{gridItemVm.isUser ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{isUser ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 

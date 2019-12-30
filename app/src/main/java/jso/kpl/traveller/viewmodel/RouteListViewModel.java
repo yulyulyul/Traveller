@@ -34,6 +34,7 @@ import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SearchReq;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
+import jso.kpl.traveller.network.ProfileAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.GridTypePost;
 import jso.kpl.traveller.ui.Fragment.VerticalTypePost;
@@ -90,8 +91,18 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     //StaggeredGridLayout의 한줄 당 아이템 갯수와 간격을 설정하는 객체
     public GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(3, 10, true);
 
+    //검색 결과 및 재 검색
+    public MutableLiveData<String> country = new MutableLiveData<>();
+    public MutableLiveData<String> minCost = new MutableLiveData<>();
+    public MutableLiveData<String> maxCost = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isOpen = new MutableLiveData<>();
+    // 유저 포스트 갯수
+    public MutableLiveData<String> profileImg = new MutableLiveData<>();
+    public MutableLiveData<List<Integer>> cnts = new MutableLiveData<>();
+
     //통신 관련 -------------------------------------------------------------------------------------
     PostAPI postAPI = WebService.INSTANCE.getClient().create(PostAPI.class);
+    ProfileAPI profileAPI = WebService.INSTANCE.getClient().create(ProfileAPI.class);
 
     Call<ResponseResult<List<ListItem>>> call;
     Callback callback = this;
@@ -108,11 +119,13 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
     public RecyclerView.OnScrollListener onVerticalScrollListener;
 
     public MutableLiveData<Boolean> isUser = new MutableLiveData();
-    public MutableLiveData<Boolean> isLike = new MutableLiveData();
-    public MutableLiveData<Boolean> isCart = new MutableLiveData();
 
     //----------------------------------------------------------------------------------------------
     public RouteListViewModel() {
+
+        cnts.setValue(new ArrayList<Integer>());
+
+        isOpen.setValue(false);
 
         isRefresh.setValue(false);
 
@@ -369,6 +382,29 @@ public class RouteListViewModel extends ViewModel implements Callback, GridTypeP
             });
         }
     }
+
+    public void userInfoCall() {
+
+        profileAPI.loadUserInfoTest(App.Companion.getUser().getU_userid()).enqueue(new Callback<ResponseResult<List<Integer>>>() {
+            @Override
+            public void onResponse(Call<ResponseResult<List<Integer>>> call, Response<ResponseResult<List<Integer>>> response) {
+                if (response.body() != null) {
+                    ResponseResult<List<Integer>> result = response.body();
+
+                    if (result.getRes_type() == 1) {
+                        cnts.setValue(result.getRes_obj());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseResult<List<Integer>>> call, Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+
+    }
+
 
     //통신 결과-----------------------------------------------------------------------------------
 

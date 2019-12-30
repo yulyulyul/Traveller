@@ -2,10 +2,8 @@ package jso.kpl.traveller.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
+import jso.kpl.traveller.databinding.MyProfileBinding;
 import jso.kpl.traveller.databinding.RouteListBinding;
+import jso.kpl.traveller.databinding.SearchResultBinding;
 import jso.kpl.traveller.model.ListItem;
 import jso.kpl.traveller.model.MyPageItem;
+import jso.kpl.traveller.model.SearchReq;
+import jso.kpl.traveller.util.CurrencyChange;
+import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.RouteListViewModel;
 
 public class RouteList extends AppCompatActivity {
@@ -45,14 +49,13 @@ public class RouteList extends AppCompatActivity {
         binding.setMainListVm(routeListVm);
         binding.setLifecycleOwner(this);
 
-        View testView = getLayoutInflater().inflate(R.layout.test, binding.test, false);
-
-        binding.test.addView(testView);
 
         if (getIntent() != null) {
             item = (MyPageItem) getIntent().getSerializableExtra("req");
             binding.getMainListVm().setItem(item);
             binding.getMainListVm().searchByCondition(item);
+
+            addUpperView(item);
         }
 
         if (((MyPageItem) getIntent().getSerializableExtra("req")).getType() == 0) {
@@ -144,6 +147,112 @@ public class RouteList extends AppCompatActivity {
         });
     }
 
+    public void addUpperView(final MyPageItem item) {
+
+        View addView;
+
+        final int type = item.getType();
+
+        if(type == 1){
+            binding.getMainListVm().country.setValue(((SearchReq) item.getO()).getSr_country());
+            binding.getMainListVm().minCost.setValue(CurrencyChange.moneyFormatToWon(((SearchReq) item.getO()).getSr_min_cost()));
+            binding.getMainListVm().maxCost.setValue(CurrencyChange.moneyFormatToWon(((SearchReq) item.getO()).getSr_max_cost()));
+
+            addView = getLayoutInflater().inflate(R.layout.search_result, binding.addView, false);
+            final SearchResultBinding resultBinding = DataBindingUtil.bind(addView);
+
+            resultBinding.setCountry(binding.getMainListVm().country);
+            resultBinding.setMinCost(binding.getMainListVm().minCost);
+            resultBinding.setMaxCost(binding.getMainListVm().maxCost);
+            resultBinding.setIsOpen(binding.getMainListVm().isOpen);
+
+            resultBinding.setLifecycleOwner(RouteList.this);
+
+            resultBinding.setOnOpenClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: ");
+                    binding.getMainListVm().isOpen.setValue(!binding.getMainListVm().isOpen.getValue());
+                }
+            });
+
+            resultBinding.setOnReSearchClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String country = binding.getMainListVm().country.getValue();
+
+                    int minCost, maxCost;
+
+                    if (binding.getMainListVm().minCost.getValue().contains("₩"))
+                        minCost = Integer.parseInt(binding.getMainListVm().minCost.getValue().replace("₩", "").replace(",", ""));
+                    else
+                        minCost = Integer.parseInt(binding.getMainListVm().minCost.getValue());
+
+                    if (binding.getMainListVm().maxCost.getValue().contains("₩"))
+                        maxCost = Integer.parseInt(binding.getMainListVm().maxCost.getValue().replace("₩", "").replace(",", ""));
+                    else
+                        maxCost = Integer.parseInt(binding.getMainListVm().maxCost.getValue());
+
+                    Log.d(TAG, "onClick: 재검색: " + country + " 최소: " + minCost + " 최대: " + maxCost);
+
+                    item.setO(new SearchReq(country, minCost, maxCost));
+
+                    binding.getMainListVm().setItem(item);
+
+                    binding.getMainListVm().gridAdapter.removeItems();
+                    binding.getMainListVm().verticalAdapter.removeItems();
+
+                    binding.getMainListVm().lastPid = 0;
+
+                    binding.getMainListVm().postList.getValue().clear();
+
+                    binding.getMainListVm().searchByCondition(item);
+
+                    JavaUtil.downKeyboard(RouteList.this);
+
+                    binding.getMainListVm().isOpen.setValue(false);
+                }
+            });
+
+            binding.addView.addView(addView);
+        } else if(type == 2 || type == 3 || type == 4) {
+            addView = getLayoutInflater().inflate(R.layout.my_profile, binding.addView, false);
+            final MyProfileBinding profileBinding = DataBindingUtil.bind(addView);
+
+            binding.getMainListVm().userInfoCall();
+
+            binding.getMainListVm().cnts.observe(RouteList.this, new Observer<List<Integer>>() {
+                @Override
+                public void onChanged(List<Integer> integers) {
+                    profileBinding.setCnts(integers);
+                }
+            });
+
+            binding.getMainListVm().profileImg.setValue(App.Companion.getUser().getU_profile_img());
+
+            profileBinding.setImg(binding.getMainListVm().profileImg.getValue());
+
+            profileBinding.setNickName(App.Companion.getUser().getU_nick_name());
+
+            binding.getMainListVm().profileImg.observe(RouteList.this, new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    profileBinding.setImg(s);
+                }
+            });
+
+            profileBinding.setOnReviseClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(RouteList.this, ProfileManagement.class);
+                    startActivityForResult(intent, 11);
+                }
+            });
+
+            binding.addView.addView(addView);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         setResult(RESULT_OK);
@@ -158,6 +267,12 @@ public class RouteList extends AppCompatActivity {
         if (resultCode != RESULT_OK)
             return;
 
+        if (requestCode == 11) {
+            Log.d(TAG, "업데이트 이미지: " + App.Companion.getUser().getU_profile_img());
+
+            binding.getMainListVm().profileImg.setValue(App.Companion.getUser().getU_profile_img());
+        }
+
         if (requestCode == 44) {
             Log.d(TAG, "디테일 포스트 -> 루트 리스트: ");
             binding.getMainListVm().gridAdapter.removeItems();
@@ -168,6 +283,8 @@ public class RouteList extends AppCompatActivity {
             binding.getMainListVm().postList.getValue().clear();
 
             binding.getMainListVm().searchByCondition(item);
+
+            binding.getMainListVm().userInfoCall();
         }
     }
 }
