@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import me.jerryhanks.timelineview.interfaces.TimeLineViewCallback
 import me.jerryhanks.timelineview.model.Status
@@ -20,7 +21,8 @@ class IndicatorAdapter<in T : TimeLine>(
 ) : RecyclerView.Adapter<IndicatorHolder>() {
 
     private var recyclerViewHeight: Int = 0
-    private var itemViewHeight: Int = 0
+    var itemViewHeight: MutableLiveData<Int> = MutableLiveData()
+    var itemViewWidth: MutableLiveData<Int> = MutableLiveData()
     private var listener: OnItemClickListener? = null
 
     private fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int, type: Int) -> Unit): T {
@@ -44,7 +46,12 @@ class IndicatorAdapter<in T : TimeLine>(
         recyclerViewHeight = parent.height
 
         if (parent.childCount != 0) {
-            itemViewHeight = parent.getChildAt(0).height
+            var recyclerItem = parent.getChildAt(0)
+            itemViewHeight.value = recyclerItem.height
+            if (recyclerItem is ViewGroup) {
+                itemViewWidth.value = parent.width - recyclerItem.getChildAt(3).width - 30
+            }
+            Log.d("IndicatorAdapter", itemViewHeight.value.toString() + ", " + itemViewWidth.value.toString())
         }
 
         return IndicatorHolder(view).listen { pos, type ->
@@ -62,7 +69,10 @@ class IndicatorAdapter<in T : TimeLine>(
             val params = holder.constraintLayout.layoutParams
             holder.constraintLayout.layoutParams
             if (params is RecyclerView.LayoutParams) {
-                params.bottomMargin = recyclerViewHeight - itemViewHeight
+                if (itemViewHeight.value == null) {
+                    itemViewHeight.value = 0
+                }
+                params.bottomMargin = recyclerViewHeight - (itemViewHeight.value)!!.toInt()
             }
         } else {
             val params = holder.constraintLayout.layoutParams
@@ -120,6 +130,10 @@ class IndicatorAdapter<in T : TimeLine>(
 
     override fun getItemCount(): Int {
         return this.timeLines.size
+    }
+
+    fun getItem(position: Int): TimeLine {
+        return this.timeLines.get(position)
     }
 
     /**

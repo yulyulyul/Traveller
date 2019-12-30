@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -162,7 +163,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         cartlistAPI.cartlist(App.Companion.getUser().getU_userid()).enqueue(this);
 
         timelineItem.setValue(new ArrayList<Timeline>());
-        timelineItem.getValue().add(new Timeline(Status.COMPLETED, "", "", "", "", ""));
+        timelineItem.getValue().add(new Timeline(Status.ATTENTION, "", "", "", "", ""));
         timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
             public View onBindView(Timeline model, FrameLayout container, final int position) {
                 TimeLineItemBinding timeLineItemBinding = DataBindingUtil.inflate(LayoutInflater.from(App.INSTANCE), R.layout.time_line_item, container, false);
@@ -354,7 +355,6 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                     }
                                     timelineItem.getValue().clear();
                                     timelineItem.getValue().addAll(cartlistTimeline);
-                                    Log.d(TAG, timelineItem.getValue().toString());
 
                                     timelineAdapter.setValue(new IndicatorAdapter<>(timelineItem.getValue(), App.INSTANCE, new TimeLineViewCallback<Timeline>() {
                                         public View onBindView(Timeline model, FrameLayout container, final int position) {
@@ -389,7 +389,6 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                             });
                             isCartlist.setValue(true); // 카트리스트 타임라인뷰 보이기
                             onCartlistClickListener.onClick(view); // 네비게이션바 닫기
-
                             //cartlistWidth.setValue(200);
                         }
                     });

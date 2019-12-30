@@ -15,98 +15,113 @@
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:background="@drawable/sample_item_bg"
-        android:minHeight="120dp"
+        android:minHeight="130dp"
         android:orientation="horizontal"
         android:padding="5dp"><!--android:background="@drawable/sample_item_bg"-->
 
         <!--카트리스트 컨텐츠-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cartlist_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/place"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cartlist_content"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:text="@{TL.sp_place}"
-                android:textSize="20dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/cartlist_cost_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="비용 : "
-                android:visibility="@{TL.sp_expenses == null || TL.sp_expenses.toCharArray()[0] == '0' ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="@id/place"
-                app:layout_constraintTop_toBottomOf="@id/place" />
+                <TextView
+                    android:id="@+id/place"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@{TL.sp_place}"
+                    android:textSize="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/cartlist_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{TL.sp_expenses}"
-                android:visibility="@{TL.sp_expenses == null || TL.sp_expenses.toCharArray()[0] == '0' ? View.GONE : View.VISIBLE}"
-                app:layout_constraintLeft_toRightOf="@id/cartlist_cost_txt"
-                app:layout_constraintTop_toTopOf="@id/cartlist_cost_txt" />
+                <TextView
+                    android:id="@+id/cartlist_cost_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="비용 : "
+                    android:visibility="@{TL.sp_expenses == null || TL.sp_expenses.toCharArray()[0] == '0' ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="@id/place"
+                    app:layout_constraintTop_toBottomOf="@id/place" />
 
-            <TextView
-                android:id="@+id/cartlist_period_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="여행 날짜 : "
-                android:visibility="@{TL.sp_period == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="@id/place"
-                app:layout_constraintTop_toBottomOf="@id/cartlist_cost_txt" />
+                <TextView
+                    android:id="@+id/cartlist_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{TL.sp_expenses}"
+                    android:visibility="@{TL.sp_expenses == null || TL.sp_expenses.toCharArray()[0] == '0' ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintLeft_toRightOf="@id/cartlist_cost_txt"
+                    app:layout_constraintTop_toTopOf="@id/cartlist_cost_txt" />
 
-            <TextView
-                android:id="@+id/cartlist_period"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{TL.sp_period}"
-                android:visibility="@{TL.sp_period == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintLeft_toRightOf="@id/cartlist_period_txt"
-                app:layout_constraintTop_toTopOf="@id/cartlist_period_txt" />
+                <TextView
+                    android:id="@+id/cartlist_period_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="여행 날짜 : "
+                    android:visibility="@{TL.sp_period == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="@id/place"
+                    app:layout_constraintTop_toBottomOf="@id/cartlist_cost_txt" />
 
-            <TextView
-                android:id="@+id/cartlist_category_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="카테고리 : "
-                android:visibility="@{TL.sp_category == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintLeft_toLeftOf="@id/place"
-                app:layout_constraintTop_toBottomOf="@id/cartlist_period_txt" />
+                <TextView
+                    android:id="@+id/cartlist_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{TL.sp_period}"
+                    android:visibility="@{TL.sp_period == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintLeft_toRightOf="@id/cartlist_period_txt"
+                    app:layout_constraintTop_toTopOf="@id/cartlist_period_txt" />
 
-            <TextView
-                android:id="@+id/cartlist_category"
+                <TextView
+                    android:id="@+id/cartlist_category_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="카테고리 : "
+                    android:visibility="@{TL.sp_category == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintLeft_toLeftOf="@id/place"
+                    app:layout_constraintTop_toBottomOf="@id/cartlist_period_txt" />
+
+                <TextView
+                    android:id="@+id/cartlist_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{TL.sp_category}"
+                    android:visibility="@{TL.sp_category == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintLeft_toRightOf="@id/cartlist_category_txt"
+                    app:layout_constraintTop_toTopOf="@id/cartlist_category_txt" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/cartlist_img"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{TL.sp_category}"
-                android:visibility="@{TL.sp_category == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintLeft_toRightOf="@id/cartlist_category_txt"
-                app:layout_constraintTop_toTopOf="@id/cartlist_category_txt" />
+                android:layout_height="100dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cartlist_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:setFitCenterImg="@{TL.sp_imgs}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/cartlist_img"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="5dp"
-            app:setFitCenterImg="@{TL.sp_imgs}" />
     </LinearLayout>
+
 </layout>

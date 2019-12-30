@@ -7,15 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.yongbeom.aircalendar.AirCalendarDatePickerActivity;
 
@@ -31,6 +34,7 @@ import jso.kpl.traveller.databinding.EditingPostBinding;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.model.Timeline;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
@@ -38,6 +42,8 @@ import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.EditingPostViewModel;
+import me.jerryhanks.timelineview.IndicatorAdapter;
+import me.jerryhanks.timelineview.model.Status;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -284,6 +290,38 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                     }
                 }
         );
+
+        /*binding.getEditingPostVm().isCartlist.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean bool) {
+                if (bool) {
+                    System.out.println("여긴뭐...");
+                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.content.getLayoutParams();
+                    layoutParams.topMargin = binding.getEditingPostVm().getItemHeight();
+                    layoutParams.leftMargin = binding.getEditingPostVm().getItemWidth();
+                    binding.content.setLayoutParams(layoutParams);
+                } else {
+
+                }
+            }
+        });*/
+
+        binding.getEditingPostVm().timelineAdapter.observe(this, new Observer<IndicatorAdapter<Timeline>>() {
+            @Override
+            public void onChanged(IndicatorAdapter<Timeline> adapter) {
+                if (adapter.getItem(0).getStatus() != Status.ATTENTION) {
+                    adapter.getItemViewWidth().observe(EditingPost.this, new Observer<Integer>() {
+                        @Override
+                        public void onChanged(Integer i) {
+                            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.content.getLayoutParams();
+                            layoutParams.topMargin = binding.getEditingPostVm().timelineAdapter.getValue().getItemViewHeight().getValue();
+                            layoutParams.leftMargin = binding.getEditingPostVm().timelineAdapter.getValue().getItemViewWidth().getValue();
+                            binding.content.setLayoutParams(layoutParams);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
