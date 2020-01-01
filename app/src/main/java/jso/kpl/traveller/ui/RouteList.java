@@ -153,7 +153,7 @@ public class RouteList extends AppCompatActivity {
 
         final int type = item.getType();
 
-        if(type == 1){
+        if(type == 0){
             binding.getMainListVm().country.setValue(((SearchReq) item.getO()).getSr_country());
             binding.getMainListVm().minCost.setValue(CurrencyChange.moneyFormatToWon(((SearchReq) item.getO()).getSr_min_cost()));
             binding.getMainListVm().maxCost.setValue(CurrencyChange.moneyFormatToWon(((SearchReq) item.getO()).getSr_max_cost()));
@@ -215,6 +215,7 @@ public class RouteList extends AppCompatActivity {
             });
 
             binding.addView.addView(addView);
+
         } else if(type == 2 || type == 3 || type == 4) {
             addView = getLayoutInflater().inflate(R.layout.my_profile, binding.addView, false);
             final MyProfileBinding profileBinding = DataBindingUtil.bind(addView);
