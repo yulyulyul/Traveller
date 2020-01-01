@@ -83,7 +83,7 @@
             <FrameLayout
                 android:id="@+id/frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@id/upper_toolbar">
 
                 <LinearLayout
@@ -239,7 +239,7 @@
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:layout_marginLeft="10dp"
+                                                        android:layout_marginStart="15dp"
                                                         android:text="국가"
                                                         android:textColor="@color/clicked"
                                                         android:textSize="@dimen/middle_text_size"
@@ -249,6 +249,8 @@
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
                                                         android:layout_marginHorizontal="10dp"
+                                                        android:layout_marginStart="15dp"
+                                                        android:layout_marginEnd="15dp"
                                                         android:background="@android:color/transparent"
                                                         android:hint="여행 국가를 입력해주세요."
                                                         android:maxLength="85"
@@ -284,21 +286,22 @@
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:layout_marginLeft="10dp"
+                                                        android:layout_marginStart="15dp"
                                                         android:text="경비"
                                                         android:textColor="@color/black"
                                                         android:textSize="@dimen/middle_text_size"
                                                         android:textStyle="bold" />
 
-                                                    <EditText
+                                                    <TextView
                                                         android:id="@+id/edit_expenses"
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
                                                         android:layout_marginHorizontal="10dp"
+                                                        android:layout_marginStart="15dp"
+                                                        android:layout_marginEnd="15dp"
                                                         android:background="@android:color/transparent"
                                                         android:focusable="false"
                                                         android:hint="총 경비 합산"
-                                                        android:inputType="number"
                                                         android:maxLength="15"
                                                         android:nextFocusDown="@id/edit_comment"
                                                         android:padding="5dp"
@@ -335,7 +338,7 @@
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:layout_marginLeft="10dp"
+                                                        android:layout_marginStart="15dp"
                                                         android:text="기간"
                                                         android:textColor="@color/black"
                                                         android:textSize="@dimen/middle_text_size"
@@ -352,6 +355,8 @@
                                                             android:id="@+id/text_calendar"
                                                             android:layout_width="match_parent"
                                                             android:layout_height="wrap_content"
+                                                            android:layout_marginStart="5dp"
+                                                            android:layout_marginEnd="5dp"
                                                             android:background="@android:color/transparent"
                                                             android:focusable="true"
                                                             android:hint="여행 기간을 설정해주세요."
@@ -389,7 +394,7 @@
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:layout_marginLeft="10dp"
+                                                        android:layout_marginStart="15dp"
                                                         android:text="내용"
                                                         android:textColor="@color/black"
                                                         android:textSize="@dimen/middle_text_size"
@@ -400,6 +405,8 @@
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
                                                         android:layout_marginHorizontal="10dp"
+                                                        android:layout_marginStart="15dp"
+                                                        android:layout_marginEnd="15dp"
                                                         android:background="@android:color/transparent"
                                                         android:focusable="true"
                                                         android:hint="내용을 입력해주세요. (200자 제한)"
@@ -478,6 +485,30 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/cartlistTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:background="@drawable/s_border_round_right"
+                        android:drawableBottom="@drawable/i_double_right_16px_white"
+                        android:drawablePadding="3dp"
+                        android:paddingStart="7dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="10dp"
+                        android:text="카\n트\n리\n스\n트"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="15dp"
+                        android:visibility="@{editingPostVm.isCartlist?View.GONE:View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </FrameLayout>
 

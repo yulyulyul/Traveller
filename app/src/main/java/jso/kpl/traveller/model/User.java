@@ -19,6 +19,9 @@ public class User implements Serializable {
     @SerializedName("u_profile_img")
     String u_profile_img;
 
+    public User() {
+    }
+
     public User(String u_email, String u_pwd, String u_nick_name, String u_device) {
         this.u_email = u_email;
         this.u_pwd = u_pwd;

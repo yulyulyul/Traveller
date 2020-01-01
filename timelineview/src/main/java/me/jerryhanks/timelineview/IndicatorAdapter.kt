@@ -23,6 +23,7 @@ class IndicatorAdapter<in T : TimeLine>(
     private var recyclerViewHeight: Int = 0
     var itemViewHeight: MutableLiveData<Int> = MutableLiveData()
     var itemViewWidth: MutableLiveData<Int> = MutableLiveData()
+    var itemExist: MutableLiveData<Boolean> = MutableLiveData()
     private var listener: OnItemClickListener? = null
 
     private fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int, type: Int) -> Unit): T {
@@ -45,14 +46,16 @@ class IndicatorAdapter<in T : TimeLine>(
             LayoutInflater.from(parent.context).inflate(R.layout.timeline_indicator, parent, false)
         recyclerViewHeight = parent.height
 
-        if (parent.childCount != 0) {
-            var recyclerItem = parent.getChildAt(0)
-            itemViewHeight.value = recyclerItem.height
+       // if (parent.childCount != 0) {
+
+            var recyclerItem : View ? = parent.getChildAt(0)
+            itemViewHeight.value = recyclerItem?.height
+
             if (recyclerItem is ViewGroup) {
                 itemViewWidth.value = parent.width - recyclerItem.getChildAt(3).width - 30
             }
             Log.d("IndicatorAdapter", itemViewHeight.value.toString() + ", " + itemViewWidth.value.toString())
-        }
+       // }
 
         return IndicatorHolder(view).listen { pos, type ->
             Log.d("IndicatorAdapter", "pos -> " + pos + " type -> " + type)
@@ -126,6 +129,10 @@ class IndicatorAdapter<in T : TimeLine>(
         //start adding new views
         holder.container.addView(child)
         params.gravity = Gravity.CENTER_VERTICAL or Gravity.START
+
+        if (itemExist.value == null) {
+            itemExist.value = true
+        }
     }
 
     override fun getItemCount(): Int {

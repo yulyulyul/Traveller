@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -300,24 +301,24 @@ public class BindingAdapters {
     //금액 EditText를 통화 단위로 변경, 누르면 일반 숫자로 나열
     //최대 입력 길이는 10
     @BindingAdapter("onChangeMoney")
-    public static void bindChangeMoney(EditText et, @Nullable String money) {
+    public static void bindChangeMoney(TextView tv, @Nullable String money) {
 
         final int len = 10;
 
-        et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        tv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
                 if (hasFocus) {
                     Log.d("TAG", "bindChangeMoney: focus on");
 
-                    if (!((EditText) v).getText().equals("")) {
-                        String a = ((EditText) v).getText().toString().replace("₩", "");
+                    if (!((TextView) v).getText().equals("")) {
+                        String a = ((TextView) v).getText().toString().replace("₩", "");
                         a = a.replace(",", "");
 
-                        ((EditText) v).setText(a);
+                        ((TextView) v).setText(a);
 
-                        ((EditText) v).setFilters(new InputFilter[]{
+                        ((TextView) v).setFilters(new InputFilter[]{
                                 new InputFilter.LengthFilter(len)
                         });
 
@@ -325,19 +326,19 @@ public class BindingAdapters {
                 } else {
 
                     try {
-                        if (((EditText) v).getText().toString().equals("")) {
+                        if (((TextView) v).getText().toString().equals("")) {
                             Log.d("TAG", "onFocusChange: off");
-                            ((EditText) v).setText("0");
+                            ((TextView) v).setText("0");
                         }
 
-                        int len = ((EditText) v).length();
+                        int len = ((TextView) v).length();
 
                         int change_length = (10 + len / 3 + 1);
 
-                        ((EditText) v).setFilters(new InputFilter[]{
+                        ((TextView) v).setFilters(new InputFilter[]{
                                 new InputFilter.LengthFilter(change_length)});
 
-                        Long lngMoney = Long.parseLong(((EditText) v).getText().toString());
+                        Long lngMoney = Long.parseLong(((TextView) v).getText().toString());
                         String cc = CurrencyChange.moneyFormatToWon(lngMoney);
 
                         ((EditText) v).setText(cc);

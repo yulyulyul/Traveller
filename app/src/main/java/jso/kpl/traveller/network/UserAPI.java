@@ -18,13 +18,18 @@ public interface UserAPI {
     @POST("/login")
     Call<ResponseResult<User>> goLogin(@Body LoginUser lu_obj);
 
-    //회원가입
     @FormUrlEncoded
     @POST("/check_value")
     Call<ResponseResult<Integer>> authEmail(@Field("u_email") String u_email);
 
+    //회원가입
     @Multipart
     @POST("/signup")
     Call<ResponseResult<User>> goSignUp(@Part("User") User user,
                                         @Part MultipartBody.Part imgBody);
+
+    //회원 탈퇴
+    @FormUrlEncoded
+    @POST("/delete_user")
+    Call<ResponseResult<Integer>> deleteUser(@Field("u_userid") int u_userid);
 }

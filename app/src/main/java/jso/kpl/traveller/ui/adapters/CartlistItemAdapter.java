@@ -84,10 +84,12 @@ public class CartlistItemAdapter extends RecyclerView.Adapter<CartlistItemAdapte
 
         public void onBind(final CartListItem item){
 
-            String tmp = item.p_period.replace(" ", "");
-            String[] tmps = tmp.split("~");
+            if (item.p_period != null) {
+                String tmp = item.p_period.replace(" ", "");
+                String[] tmps = tmp.split("~");
 
-            item.setP_period(JavaUtil.travelPeriod(tmps[0], tmps[1]));
+                item.setP_period(JavaUtil.travelPeriod(tmps[0], tmps[1]));
+            }
 
             if (!item.getP_expenses().contains("₩")) {
                 String currency = CurrencyChange.moneyFormatToWon(Long.parseLong(item.getP_expenses()));

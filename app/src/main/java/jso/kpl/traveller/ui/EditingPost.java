@@ -291,21 +291,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 }
         );
 
-        /*binding.getEditingPostVm().isCartlist.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean bool) {
-                if (bool) {
-                    System.out.println("여긴뭐...");
-                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.content.getLayoutParams();
-                    layoutParams.topMargin = binding.getEditingPostVm().getItemHeight();
-                    layoutParams.leftMargin = binding.getEditingPostVm().getItemWidth();
-                    binding.content.setLayoutParams(layoutParams);
-                } else {
-
-                }
-            }
-        });*/
-
         binding.getEditingPostVm().timelineAdapter.observe(this, new Observer<IndicatorAdapter<Timeline>>() {
             @Override
             public void onChanged(IndicatorAdapter<Timeline> adapter) {
@@ -320,6 +305,14 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         }
                     });
                 }
+            }
+        });
+
+        binding.cartlistTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DrawerLayout drawer = binding.drawer;
+                drawer.openDrawer(Gravity.LEFT);
             }
         });
     }
