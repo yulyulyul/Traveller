@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -18,18 +19,19 @@
         <include
             android:id="@+id/top_action_bar"
             layout="@layout/top_action_bar"
-            app:title="@{pmVm.title}" />
+            app:title="@{pmVm.title[pmVm.toolbarTitle]}" />
 
-        <ScrollView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/container"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="@{!pmVm.isInputPwd &amp;&amp; pmVm.toolbarTitle == 0 ? View.VISIBLE : View.GONE}">
 
                 <LinearLayout
+                    android:id="@+id/linear"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
@@ -38,18 +40,129 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
+                        <TextView
+                            android:id="@+id/profile_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="프로필 사진"
+                            android:textColor="@color/black_87"
+                            android:textSize="@dimen/subtitle_text_size"
+                            android:textStyle="bold" />
+
                         <ImageView
                             android:id="@+id/profile_iv"
                             OnClickListener="@{pmVm.onImgClickListener}"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_below="@id/profile_txt"
                             android:layout_centerInParent="true"
-                            android:layout_margin="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
                             app:setCircleImg="@{pmVm.userLD.u_profile_img}" />
+
+                        <TextView
+                            android:id="@+id/profile_update_btn"
+                            OnClickListener="@{pmVm.onImgClickListener}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/profile_iv"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="15dp"
+                            android:text="프로필 사진 변경"
+                            android:textColor="@color/clicked"
+                            android:textSize="@dimen/subtitle_text_size" />
 
                     </RelativeLayout>
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="20dp">
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/clicked"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/user_info_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="프로필 정보"
+                            android:textColor="@color/black_87"
+                            android:textSize="@dimen/subtitle_text_size"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                        <TextView
+                            android:id="@+id/email_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="20dp"
+                            android:text="이메일"
+                            android:textColor="#888888"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/user_info_txt" />
+
+                        <TextView
+                            android:id="@+id/email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="35dp"
+                            android:layout_marginTop="5dp"
+                            android:text="@{pmVm.userLD.u_email}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/email_txt" />
+
+                        <TextView
+                            android:id="@+id/nick_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="10dp"
+                            android:text="닉네임"
+                            android:textColor="#888888"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/email" />
+
+                        <TextView
+                            android:id="@+id/nick"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="35dp"
+                            android:layout_marginTop="5dp"
+                            android:text="@{pmVm.userLD.u_nick_name}"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/nick_txt" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -57,10 +170,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/clicked"
-                            android:padding="10dp"
+                            android:padding="20dp"
                             android:text="개인 정보"
-                            android:textColor="@color/white"
+                            android:textColor="@color/clicked"
                             android:textSize="@dimen/subtitle_text_size"
                             android:textStyle="bold" />
 
@@ -110,19 +222,20 @@
                                     android:layout_height="wrap_content"
                                     android:hint="수정 닉네임"
                                     android:nextFocusDown="@id/update_btn"
-                                    android:text="@={pmVm.updateNick}"/>
+                                    android:text="@={pmVm.updateNick}" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="@{pmVm.wrongUpdateNick}"
                                     android:textColor="@color/colorAccent"
-                                    android:visibility="@{pmVm.wrongUpdateNick == null ? View.GONE : View.VISIBLE }"/>
+                                    android:visibility="@{pmVm.wrongUpdateNick == null ? View.GONE : View.VISIBLE }" />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <Button
                                 android:id="@+id/update_nick_btn"
+                                OnClickListener="@{pmVm.onUpdateNickListener}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
@@ -132,7 +245,6 @@
                                 android:background="@drawable/s_round_border_blue"
                                 android:backgroundTint="@color/clicked"
                                 android:clickable="true"
-                                OnClickListener="@{pmVm.onUpdateNickListener}"
                                 android:text="수정"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/subtitle_text_size" />
@@ -178,8 +290,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:focusableInTouchMode="true"
                                 android:background="@color/white"
+                                android:focusableInTouchMode="true"
                                 android:onClick="@{(view) -> pmVm.onReviseClicked(view)}"
                                 android:text="@{pmVm.isPwd ? @string/cancel : @string/revise}"
                                 android:textColor="@color/clicked"
@@ -201,21 +313,21 @@
                                 app:hintTextColor="@color/clicked">
 
                                 <androidx.appcompat.widget.AppCompatEditText
+                                    setFocusComplete="@{pmVm.currentPwdFocus}"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="현재 비밀번호"
                                     android:inputType="textPassword"
                                     android:nextFocusDown="@id/update_pwd"
-                                    android:text="@={pmVm.currentPwd}"
-                                    setFocusComplete="@{pmVm.currentPwdFocus}" />
+                                    android:text="@={pmVm.currentPwd}" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
                                     android:text="@{pmVm.wrongCurrentPwd}"
                                     android:textColor="@color/colorAccent"
-                                    android:visibility="@{pmVm.wrongCurrentPwd == null ? View.GONE : View.VISIBLE }"
-                                    android:layout_marginBottom="5dp"/>
+                                    android:visibility="@{pmVm.wrongCurrentPwd == null ? View.GONE : View.VISIBLE }" />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -226,21 +338,21 @@
 
                                 <androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/update_pwd"
+                                    setFocusComplete="@{pmVm.updatePwdFocus}"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="수정 비밀번호"
                                     android:inputType="textPassword"
                                     android:nextFocusDown="@id/update_btn"
-                                    android:text="@={pmVm.updatePwd}"
-                                    setFocusComplete="@{pmVm.updatePwdFocus}"/>
+                                    android:text="@={pmVm.updatePwd}" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
                                     android:text="@{pmVm.wrongUpdatePwd}"
                                     android:textColor="@color/colorAccent"
-                                    android:visibility="@{pmVm.wrongUpdatePwd== null ? View.GONE : View.VISIBLE }"
-                                    android:layout_marginBottom="5dp"/>
+                                    android:visibility="@{pmVm.wrongUpdatePwd== null ? View.GONE : View.VISIBLE }" />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -262,121 +374,428 @@
 
                         </LinearLayout>
 
+                    </LinearLayout>-->
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="20dp">
+
+                        <View
+                            android:id="@+id/divider3"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/clicked"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <TextView
+                            android:id="@+id/act_info_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="활동 정보"
+                            android:textColor="@color/black_87"
+                            android:textSize="@dimen/subtitle_text_size"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                        <TextView
+                            android:id="@+id/enroll_count_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="20dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="5dp"
-                            android:onClick="@{()->pmVm.onLogoutClicked()}"
-                            android:text="로그아웃"
-                            android:textSize="@dimen/subtitle_text_size" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/clicked"
-                            android:padding="10dp"
-                            android:text="활동 정보"
-                            android:textColor="@color/white"
+                            android:text="내 포스트"
                             android:textSize="@dimen/subtitle_text_size"
-                            android:textStyle="bold" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="20dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="작성 포스트의 수"
-                                android:textSize="@dimen/subtitle_text_size" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:text="@{pmVm.cnts[0].toString()}"
-                                android:textColor="@color/clicked"
-                                android:textSize="@dimen/subtitle_text_size" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="20dp"
-                            android:layout_marginVertical="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="좋아요 포스트의 수"
-                                android:textSize="@dimen/subtitle_text_size" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:text="@{pmVm.cnts[1].toString()}"
-                                android:textColor="@color/clicked"
-                                android:textSize="@dimen/subtitle_text_size" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="20dp"
-                            android:layout_marginVertical="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="선호하는 국가의 수"
-                                android:textSize="@dimen/subtitle_text_size" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:text="@{pmVm.cnts[2].toString()}"
-                                android:textColor="@color/clicked"
-                                android:textSize="@dimen/subtitle_text_size" />
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorAccent">
+                            app:layout_constraintBottom_toBottomOf="@id/like_count_txt"
+                            app:layout_constraintEnd_toStartOf="@+id/like_count_txt"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/like_count_txt" />
 
                         <TextView
+                            android:id="@+id/enroll_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{pmVm.cnts[0].toString()}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintBottom_toBottomOf="@id/like_count"
+                            app:layout_constraintEnd_toEndOf="@id/enroll_count_txt"
+                            app:layout_constraintStart_toStartOf="@id/enroll_count_txt"
+                            app:layout_constraintTop_toTopOf="@id/like_count" />
+
+                        <TextView
+                            android:id="@+id/like_count_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:text="좋아요 포스트"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/like_count" />
+
+                        <TextView
+                            android:id="@+id/like_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@{pmVm.cnts[1].toString()}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/act_info_txt" />
+
+                        <TextView
+                            android:id="@+id/favorite_count_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="선호 국가"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintBottom_toBottomOf="@id/like_count_txt"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/like_count_txt"
+                            app:layout_constraintTop_toTopOf="@id/like_count_txt" />
+
+                        <TextView
+                            android:id="@+id/favorite_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{pmVm.cnts[2].toString()}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintBottom_toBottomOf="@id/like_count"
+                            app:layout_constraintEnd_toEndOf="@id/favorite_count_txt"
+                            app:layout_constraintStart_toStartOf="@id/favorite_count_txt"
+                            app:layout_constraintTop_toTopOf="@id/like_count" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="20dp">
+
+                        <View
+                            android:id="@+id/divider4"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/clicked"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+
+                            android:id="@+id/user_info_update_txt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:text="탈퇴"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/subtitle_text_size" />
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:text="계정 관리"
+                            android:textColor="@color/black_87"
+                            android:textSize="@dimen/subtitle_text_size"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider4" />
 
-                    </LinearLayout>
+                        <TextView
+                            android:id="@+id/profile_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="25dp"
+                            android:drawableEnd="@drawable/i_right_btn_16px_blue"
+                            android:text="프로필 정보 변경"
+                            android:textColor="@color/clicked"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/user_info_update_txt" />
+
+                        <TextView
+                            android:id="@+id/pwd_update"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="25dp"
+                            android:drawableEnd="@drawable/i_right_btn_16px_blue"
+                            android:text="계정 비밀번호 변경"
+                            android:textColor="@color/clicked"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_info" />
+
+                        <TextView
+                            android:id="@+id/user_delete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="25dp"
+                            android:drawableEnd="@drawable/i_right_btn_16px_blue"
+                            android:text="회원 탈퇴"
+                            android:textColor="@color/clicked"
+                            android:textSize="@dimen/subtitle_text_size"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/pwd_update" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </ScrollView>
 
-        </ScrollView>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/pwd_check"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite"
+                    android:orientation="vertical"
+                    android:visibility="@{pmVm.isInputPwd ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/input_pwd_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="10dp"
+                        android:padding="10dp"
+                        android:text="회원님의 정보 보호를 위해\n현재 비밀번호를 입력하세요."
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintBottom_toTopOf="@id/divider"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="@color/colorWhite"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/input_pwd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="10dp"
+                        android:hint="비밀번호"
+                        android:inputType="textPassword"
+                        android:padding="10dp"
+                        android:textColor="@color/clicked"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toStartOf="@id/pwd_check_btn"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider">
+
+                    </EditText>
+
+                    <Button
+                        android:id="@+id/pwd_check_btn"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@drawable/s_border_round_square"
+                        android:text="확인"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/input_pwd"
+                        app:layout_constraintTop_toTopOf="@id/input_pwd" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite"
+                    android:visibility="@{!pmVm.isInputPwd &amp;&amp; pmVm.toolbarTitle == 1 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/nick_txt2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="15dp"
+                        android:text="닉네임"
+                        android:textColor="#888888"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/input_nick"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="30dp"
+                        android:hint="한글, 영문 소대문자, 숫자 2 ~ 10자"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/nick_txt2" />
+
+                    <Button
+                        android:id="@+id/user_info_update_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/s_round_border_blue"
+                        android:backgroundTint="@color/clicked"
+                        android:text="수정"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/input_nick" />
+
+                    <TextView
+                        android:id="@+id/nick_name_check_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="25dp"
+                        android:textColor="@color/design_default_color_error"
+                        android:textSize="@dimen/subtitle_text_size"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/user_info_update_btn" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite"
+                    android:visibility="@{!pmVm.isInputPwd &amp;&amp; pmVm.toolbarTitle == 2 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/pwd_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="15dp"
+                        android:text="새 비밀번호"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/input_new_pwd"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="30dp"
+                        android:hint="영문 소문자, 숫자, 특문 !@#$%^*(선택) 조합 8자 이상"
+                        android:inputType="textPassword"
+                        android:textColor="@color/clicked"
+                        android:textSize="@dimen/middle_text_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pwd_txt" />
+
+                    <TextView
+                        android:id="@+id/pwd_check_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="15dp"
+                        android:text="새 비밀번호 확인"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/input_new_pwd" />
+
+                    <EditText
+                        android:id="@+id/input_new_pwd_check"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="30dp"
+                        android:inputType="textPassword"
+                        android:textColor="@color/clicked"
+                        android:textSize="@dimen/middle_text_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pwd_check_txt" />
+
+                    <Button
+                        android:id="@+id/user_pwd_update_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/s_round_border_blue"
+                        android:backgroundTint="@color/clicked"
+                        android:text="수정"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/subtitle_text_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/input_new_pwd_check" />
+
+                    <TextView
+                        android:id="@+id/pwd_check_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="25dp"
+                        android:textColor="@color/design_default_color_error"
+                        android:textSize="@dimen/subtitle_text_size"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/user_pwd_update_btn" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

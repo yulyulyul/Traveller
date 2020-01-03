@@ -64,6 +64,7 @@
                                     app:setCircleImg="@{myPageVm.mpProfileLD.u_profile_img}" />
 
                                 <TextView
+                                    android:id="@+id/nick_name_txt"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
@@ -72,6 +73,17 @@
                                     android:text="@{myPageVm.mpProfileLD.u_nick_name}"
                                     android:textColor="@color/white"
                                     android:textSize="20dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginHorizontal="20dp"
+                                    android:onClick="@{()->myPageVm.onLogoutClicked()}"
+                                    android:text="로그아웃"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/middle_text_size" />
 
                             </RelativeLayout>
 
@@ -109,8 +121,9 @@
                                 android:hint="다른 여행자의 루트가 궁금하신가요?"
                                 android:textSize="15dp" />
 
-                        </LinearLayout>
 
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"

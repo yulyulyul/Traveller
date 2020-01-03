@@ -66,10 +66,9 @@
             android:clickable="true"
             android:background="@drawable/s_round_border_blue"
             android:backgroundTint="@color/clicked"
-            android:onClick="@{()->pmVm.onUpdatePwdClicked()}"
             android:text="수정"
             android:textColor="@color/white"
-            android:textSize="@dimen/subtitle_text_size" />
+            android:textSize="@dimen/subtitle_text_size" /> <!--android:onClick="@{()->pmVm.onUpdatePwdClicked()}"-->
 
     </LinearLayout>
 

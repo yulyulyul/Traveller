@@ -1,7 +1,9 @@
 package jso.kpl.traveller.viewmodel;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,6 +23,7 @@ import jso.kpl.traveller.model.User;
 import jso.kpl.traveller.network.CountryAPI;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
+import jso.kpl.traveller.ui.LoginSelect;
 import jso.kpl.traveller.ui.PostType.EmptyPost;
 import jso.kpl.traveller.ui.PostType.SimplePost;
 import jso.kpl.traveller.ui.RouteSearch;
@@ -192,6 +195,20 @@ public class MyPageViewModel extends ViewModel {
                 errorStr.setValue("일시적 오류입니다.");
             }
         });
+    }
+
+    public void onLogoutClicked() {
+        SharedPreferences sp = App.INSTANCE.getSharedPreferences("auto_login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.remove("auto_login");
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(App.INSTANCE, LoginSelect.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        App.INSTANCE.startActivity(intent);
     }
 
     public void postCall(final Activity act, final LinearLayout layout, final int type) {

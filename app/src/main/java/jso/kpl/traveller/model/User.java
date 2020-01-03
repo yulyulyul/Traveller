@@ -18,8 +18,11 @@ public class User implements Serializable {
     String u_device;
     @SerializedName("u_profile_img")
     String u_profile_img;
-
     int u_is_cart;
+
+    public User() {
+    }
+
 
     public User(String u_email, String u_pwd, String u_nick_name, String u_device) {
         this.u_email = u_email;

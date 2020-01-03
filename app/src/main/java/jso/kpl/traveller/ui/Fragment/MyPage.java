@@ -28,6 +28,8 @@ import jso.kpl.traveller.ui.CountryList;
 import jso.kpl.traveller.ui.DetailCountryInfo;
 import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.EditingPost;
+import jso.kpl.traveller.ui.Login;
+import jso.kpl.traveller.ui.LoginSelect;
 import jso.kpl.traveller.ui.MainTab;
 import jso.kpl.traveller.ui.ProfileManagement;
 import jso.kpl.traveller.ui.RouteList;
@@ -276,9 +278,18 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
         }
 
         if (requestCode == RETURN_PROFILE) {
-            pageBinding.getMyPageVm().mpProfileLD.setValue(App.Companion.getUser());
-            ((MainTab) getActivity()).replaceFragment(newInstance(App.Companion.getUser()), "myPage");
-            Log.d(TAG, "프로필:마이페이지 프래그먼트 갱신");
+            if (data != null) {
+                if (data.getIntExtra("result", 0) == 1) {
+                    Intent intent = new Intent(getActivity(), LoginSelect.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            } else {
+                pageBinding.getMyPageVm().mpProfileLD.setValue(App.Companion.getUser());
+                ((MainTab) getActivity()).replaceFragment(newInstance(App.Companion.getUser()), "myPage");
+                Log.d(TAG, "프로필:마이페이지 프래그먼트 갱신");
+            }
         }
 
         if (requestCode == RETURN_DETAIL_POST) {

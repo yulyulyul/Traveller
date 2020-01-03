@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import me.jerryhanks.timelineview.interfaces.TimeLineViewCallback
 import me.jerryhanks.timelineview.model.Status
@@ -20,7 +23,8 @@ class IndicatorAdapter<in T : TimeLine>(
 ) : RecyclerView.Adapter<IndicatorHolder>() {
 
     private var recyclerViewHeight: Int = 0
-    private var itemViewHeight: Int = 0
+    var itemViewHeight: MutableLiveData<Int> = MutableLiveData()
+    var content: MutableLiveData<ViewGroup> = MutableLiveData()
     private var listener: OnItemClickListener? = null
 
     private fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int, type: Int) -> Unit): T {
@@ -42,10 +46,8 @@ class IndicatorAdapter<in T : TimeLine>(
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.timeline_indicator, parent, false)
         recyclerViewHeight = parent.height
-
-        if (parent.childCount != 0) {
-            itemViewHeight = parent.getChildAt(0).height
-        }
+        content.value = parent
+        itemViewHeight.value = parent.getChildAt(0)?.height
 
         return IndicatorHolder(view).listen { pos, type ->
             Log.d("IndicatorAdapter", "pos -> " + pos + " type -> " + type)
@@ -58,11 +60,13 @@ class IndicatorAdapter<in T : TimeLine>(
     }
 
     override fun onBindViewHolder(holder: IndicatorHolder, position: Int) {
-        if (position == itemCount - 1) {
+        if (position == itemCount - 1 && itemCount != 1) {
             val params = holder.constraintLayout.layoutParams
-            holder.constraintLayout.layoutParams
             if (params is RecyclerView.LayoutParams) {
-                params.bottomMargin = recyclerViewHeight - itemViewHeight
+                if (itemViewHeight.value == null) {
+                    itemViewHeight.value = 0
+                }
+                params.bottomMargin = recyclerViewHeight - (itemViewHeight.value)!!.toInt()
             }
         } else {
             val params = holder.constraintLayout.layoutParams
@@ -116,10 +120,27 @@ class IndicatorAdapter<in T : TimeLine>(
         //start adding new views
         holder.container.addView(child)
         params.gravity = Gravity.CENTER_VERTICAL or Gravity.START
+        /*Log.d("indicatCon2", "" + holder.container.height) // frame content
+        Log.d("indicatCon2", "" + holder.container.getChildAt(0).height) // frame content
+        if (child is LinearLayout) {
+            var child_constraint = child.getChildAt(0)
+            //Log.d("indicat", ""+ child.getChildAt(0)) //const
+            //Log.d("indicat", ""+ child.getChildAt(0).height)
+            //Log.d("indicatCon2", ""+ holder.container.getChildAt(0).height) // frame content
+            if (child_constraint is ConstraintLayout) {
+                //Log.d("indicat", ""+ child_constraint.getChildAt(0)) // const cartlist
+                //Log.d("indicat", ""+ child_constraint.getChildAt(0).height)
+
+            }
+        }*/
     }
 
     override fun getItemCount(): Int {
         return this.timeLines.size
+    }
+
+    fun getItem(position: Int): TimeLine {
+        return this.timeLines.get(position)
     }
 
     /**

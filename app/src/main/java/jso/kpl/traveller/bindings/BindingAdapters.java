@@ -1,11 +1,7 @@
 package jso.kpl.traveller.bindings;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.text.InputFilter;
 import android.util.Log;
@@ -13,15 +9,13 @@ import android.view.KeyEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -37,7 +31,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
@@ -211,9 +204,9 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("file:///"))
+        if (imgUri != null && imgUri.contains("file:///"))
             path = imgUri;
-        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+        else if (imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
         else
             path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
@@ -233,9 +226,9 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("file:///"))
+        if (imgUri != null && imgUri.contains("file:///"))
             path = imgUri;
-        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+        else if (imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
         else
             path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
@@ -256,9 +249,9 @@ public class BindingAdapters {
 
         String path;
 
-        if(imgUri != null && imgUri.contains("file:///"))
+        if (imgUri != null && imgUri.contains("file:///"))
             path = imgUri;
-        else if(imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
+        else if (imgUri != null && (imgUri.contains(".jpg") || imgUri.contains(".gif") || imgUri.contains(".png")))
             path = App.INSTANCE.getResources().getString(R.string.server_ip_port) + "uploads/" + imgUri;
         else
             path = "android.resource://jso.kpl.traveller/drawable/" + imgUri;
@@ -332,24 +325,24 @@ public class BindingAdapters {
     //금액 EditText를 통화 단위로 변경, 누르면 일반 숫자로 나열
     //최대 입력 길이는 10
     @BindingAdapter("onChangeMoney")
-    public static void bindChangeMoney(EditText et, @Nullable String money) {
+    public static void bindChangeMoney(TextView tv, @Nullable String money) {
 
         final int len = 10;
 
-        et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        tv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
                 if (hasFocus) {
                     Log.d("TAG", "bindChangeMoney: focus on");
 
-                    if (!((EditText) v).getText().equals("")) {
-                        String a = ((EditText) v).getText().toString().replace("₩", "");
+                    if (!((TextView) v).getText().equals("")) {
+                        String a = ((TextView) v).getText().toString().replace("₩", "");
                         a = a.replace(",", "");
 
-                        ((EditText) v).setText(a);
+                        ((TextView) v).setText(a);
 
-                        ((EditText) v).setFilters(new InputFilter[]{
+                        ((TextView) v).setFilters(new InputFilter[]{
                                 new InputFilter.LengthFilter(len)
                         });
 
@@ -357,19 +350,19 @@ public class BindingAdapters {
                 } else {
 
                     try {
-                        if (((EditText) v).getText().toString().equals("")) {
+                        if (((TextView) v).getText().toString().equals("")) {
                             Log.d("TAG", "onFocusChange: off");
-                            ((EditText) v).setText("0");
+                            ((TextView) v).setText("0");
                         }
 
-                        int len = ((EditText) v).length();
+                        int len = ((TextView) v).length();
 
                         int change_length = (10 + len / 3 + 1);
 
-                        ((EditText) v).setFilters(new InputFilter[]{
+                        ((TextView) v).setFilters(new InputFilter[]{
                                 new InputFilter.LengthFilter(change_length)});
 
-                        Long lngMoney = Long.parseLong(((EditText) v).getText().toString());
+                        Long lngMoney = Long.parseLong(((TextView) v).getText().toString());
                         String cc = CurrencyChange.moneyFormatToWon(lngMoney);
 
                         ((EditText) v).setText(cc);
@@ -427,13 +420,28 @@ public class BindingAdapters {
         view.setLayoutParams(layoutParams);
     }
 
+    // 동적 padding 조절
+    @BindingAdapter({"marginLeft", "marginTop"})
+    public static void setMargin(View view, int left, int top) {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+        layoutParams.topMargin = top;
+        layoutParams.leftMargin = left;
+        view.setLayoutParams(layoutParams);
+    }
+
+    // 동적 margin 조절
+    @BindingAdapter({"paddingLeft", "paddingTop"})
+    public static void setPadding(View view, int left, int top) {
+        view.setPadding(left, top, 0, 0);
+    }
+
     @BindingAdapter({"setTimelineAdapter"})
     public static void onBindTimelineAdapter(TimeLineView timelineView, IndicatorAdapter adapter) {
         timelineView.setIndicatorAdapter(adapter);
     }
 
     @BindingAdapter("setViewPagerAdapter")
-    public static void onBindVpAdapter(ViewPager vp, PagerAdapter adapter){
+    public static void onBindVpAdapter(ViewPager vp, PagerAdapter adapter) {
 
         vp.setAdapter(adapter);
         vp.setClipToPadding(false);
@@ -442,7 +450,7 @@ public class BindingAdapters {
         float d = App.INSTANCE.getResources().getDisplayMetrics().density;
         int margin = (int) (dpValue * d);
         vp.setPadding(margin, 0, margin, 0);
-        vp.setPageMargin(margin/2);
+        vp.setPageMargin(margin / 2);
     }
 
     @BindingAdapter({"onRefreshListener", "checkRefresh"})

@@ -1,104 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="rebuild.com.kakaotalk_login.Activity.LoginActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="jso.kpl.traveller.viewmodel.LoginViewModel" />
     </data>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/clicked"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingTop="56dp"
-            android:paddingRight="24dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="트래블러"
-                android:textSize="50dp"
-                android:gravity="center"
-                android:textColor="@color/white" />
-
-            <!-- Email Label -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:textColorHint="@color/colorWhite">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/input_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="이메일"
-                    android:inputType="textEmailAddress"
-                    android:onTextChanged="@{viewmodel::onEmailChanged}"
-                    android:text="@={viewmodel.email}"
-                    android:textColor="@color/colorWhite"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Password Label -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:textColorHint="@color/colorWhite">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="패스워드"
-                    android:inputType="textPassword"
-                    android:onTextChanged="@{viewmodel::onPasswordChanged}"
-                    android:text="@={viewmodel.password}"
-                    android:textColor="@color/colorWhite" />
-            </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="match_parent"
+            android:background="@color/clicked"
+            android:fitsSystemWindows="true">
 
             <LinearLayout
+                android:id="@+id/linear"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@drawable/s_round_border_blue"
-                android:enabled="@{viewmodel.btnSelected}"
-                android:onClick="@{()->viewmodel.login()}">
+                android:paddingLeft="24dp"
+                android:paddingTop="56dp"
+                android:paddingRight="24dp">
 
                 <TextView
-                    android:id="@+id/btn_login"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/travller"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="로그인"
-                    android:textSize="@dimen/subtitle_text_size"
-                    android:textColor="@color/clicked"/>
+                    android:gravity="center"
+                    android:text="트래블러"
+                    android:textColor="@color/white"
+                    android:textSize="50dp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <!-- Email Label -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textColorHint="@color/colorWhite">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/input_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:hint="이메일"
+                            android:inputType="textEmailAddress"
+                            android:onTextChanged="@{viewmodel::onEmailChanged}"
+                            android:text="@={viewmodel.email}"
+                            android:textColor="@color/colorWhite">
+
+                            <requestFocus />
+                        </androidx.appcompat.widget.AppCompatEditText>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Password Label -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textColorHint="@color/colorWhite">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/input_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="패스워드"
+                            android:inputType="textPassword"
+                            android:onTextChanged="@{viewmodel::onPasswordChanged}"
+                            android:text="@={viewmodel.password}"
+                            android:textColor="@color/colorWhite" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/s_round_border_blue"
+                        android:enabled="@{viewmodel.btnSelected}"
+                        android:gravity="center"
+                        android:onClick="@{()->viewmodel.login()}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/btn_login"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:text="로그인"
+                            android:textColor="@color/clicked"
+                            android:textSize="@dimen/subtitle_text_size" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/find_pwd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:text="비밀번호를 잊으셨나요?"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="15dp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
+        </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/clicked"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/back_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/i_arrow_back_white_96dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/find_pwd_txt"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="비밀번호 찾기"
-                android:gravity="center" />
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/title_text_size"
+                app:layout_constraintBottom_toBottomOf="@id/back_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/back_btn" />
 
-        </LinearLayout>
-    </ScrollView>
+            <TextView
+                android:id="@+id/find_pwd_email_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="40dp"
+                android:text="이메일 주소"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/subtitle_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/find_pwd_txt" />
+
+            <EditText
+                android:id="@+id/find_pwd_input_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="35dp"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/middle_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/find_pwd_email_txt" />
+
+            <Button
+                android:id="@+id/find_pwd_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="35dp"
+                android:background="@drawable/s_round_border_blue"
+                android:text="확인"
+                android:textColor="@color/clicked"
+                android:textSize="@dimen/subtitle_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/find_pwd_input_email" />
+
+            <TextView
+                android:id="@+id/find_pwd_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="25dp"
+                android:textColor="@color/design_default_color_error"
+                android:textSize="@dimen/subtitle_text_size"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/find_pwd_btn" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
 </layout>

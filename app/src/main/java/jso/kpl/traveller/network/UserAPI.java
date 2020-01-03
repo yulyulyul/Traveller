@@ -15,14 +15,14 @@ import retrofit2.http.Part;
 public interface UserAPI {
 
     //로그인
-    @POST("login")
+    @POST("/login")
     Call<ResponseResult<User>> goLogin(@Body LoginUser lu_obj);
 
-    //회원가입
     @FormUrlEncoded
     @POST("/check_value")
     Call<ResponseResult<Integer>> authEmail(@Field("u_email") String u_email);
 
+    //회원가입
     @Multipart
     @POST("/signup")
     Call<ResponseResult<User>> goSignUp(@Part("User") User user,
@@ -32,4 +32,15 @@ public interface UserAPI {
     @FormUrlEncoded
     @POST("/update_user_cart_list")
     Call<ResponseResult<Integer>> updateCartListView(@Field("u_userid") int u_userid, @Field("u_is_cart") int u_is_cart);
+
+    //회원 탈퇴
+    @FormUrlEncoded
+    @POST("/delete_user")
+    Call<ResponseResult<Integer>> deleteUser(@Field("u_userid") int u_userid);
+
+    //임시 비밀번호 수정
+    @FormUrlEncoded
+    @POST("/update_temp_pwd")
+    Call<ResponseResult<Integer>> updateUserTempPwd(@Field("u_email") String u_email,
+                                                @Field("update_pwd") String u_pwd);
 }

@@ -30,7 +30,7 @@ public class RegexMethod {
         if(nickname == null)
             nickname = "";
 
-        return Pattern.matches("^[\\w가-힣]{2,20}$", nickname);
+        return Pattern.matches("^[\\w가-힣]{2,10}$", nickname);
     }
 
 }

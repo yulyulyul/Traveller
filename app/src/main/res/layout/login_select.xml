@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageView"
                 android:layout_alignParentRight="true"
-                android:text="당신과 함께 떠나는 여행, 트레블러"
+                android:text="당신과 함께 떠나는 여행, 트래블러"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold" />

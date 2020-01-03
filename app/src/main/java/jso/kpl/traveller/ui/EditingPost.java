@@ -7,15 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.yongbeom.aircalendar.AirCalendarDatePickerActivity;
 
@@ -31,6 +34,7 @@ import jso.kpl.traveller.databinding.EditingPostBinding;
 import jso.kpl.traveller.model.Post;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
+import jso.kpl.traveller.model.Timeline;
 import jso.kpl.traveller.network.PostAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
@@ -38,6 +42,8 @@ import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.EditingPostViewModel;
+import me.jerryhanks.timelineview.IndicatorAdapter;
+import me.jerryhanks.timelineview.model.Status;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,7 +76,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
 
         //EditingPost의 ViewModel
         editingPostVm = new EditingPostViewModel();
-
 
         binding = DataBindingUtil.setContentView(this, R.layout.editing_post);
 
@@ -285,6 +290,43 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                     }
                 }
         );
+
+        binding.getEditingPostVm().timelineAdapter.getValue().getContent().observe(this, new Observer<ViewGroup>() {
+            @Override
+            public void onChanged(ViewGroup view) {
+                binding.getEditingPostVm().recyclerView = view;
+            }
+        });
+
+        binding.getEditingPostVm().itemViewHeight.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.content.getLayoutParams();
+                layoutParams.leftMargin = binding.getEditingPostVm().itemViewWidth.getValue();
+                layoutParams.topMargin = binding.getEditingPostVm().itemViewHeight.getValue();
+                binding.content.setLayoutParams(layoutParams);
+            }
+        });
+
+        binding.getEditingPostVm().isCartlist.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean bool) {
+                if (!bool) {
+                    if (binding.getEditingPostVm().itemViewHeight.getValue() != null) {
+                        binding.getEditingPostVm().itemViewWidth.setValue(0);
+                        binding.getEditingPostVm().itemViewHeight.setValue(0);
+                    }
+                }
+            }
+        });
+
+        binding.cartlistTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DrawerLayout drawer = binding.drawer;
+                drawer.openDrawer(Gravity.LEFT);
+            }
+        });
     }
 
     @Override
@@ -316,8 +358,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                         binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
 
                     }
-
-
                 } else {
                     binding.getEditingPostVm().travelPeriod.setValue(new String[]{startDate, endDate});
                     binding.getEditingPostVm().travelResult.setValue(startDate + " ~ " + endDate);
@@ -336,8 +376,6 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 .addToBackStack(null).commit();
 
         binding.getEditingPostVm().fragment.setValue(null);
-
-
 
 
         if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
@@ -373,6 +411,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             binding.getEditingPostVm().routeNodeAdapter.putItem(sp);
         }
 
+        JavaUtil.downKeyboard(this);
+
         binding.getEditingPostVm().isClick.setValue(false);
     }
 
@@ -399,42 +439,30 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             binding.getEditingPostVm().isClick.setValue(true);
             binding.postSave.setTextColor(getColor(R.color.non_clicked));
         }
+        if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
+            //노드를 삭제했을 때 메인 포스트의 경비 계산을 대신 한다.
+            long total_expense = 0;
 
+            for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
 
-
-
-
-            if (binding.getEditingPostVm().routeNodeAdapter.getItemSize() > 0) {
-                //노드를 삭제했을 때 메인 포스트의 경비 계산을 다신 한다.
-                long total_expense = 0;
-
-                for (int i = 0; i < binding.getEditingPostVm().routeNodeAdapter.getItemSize(); i++) {
-
-                    if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
-                        total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
-                    else
-                        total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
-                }
-
-                binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
-            } else {
-                binding.getEditingPostVm().inputExpenses.setValue(null);
+                if (binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().contains("₩"))
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses().replace("₩", "").replace(",", ""));
+                else
+                    total_expense += Long.parseLong(binding.getEditingPostVm().routeNodeAdapter.returnList().get(i).getSp_expenses());
             }
 
-
-
-
-
-
-
-
+            binding.getEditingPostVm().inputExpenses.setValue(CurrencyChange.moneyFormatToWon(total_expense));
+        } else {
+            binding.getEditingPostVm().inputExpenses.setValue(null);
+        }
     }
 
     @Override
     public void onBackPressed() {
-
         if (binding.getEditingPostVm().fragment.getValue() != null) {
             onDetachFragmentClicked();
+        } else if (binding.getEditingPostVm().isCartlist.getValue()) {
+            binding.getEditingPostVm().isCartlist.setValue(false);
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 

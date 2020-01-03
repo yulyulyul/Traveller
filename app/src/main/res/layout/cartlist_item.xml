@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="onImgClickListener"
             type="android.view.View.OnClickListener" />
@@ -61,12 +63,14 @@
                         android:text="@string/cost"
                         android:textColor="@color/clicked"
                         android:textSize="@dimen/middle_text_size"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="@{item.p_expenses == null ? View.GONE : View.VISIBLE}" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{item.p_expenses}" />
+                        android:text="@{item.p_expenses}"
+                        android:visibility="@{item.p_expenses == null ? View.GONE : View.VISIBLE}" />
 
                 </TableRow>
 
@@ -78,12 +82,14 @@
                         android:text="@string/period"
                         android:textColor="@color/clicked"
                         android:textSize="@dimen/middle_text_size"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="@{item.p_period == null ? View.GONE : View.VISIBLE}" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{item.p_period}" />
+                        android:text="@{item.p_period}"
+                        android:visibility="@{item.p_period == null ? View.GONE : View.VISIBLE}" />
 
                 </TableRow>
 
@@ -95,12 +101,14 @@
                         android:text="@string/category"
                         android:textColor="@color/clicked"
                         android:textSize="@dimen/middle_text_size"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="@{item.p_category == null ? View.GONE : View.VISIBLE}" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{item.p_category}" />
+                        android:text="@{item.p_category}"
+                        android:visibility="@{item.p_category == null ? View.GONE : View.VISIBLE}" />
 
                 </TableRow>
 
@@ -119,11 +127,12 @@
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="3"
                     android:adjustViewBounds="true"
-                    setFitCenterImg="@{item.sp_imgs}"
+                    setFitCenterImg="@{item.sp_imgs.split(&quot;,&quot;)[0]}"
                     android:scaleType="centerCrop"
                     android:clickable="true"
                     android:focusableInTouchMode="true"
-                    OnClickListener="@{onImgClickListener}"/>
+                    OnClickListener="@{onImgClickListener}"
+                    android:visibility="@{item.sp_imgs.split(&quot;,&quot;)[0] != null ? View.VISIBLE : View.GONE}" />
 
                 <ImageView
                     android:id="@+id/presentImg_2"
@@ -132,11 +141,12 @@
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="3"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/dummy_travel_img5"
+                    setFitCenterImg="@{item.sp_imgs.split(&quot;,&quot;)[1]}"
                     android:scaleType="centerCrop"
                     android:clickable="true"
                     android:focusableInTouchMode="true"
-                    OnClickListener="@{onImgClickListener}"/>
+                    OnClickListener="@{onImgClickListener}"
+                    android:visibility="@{item.sp_imgs.split(&quot;,&quot;)[1] != null ? View.VISIBLE : View.GONE}" />
 
                 <ImageView
                     android:id="@+id/presentImg_3"
@@ -145,11 +155,12 @@
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="3"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/dummy_travel_img1"
+                    setFitCenterImg="@{item.sp_imgs.split(&quot;,&quot;)[2]}"
                     android:scaleType="centerCrop"
                     android:clickable="true"
                     android:focusableInTouchMode="true"
-                    OnClickListener="@{onImgClickListener}"/>
+                    OnClickListener="@{onImgClickListener}"
+                    android:visibility="@{item.sp_imgs.split(&quot;,&quot;)[2] != null ? View.VISIBLE : View.GONE}" />
 
             </LinearLayout>
 
@@ -170,15 +181,14 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/middle_text_size"
                     android:layout_gravity="right"
-                    android:padding="10dp"/>
+                    android:padding="10dp" />
 
                 <ImageView
                     android:id="@+id/largeImg"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/dummy_travel_img5"/>
+                    android:scaleType="centerCrop" />
 
             </LinearLayout>
 
