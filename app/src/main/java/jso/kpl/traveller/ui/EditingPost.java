@@ -291,19 +291,31 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                 }
         );
 
-        binding.getEditingPostVm().timelineAdapter.observe(this, new Observer<IndicatorAdapter<Timeline>>() {
+        binding.getEditingPostVm().timelineAdapter.getValue().getContent().observe(this, new Observer<ViewGroup>() {
             @Override
-            public void onChanged(IndicatorAdapter<Timeline> adapter) {
-                if (adapter.getItem(0).getStatus() != Status.ATTENTION) {
-                    adapter.getItemViewWidth().observe(EditingPost.this, new Observer<Integer>() {
-                        @Override
-                        public void onChanged(Integer i) {
-                            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.content.getLayoutParams();
-                            layoutParams.topMargin = binding.getEditingPostVm().timelineAdapter.getValue().getItemViewHeight().getValue();
-                            layoutParams.leftMargin = binding.getEditingPostVm().timelineAdapter.getValue().getItemViewWidth().getValue();
-                            binding.content.setLayoutParams(layoutParams);
-                        }
-                    });
+            public void onChanged(ViewGroup view) {
+                binding.getEditingPostVm().recyclerView = view;
+            }
+        });
+
+        binding.getEditingPostVm().itemViewHeight.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.content.getLayoutParams();
+                layoutParams.leftMargin = binding.getEditingPostVm().itemViewWidth.getValue();
+                layoutParams.topMargin = binding.getEditingPostVm().itemViewHeight.getValue();
+                binding.content.setLayoutParams(layoutParams);
+            }
+        });
+
+        binding.getEditingPostVm().isCartlist.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean bool) {
+                if (!bool) {
+                    if (binding.getEditingPostVm().itemViewHeight.getValue() != null) {
+                        binding.getEditingPostVm().itemViewWidth.setValue(0);
+                        binding.getEditingPostVm().itemViewHeight.setValue(0);
+                    }
                 }
             }
         });
@@ -398,6 +410,8 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
         } else {
             binding.getEditingPostVm().routeNodeAdapter.putItem(sp);
         }
+
+        JavaUtil.downKeyboard(this);
 
         binding.getEditingPostVm().isClick.setValue(false);
     }

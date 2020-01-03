@@ -117,13 +117,13 @@ public class CartlistItemAdapter extends RecyclerView.Adapter<CartlistItemAdapte
 
                     switch (v.getId()) {
                         case R.id.presentImg_1:
-                            showLargeImg(binding, item.getSp_imgs());
+                            showLargeImg(binding, item.getSp_imgs().split(",")[0]);
                             break;
                         case R.id.presentImg_2:
-                            showLargeImg(binding, item.getSp_imgs());
+                            showLargeImg(binding, item.getSp_imgs().split(",")[1]);
                             break;
                         case R.id.presentImg_3:
-                            showLargeImg(binding, item.getSp_imgs());
+                            showLargeImg(binding, item.getSp_imgs().split(",")[2]);
                             break;
                     }
                     Log.d("Trav.cartAdapter", "onClick: ");

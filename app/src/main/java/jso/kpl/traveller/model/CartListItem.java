@@ -1,7 +1,5 @@
 package jso.kpl.traveller.model;
 
-import java.util.List;
-
 public class CartListItem {
     public int p_id;
     public String p_place;
@@ -10,8 +8,8 @@ public class CartListItem {
     public String sp_imgs;
     public String p_category;
 
-   // List<String> sp_imgss;
-    
+    // List<String> sp_imgs;
+
     public int getP_id() {
         return p_id;
     }

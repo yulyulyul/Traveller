@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -14,6 +13,7 @@ import jso.kpl.traveller.App
 import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
+import jso.kpl.traveller.network.ProfileAPI
 import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.ui.MainTab
@@ -23,8 +23,7 @@ import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import java.util.*
 
 /**
  * login,xml에 대응하는 ViewModel
@@ -39,6 +38,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     var progressDialog: SingleLiveEvent<Boolean>? = null
 
     var isLogin : MutableLiveData<Boolean>? = null
+    var isFindPwd : MutableLiveData<Boolean>? = null
+
+    var findPwdInputError : ArrayList<String>? = null
     var SHAPassword: String? = null
 
     //통신으로 받은 유저 객체
@@ -52,7 +54,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         progressDialog = SingleLiveEvent<Boolean>()
 
         isLogin = MutableLiveData<Boolean>()
+        isFindPwd = MutableLiveData<Boolean>()
+        isFindPwd?.value = false
 
+        findPwdInputError = ArrayList(Arrays.asList(
+            "이메일을 입력하지 않았습니다.\n이메일을 입력해주세요.",
+            "입력하신 이메일 형식이 올바르지 않습니다.",
+            "가입 이력이 없는 이메일입니다.\n이메일을 확인해주세요."
+        ))
     }
 
     companion object {
@@ -78,6 +87,42 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         WebService.client.create(UserAPI::class.java)
             .goLogin(LoginUser(email?.get()!!, SHAPassword!!))
             .enqueue(this)
+    }
+
+    fun findPwd(email: String, callback: ((Boolean)->Unit)) {
+        WebService.client.create(UserAPI::class.java)
+            .authEmail(email)
+            .enqueue(object: Callback<ResponseResult<Int>> {
+                override fun onResponse(call: Call<ResponseResult<Int>>, response: Response<ResponseResult<Int>>) {
+                    if (response.body()?.res_obj != null && response.body()?.res_obj == 0) {
+                        callback.invoke(true)
+                    } else {
+                        callback.invoke(false)
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseResult<Int>>, t: Throwable?) {
+                    App.sendToast("서버 통신에 실패하였습니다.\n잠시 후 다시 시도해주세요.")
+                }
+            })
+    }
+
+    fun updatePwdTemp(email: String, tempPwd: String) {
+        WebService.client.create(UserAPI::class.java)
+            .updateUserTempPwd(email, JavaUtil.returnSHA256(tempPwd))
+            .enqueue(object: Callback<ResponseResult<Int>> {
+                override fun onResponse(call: Call<ResponseResult<Int>>, response: Response<ResponseResult<Int>>) {
+                    if (response.body()?.res_obj != null && response.body()?.res_obj == 1) {
+                        Log.d(TAG, "임시 비밀번호 수정 성공")
+                    } else {
+                        Log.d(TAG, "임시 비밀번호 수정 실패")
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseResult<Int>>, t: Throwable?) {
+                    App.sendToast("서버 통신에 실패하였습니다.\n잠시 후 다시 시도해주세요.")
+                }
+            })
     }
 
     //ViewModel이 끝날 때 불림.(Activity LifeCycle이랑 생명주기가 다름)

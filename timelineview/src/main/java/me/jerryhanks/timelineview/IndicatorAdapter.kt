@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -22,8 +24,7 @@ class IndicatorAdapter<in T : TimeLine>(
 
     private var recyclerViewHeight: Int = 0
     var itemViewHeight: MutableLiveData<Int> = MutableLiveData()
-    var itemViewWidth: MutableLiveData<Int> = MutableLiveData()
-    var itemExist: MutableLiveData<Boolean> = MutableLiveData()
+    var content: MutableLiveData<ViewGroup> = MutableLiveData()
     private var listener: OnItemClickListener? = null
 
     private fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int, type: Int) -> Unit): T {
@@ -45,17 +46,8 @@ class IndicatorAdapter<in T : TimeLine>(
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.timeline_indicator, parent, false)
         recyclerViewHeight = parent.height
-
-       // if (parent.childCount != 0) {
-
-            var recyclerItem : View ? = parent.getChildAt(0)
-            itemViewHeight.value = recyclerItem?.height
-
-            if (recyclerItem is ViewGroup) {
-                itemViewWidth.value = parent.width - recyclerItem.getChildAt(3).width - 30
-            }
-            Log.d("IndicatorAdapter", itemViewHeight.value.toString() + ", " + itemViewWidth.value.toString())
-       // }
+        content.value = parent
+        itemViewHeight.value = parent.getChildAt(0)?.height
 
         return IndicatorHolder(view).listen { pos, type ->
             Log.d("IndicatorAdapter", "pos -> " + pos + " type -> " + type)
@@ -68,9 +60,8 @@ class IndicatorAdapter<in T : TimeLine>(
     }
 
     override fun onBindViewHolder(holder: IndicatorHolder, position: Int) {
-        if (position == itemCount - 1) {
+        if (position == itemCount - 1 && itemCount != 1) {
             val params = holder.constraintLayout.layoutParams
-            holder.constraintLayout.layoutParams
             if (params is RecyclerView.LayoutParams) {
                 if (itemViewHeight.value == null) {
                     itemViewHeight.value = 0
@@ -129,10 +120,19 @@ class IndicatorAdapter<in T : TimeLine>(
         //start adding new views
         holder.container.addView(child)
         params.gravity = Gravity.CENTER_VERTICAL or Gravity.START
+        /*Log.d("indicatCon2", "" + holder.container.height) // frame content
+        Log.d("indicatCon2", "" + holder.container.getChildAt(0).height) // frame content
+        if (child is LinearLayout) {
+            var child_constraint = child.getChildAt(0)
+            //Log.d("indicat", ""+ child.getChildAt(0)) //const
+            //Log.d("indicat", ""+ child.getChildAt(0).height)
+            //Log.d("indicatCon2", ""+ holder.container.getChildAt(0).height) // frame content
+            if (child_constraint is ConstraintLayout) {
+                //Log.d("indicat", ""+ child_constraint.getChildAt(0)) // const cartlist
+                //Log.d("indicat", ""+ child_constraint.getChildAt(0).height)
 
-        if (itemExist.value == null) {
-            itemExist.value = true
-        }
+            }
+        }*/
     }
 
     override fun getItemCount(): Int {

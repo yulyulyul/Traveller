@@ -145,9 +145,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:marginLeft="@{editingPostVm.isCartlist ? 90 : 0}"
-                            app:marginTop="@{editingPostVm.isCartlist ? 370 : 0}">
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <!--노드 파트-->
 
@@ -241,7 +239,6 @@
                                                         android:layout_height="wrap_content"
                                                         android:layout_marginStart="15dp"
                                                         android:text="국가"
-                                                        android:textColor="@color/clicked"
                                                         android:textSize="@dimen/middle_text_size"
                                                         android:textStyle="bold" />
 
@@ -505,7 +502,7 @@
                         android:text="카\n트\n리\n스\n트"
                         android:textColor="@color/colorWhite"
                         android:textSize="15dp"
-                        android:visibility="@{editingPostVm.isCartlist?View.GONE:View.VISIBLE}"
+                        android:visibility="@{!editingPostVm.isCartlist &amp;&amp; editingPostVm.fragment == null ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>

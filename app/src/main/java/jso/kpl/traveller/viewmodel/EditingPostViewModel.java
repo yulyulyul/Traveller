@@ -20,6 +20,7 @@ import com.yongbeom.aircalendar.core.AirCalendarIntent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -59,6 +60,10 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public MutableLiveData<IndicatorAdapter<Timeline>> timelineAdapter = new MutableLiveData<>();
     public MutableLiveData<List<Timeline>> timelineItem = new MutableLiveData<>();
     public MutableLiveData<Integer> timelineSelect = new MutableLiveData<>();
+
+    public ViewGroup recyclerView;
+    public MutableLiveData<Integer> itemViewHeight = new MutableLiveData<>();
+    public MutableLiveData<Integer> itemViewWidth = new MutableLiveData<>();
 
     //레트로핏
     CartlistAPI cartlistAPI = WebService.INSTANCE.getClient().create(CartlistAPI.class);
@@ -329,6 +334,16 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         } else {
             noCartlist.setValue(false);
             List<CartListItem> cartListItem = cartlistRes.getRes_obj();
+            for (CartListItem idx : cartListItem) {
+                if (idx.getP_category() != null) {
+                    if (idx.getP_category().split(", ").length > 4) {
+                        ArrayList<String> categoryList = new ArrayList<>(Arrays.asList(idx.getP_category().split(", ", 5)));
+                        categoryList.remove(categoryList.size() - 1);
+                        String category = categoryList.toString();
+                        idx.setP_category(category.substring(1, category.length() - 1).concat(" ..."));
+                    }
+                }
+            }
             Log.d(TAG, cartListItem.toString());
             cartlistItem.setValue(new ArrayList<CartListItem>());
             cartlistItem.getValue().addAll(cartListItem);
@@ -351,7 +366,20 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                     List<Timeline> cartlistTimeline = cartlistTimelineRes.getRes_obj();
                                     for (int i = 0; i < cartlistTimeline.size(); i++) {
                                         cartlistTimeline.get(i).setStatus(Status.COMPLETED);
-                                        cartlistTimeline.get(i).setSp_imgs(cartlistTimeline.get(i).getSp_imgs());
+                                        if (cartlistTimeline.get(i).getSp_period() != null) {
+                                            String tmp = cartlistTimeline.get(i).getSp_period().replace(" ", "");
+                                            String[] tmps = tmp.split("~");
+
+                                            cartlistTimeline.get(i).setSp_period(JavaUtil.travelPeriod(tmps[0], tmps[1]));
+                                        }
+                                        if (cartlistTimeline.get(i).getSp_category() != null) {
+                                            if (cartlistTimeline.get(i).getSp_category().split(", ").length > 4) {
+                                                ArrayList<String> categoryList = new ArrayList<>(Arrays.asList(cartlistTimeline.get(i).getSp_category().split(", ", 5)));
+                                                categoryList.remove(categoryList.size() - 1);
+                                                String category = categoryList.toString();
+                                                cartlistTimeline.get(i).setSp_category(category.substring(1, category.length() - 1).concat(" ..."));
+                                            }
+                                        }
                                     }
                                     timelineItem.getValue().clear();
                                     timelineItem.getValue().addAll(cartlistTimeline);
@@ -378,6 +406,13 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                             timelineSelect.setValue(position);
                                         }
                                     });
+
+                                    if (itemViewWidth.getValue() == null || itemViewWidth.getValue() == 0) {
+                                        itemViewWidth.setValue((recyclerView.getChildAt(0).getWidth() - ((ViewGroup) recyclerView.getChildAt(0)).getChildAt(3).getWidth()) - 30);
+                                    }
+                                    if (itemViewHeight.getValue() == null || itemViewHeight.getValue() == 0) {
+                                        itemViewHeight.setValue(recyclerView.getChildAt(0).getHeight());
+                                    }
                                 }
 
                                 @Override
@@ -387,6 +422,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                     t.printStackTrace();
                                 }
                             });
+
                             isCartlist.setValue(true); // 카트리스트 타임라인뷰 보이기
                             onCartlistClickListener.onClick(view); // 네비게이션바 닫기
                             //cartlistWidth.setValue(200);

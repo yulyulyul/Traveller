@@ -32,4 +32,10 @@ public interface UserAPI {
     @FormUrlEncoded
     @POST("/delete_user")
     Call<ResponseResult<Integer>> deleteUser(@Field("u_userid") int u_userid);
+
+    //임시 비밀번호 수정
+    @FormUrlEncoded
+    @POST("/update_temp_pwd")
+    Call<ResponseResult<Integer>> updateUserTempPwd(@Field("u_email") String u_email,
+                                                @Field("update_pwd") String u_pwd);
 }

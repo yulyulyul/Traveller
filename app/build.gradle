@@ -26,6 +26,12 @@ android {
 
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     def room_version = "2.1.0"
     def support_lib_version = "1.9.1"
@@ -115,5 +121,7 @@ dependencies {
 
     //타임라인 뷰
     implementation project(':timelineview')
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 apply plugin: 'com.google.gms.google-services'

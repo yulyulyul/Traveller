@@ -730,7 +730,7 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="30dp"
-                        android:hint="영문 소문자, 숫자, 특수문자 !@#$%^* 조합 8자 이상"
+                        android:hint="영문 소문자, 숫자, 특문 !@#$%^*(선택) 조합 8자 이상"
                         android:inputType="textPassword"
                         android:textColor="@color/clicked"
                         android:textSize="@dimen/middle_text_size"
