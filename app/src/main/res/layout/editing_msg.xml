@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="editingMsgVm"
+            type="jso.kpl.traveller.viewmodel.EditingMsgViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#6687cefa"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:text="To. "
+                android:textSize="@dimen/title_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/to"
+                android:layout_toRightOf="@+id/to"
+                android:text="@{editingMsgVm.receiverLD}"
+                android:textSize="@dimen/subtitle_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="10dp"
+                android:text="전송"
+                android:textColor="@{editingMsgVm.isSendLD ? @color/white:@color/non_clicked}"
+                android:textSize="@dimen/title_text_size"
+                android:textStyle="bold"
+                android:onClick="@{()->editingMsgVm.onSendClicked()}"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            android:layout_marginVertical="10dp">
+
+            <LinearLayout
+                android:id="@+id/bg_body"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/s_round_border_blue"
+                android:backgroundTint="@color/white"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/real_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="top"
+                    android:hint="쪽지를 작성하세요."
+                    android:lineSpacingExtra="5dp"
+                    android:lines="5"
+                    android:maxLength="300"
+                    android:maxLines="10"
+                    android:inputType="textMultiLine"
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="10dp"
+                    android:text="@={editingMsgVm.contentLD}"
+                    android:textColor="#000080"
+                    android:textColorHint="@color/non_clicked"
+                    android:textSize="@dimen/subtitle_text_size" />
+
+                <TextView
+                    android:id="@+id/limit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@={editingMsgVm.limitCharLD}"
+                    android:textColor="@color/non_clicked" />
+
+                <jso.kpl.traveller.ui.adapters.MeasuredViewPager
+                    android:id="@+id/vp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:paddingHorizontal="20dp"
+                    app:setViewPagerAdapter="@{editingMsgVm.msgBgAdapter}" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

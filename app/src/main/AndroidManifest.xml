@@ -20,7 +20,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.SearchResultList"></activity>
+        <activity android:name=".ui.MsgList"></activity>
+        <activity
+            android:name=".ui.EditingMsg"
+            android:theme="@style/Transparent" />
+        <activity android:name=".ui.SearchResultList" />
         <activity android:name=".ui.StartScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,11 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_api" />
-
         <activity
             android:name=".ui.AddOptionView"
             android:theme="@style/Transparent" />
@@ -51,7 +50,41 @@
         <activity android:name=".ui.DetailCountryInfo" />
         <activity android:name=".ui.DetailPost" />
         <activity android:name=".ui.CustomDialog" />
+        <activity
+            android:name=".ui.LoginSelect"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.Login"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name="com.yongbeom.aircalendar.AirCalendarDatePickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </service>
 
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_api" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
@@ -62,17 +95,6 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_key" />
 
-        <activity
-            android:name=".ui.LoginSelect"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity
-            android:name=".ui.Login"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible" />
-        <activity
-            android:name="com.yongbeom.aircalendar.AirCalendarDatePickerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" /> <!-- 파일 경로 보안 처리 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="jso.kpl.traveller.file_provider"

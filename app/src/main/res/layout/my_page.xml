@@ -74,16 +74,25 @@
                                     android:textColor="@color/white"
                                     android:textSize="20dp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/hamburger_menu"
+                                    android:backgroundTint="@color/white"
                                     android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginHorizontal="20dp"
-                                    android:onClick="@{()->myPageVm.onLogoutClicked()}"
-                                    android:text="로그아웃"
-                                    android:textColor="@color/colorWhite"
-                                    android:textSize="@dimen/middle_text_size" />
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginRight="20dp"
+                                    OnClickListener="@{myPageVm.onMenuClickListener}"/>
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_alignParentRight="true"-->
+<!--                                    android:layout_centerVertical="true"-->
+<!--                                    android:layout_marginHorizontal="20dp"-->
+<!--                                    android:onClick="@{()->myPageVm.onLogoutClicked()}"-->
+<!--                                    android:text="로그아웃"-->
+<!--                                    android:textColor="@color/colorWhite"-->
+<!--                                    android:textSize="@dimen/middle_text_size" />-->
 
                             </RelativeLayout>
 

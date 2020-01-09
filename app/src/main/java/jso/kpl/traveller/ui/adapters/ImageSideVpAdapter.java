@@ -45,5 +45,4 @@ public class ImageSideVpAdapter extends FragmentStatePagerAdapter {
     }
 
 
-
 }

@@ -3,14 +3,21 @@ package jso.kpl.traveller.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
@@ -23,6 +30,8 @@ import jso.kpl.traveller.viewmodel.MainTabViewModel;
 
 public class MainTab extends AppCompatActivity {
 
+    String TAG = "Trav.MainTab";
+
     User user;
 
     FragmentManager fm;
@@ -30,7 +39,7 @@ public class MainTab extends AppCompatActivity {
     MyPage myPage;
     AllRouteList allRouteList;
 
-    MainTabBinding binding;
+    public MainTabBinding binding;
     MainTabViewModel mainTabVm;
 
     @Override
@@ -57,6 +66,9 @@ public class MainTab extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         transitedContainer(binding.mainContainer);
+
+        //binding.mainDrawerLayout.openDrawer(Gravity.RIGHT);
+        binding.mainDrawerLayout.closeDrawer(Gravity.RIGHT);
     }
 
     public void transitedContainer(final FrameLayout layout) {

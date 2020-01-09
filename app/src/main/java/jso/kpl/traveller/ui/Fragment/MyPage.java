@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +23,24 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MyPageBinding;
 import jso.kpl.traveller.model.MyPageItem;
+import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.network.MsgWebService;
+import jso.kpl.traveller.network.UserAPI;
 import jso.kpl.traveller.ui.AddOptionView;
 import jso.kpl.traveller.ui.CountryList;
 import jso.kpl.traveller.ui.DetailCountryInfo;
 import jso.kpl.traveller.ui.DetailPost;
 import jso.kpl.traveller.ui.EditingPost;
-import jso.kpl.traveller.ui.Login;
 import jso.kpl.traveller.ui.LoginSelect;
 import jso.kpl.traveller.ui.MainTab;
 import jso.kpl.traveller.ui.ProfileManagement;
 import jso.kpl.traveller.ui.RouteList;
 import jso.kpl.traveller.ui.adapters.FlagRvAdapter;
 import jso.kpl.traveller.viewmodel.MyPageViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListener {
 
@@ -160,6 +166,13 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
                 }
             }
         });
+
+        pageBinding.getMyPageVm().onMenuClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainTab) getActivity()).binding.mainDrawerLayout.openDrawer(Gravity.RIGHT);
+            }
+        };
 
         return pageBinding.getRoot();
     }

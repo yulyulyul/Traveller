@@ -58,11 +58,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <androidx.viewpager.widget.ViewPager
+
+                <jso.kpl.traveller.ui.adapters.MeasuredViewPager
                     android:id="@+id/spVp"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:setViewPagerAdapter="@{smallPostVm.postImgAdapter}" />
+                    android:layout_height="wrap_content"
+                    app:setViewPagerAdapter="@{smallPostVm.postImgAdapter}"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

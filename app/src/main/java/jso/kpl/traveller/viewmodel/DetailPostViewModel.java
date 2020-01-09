@@ -1,5 +1,6 @@
 package jso.kpl.traveller.viewmodel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import jso.kpl.traveller.model.SmallPost;
 import jso.kpl.traveller.network.CartlistAPI;
 import jso.kpl.traveller.network.RouteOtherDetailAPI;
 import jso.kpl.traveller.network.WebService;
+import jso.kpl.traveller.ui.EditingMsg;
 import jso.kpl.traveller.ui.Fragment.ImageSideItem;
 import jso.kpl.traveller.ui.adapters.ImageSideVpAdapter;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
@@ -39,6 +41,9 @@ public class DetailPostViewModel extends ViewModel implements Callback {
 
     //카테고리 리사이클러뷰의 어댑터
     public MutableLiveData<RouteOtherDetailCategoryItemAdapter> categoryAdapter = new MutableLiveData<>();
+
+    //본인 포스트 체크 라이브 데이터
+    public MutableLiveData<Boolean> isUser = new MutableLiveData<>();
 
     //좋아요 체크 라이브 데이터
     public MutableLiveData<Boolean> isLike = new MutableLiveData<>();
@@ -67,6 +72,7 @@ public class DetailPostViewModel extends ViewModel implements Callback {
         cartlistAPI = WebService.INSTANCE.getClient().create(CartlistAPI.class);
         isLike.setValue(false);
         isCart.setValue(false);
+        isUser.setValue(false);
     }
 
     //루트 노드 어댑터
@@ -123,6 +129,13 @@ public class DetailPostViewModel extends ViewModel implements Callback {
         });
     }
 
+    public void onSendMsgClicked(){
+        Intent intent = new Intent(App.INSTANCE, EditingMsg.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("p_author", postItem.getValue().getP_author());
+        App.INSTANCE.startActivity(intent);
+    }
+
     //좋아요 누를 때 클릭 이벤트
     public void onLikeClicked() {
         likeCall();
@@ -152,6 +165,11 @@ public class DetailPostViewModel extends ViewModel implements Callback {
         isLike.setValue(postItem.getValue().isP_is_like());
 
         categoryAdapter.setValue(new RouteOtherDetailCategoryItemAdapter(postItem.getValue().getP_category(), 1));
+
+        if(App.Companion.getUser().getU_nick_name().equals(postItem.getValue().getP_author()))
+            isUser.setValue(true);
+
+        Log.d(TAG, "본인 포스트: " + isUser.getValue());
 
         // 기간 텍스트 설정
         isLike.setValue(postItem.getValue().isP_is_like());

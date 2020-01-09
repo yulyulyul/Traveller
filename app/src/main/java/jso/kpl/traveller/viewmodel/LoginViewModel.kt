@@ -9,11 +9,12 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.iid.FirebaseInstanceId
 import jso.kpl.traveller.App
 import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
-import jso.kpl.traveller.network.ProfileAPI
+import jso.kpl.traveller.network.MsgWebService
 import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.ui.MainTab
@@ -37,10 +38,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     var muUser: MutableLiveData<User>? = null
     var progressDialog: SingleLiveEvent<Boolean>? = null
 
-    var isLogin : MutableLiveData<Boolean>? = null
-    var isFindPwd : MutableLiveData<Boolean>? = null
+    var isLogin: MutableLiveData<Boolean>? = null
+    var isFindPwd: MutableLiveData<Boolean>? = null
 
-    var findPwdInputError : ArrayList<String>? = null
+    var findPwdInputError: ArrayList<String>? = null
     var SHAPassword: String? = null
 
     //통신으로 받은 유저 객체
@@ -57,11 +58,13 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         isFindPwd = MutableLiveData<Boolean>()
         isFindPwd?.value = false
 
-        findPwdInputError = ArrayList(Arrays.asList(
-            "이메일을 입력하지 않았습니다.\n이메일을 입력해주세요.",
-            "입력하신 이메일 형식이 올바르지 않습니다.",
-            "가입 이력이 없는 이메일입니다.\n이메일을 확인해주세요."
-        ))
+        findPwdInputError = ArrayList(
+            Arrays.asList(
+                "이메일을 입력하지 않았습니다.\n이메일을 입력해주세요.",
+                "입력하신 이메일 형식이 올바르지 않습니다.",
+                "가입 이력이 없는 이메일입니다.\n이메일을 확인해주세요."
+            )
+        )
     }
 
     companion object {
@@ -70,7 +73,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     // '이메일' EditText의 입력의 변화를 감지하는 부분
     fun onEmailChanged(s: CharSequence, start: Int, befor: Int, count: Int) {
-        btnSelected?.set(RegexMethod.isEmailValid(s.toString()) && RegexMethod.isPasswordValid(password?.get()!!))
+        btnSelected?.set(
+            RegexMethod.isEmailValid(s.toString()) && RegexMethod.isPasswordValid(
+                password?.get()!!
+            )
+        )
     }
 
     // 'Password' EditText의 입력의 변화를 감지하는 부분
@@ -89,11 +96,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
             .enqueue(this)
     }
 
-    fun findPwd(email: String, callback: ((Boolean)->Unit)) {
+    fun findPwd(email: String, callback: ((Boolean) -> Unit)) {
         WebService.client.create(UserAPI::class.java)
             .authEmail(email)
-            .enqueue(object: Callback<ResponseResult<Int>> {
-                override fun onResponse(call: Call<ResponseResult<Int>>, response: Response<ResponseResult<Int>>) {
+            .enqueue(object : Callback<ResponseResult<Int>> {
+                override fun onResponse(
+                    call: Call<ResponseResult<Int>>,
+                    response: Response<ResponseResult<Int>>
+                ) {
                     if (response.body()?.res_obj != null && response.body()?.res_obj == 0) {
                         callback.invoke(true)
                     } else {
@@ -110,8 +120,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     fun updatePwdTemp(email: String, tempPwd: String) {
         WebService.client.create(UserAPI::class.java)
             .updateUserTempPwd(email, JavaUtil.returnSHA256(tempPwd))
-            .enqueue(object: Callback<ResponseResult<Int>> {
-                override fun onResponse(call: Call<ResponseResult<Int>>, response: Response<ResponseResult<Int>>) {
+            .enqueue(object : Callback<ResponseResult<Int>> {
+                override fun onResponse(
+                    call: Call<ResponseResult<Int>>,
+                    response: Response<ResponseResult<Int>>
+                ) {
                     if (response.body()?.res_obj != null && response.body()?.res_obj == 1) {
                         Log.d(TAG, "임시 비밀번호 수정 성공")
                     } else {
@@ -131,34 +144,29 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     }
 
     // 로그인 요청시 Retrofit 결과 리턴받는 곳.
-    override fun onResponse(call: Call<ResponseResult<User>>?,
+    override fun onResponse(
+        call: Call<ResponseResult<User>>?,
         response: Response<ResponseResult<User>>?
     ) {
-        progressDialog?.value = false
+        var res_type: Int? = response?.body()?.res_type
 
-        var res_type:Int? = response?.body()?.res_type
+        if (res_type == 1) {
 
-        if(res_type == 1){
             receiveUser = response?.body()?.res_obj
-            Log.d(TAG + "응답 객체 : ", receiveUser?.toString())
+
+            Log.d(TAG + "로그인 객체: ", receiveUser?.toString())
 
             if (receiveUser != null) {
 
                 //로그인 확인 저장 용
                 isLogin?.value = true
 
-                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
+                progressDialog?.value = false
 
-                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                ls_goLogin.putExtra("user", receiveUser);
-
-                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
             } else {
                 App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
             }
-        } else if(res_type == 0){
+        } else if (res_type == 0) {
             App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
         }
     }

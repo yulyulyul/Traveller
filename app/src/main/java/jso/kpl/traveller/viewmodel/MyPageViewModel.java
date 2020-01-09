@@ -53,6 +53,7 @@ public class MyPageViewModel extends ViewModel {
     public List<Country> favCountryList;
 
     public View.OnClickListener onProfileClickListener;
+    public View.OnClickListener onMenuClickListener;
     public View.OnClickListener onEditingPostClickListener;
 
     public void setOnEditingPostClickListener(View.OnClickListener onEditingPostClickListener) {
@@ -195,20 +196,6 @@ public class MyPageViewModel extends ViewModel {
                 errorStr.setValue("일시적 오류입니다.");
             }
         });
-    }
-
-    public void onLogoutClicked() {
-        SharedPreferences sp = App.INSTANCE.getSharedPreferences("auto_login", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
-        editor.remove("auto_login");
-        editor.clear();
-        editor.commit();
-
-        Intent intent = new Intent(App.INSTANCE, LoginSelect.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        App.INSTANCE.startActivity(intent);
     }
 
     public void postCall(final Activity act, final LinearLayout layout, final int type) {

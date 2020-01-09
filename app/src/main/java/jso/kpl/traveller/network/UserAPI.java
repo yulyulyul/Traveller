@@ -18,6 +18,11 @@ public interface UserAPI {
     @POST("/login")
     Call<ResponseResult<User>> goLogin(@Body LoginUser lu_obj);
 
+    //로그아웃
+    @FormUrlEncoded
+    @POST("/logout")
+    Call<ResponseResult<Integer>> goLogout(@Field("u_userid") int u_userid);
+
     @FormUrlEncoded
     @POST("/check_value")
     Call<ResponseResult<Integer>> authEmail(@Field("u_email") String u_email);
@@ -43,4 +48,7 @@ public interface UserAPI {
     @POST("/update_temp_pwd")
     Call<ResponseResult<Integer>> updateUserTempPwd(@Field("u_email") String u_email,
                                                 @Field("update_pwd") String u_pwd);
+    @FormUrlEncoded
+    @POST("/upload_token")
+    Call<ResponseResult<Integer>> uploadToken(@Field("u_userid") int u_userid, @Field("u_token") String u_token);
 }

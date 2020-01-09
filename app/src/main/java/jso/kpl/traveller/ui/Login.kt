@@ -1,19 +1,29 @@
 package jso.kpl.traveller.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.iid.FirebaseInstanceId
 import jso.kpl.traveller.App
 import jso.kpl.traveller.R
 import jso.kpl.traveller.databinding.LoginBinding
+import jso.kpl.traveller.model.ResponseResult
+import jso.kpl.traveller.network.UserAPI
+import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.util.GMailSender
 import jso.kpl.traveller.util.RegexMethod
 import jso.kpl.traveller.viewmodel.LoginViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.mail.MessagingException
 import javax.mail.SendFailedException
 
@@ -94,6 +104,50 @@ class Login : AppCompatActivity() {
                 BindingLogin?.findPwdError?.visibility = View.VISIBLE
             }
         }))
+
+        onAutoLogin()
+    }
+
+    private fun onAutoLogin(){
+
+        BindingLogin?.viewmodel?.isLogin?.observe(this, Observer { it ->
+            if (it) {
+                BindingLogin?.viewmodel?.autoSaveLogin(this)
+
+                FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+
+                    Log.d(LoginViewModel.TAG, "토큰 발행: " + task.result!!.token)
+
+                    WebService.client.create(UserAPI::class.java)
+                        .uploadToken(BindingLogin?.viewmodel?.receiveUser!!.u_userid, task.result!!.token)
+                        .enqueue(object : Callback<ResponseResult<Int>> {
+                            override fun onResponse(
+                                call: Call<ResponseResult<Int>>,
+                                response: Response<ResponseResult<Int>>
+                            ) {
+
+                                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
+
+                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                                ls_goLogin.putExtra("user", BindingLogin?.viewmodel?.receiveUser);
+
+                                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
+
+                                BindingLogin?.viewmodel?.onCleared()
+                                finish()
+                            }
+
+                            override fun onFailure(call: Call<ResponseResult<Int>>, t: Throwable) {
+
+                            }
+                        })
+                }
+            }
+        })
+
+
     }
 
     fun onFindPwdBtn() {
@@ -114,13 +168,6 @@ class Login : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        BindingLogin?.viewmodel?.isLogin?.observe(this, Observer { it ->
-            if (it) {
-                BindingLogin?.viewmodel?.autoSaveLogin(this)
-            }
-        })
-
-        BindingLogin?.viewmodel?.onCleared()
     }
 
     override fun onDestroy() {

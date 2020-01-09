@@ -27,6 +27,8 @@ public class ImageSideItem extends Fragment {
 
     public MutableLiveData<View.OnClickListener> onPostClickListener = new MutableLiveData<>();
 
+    public String displayImg;
+
     public ImageSideItem() {
         // Required empty public constructor
     }
@@ -46,6 +48,7 @@ public class ImageSideItem extends Fragment {
 
                 ((ImageSideItemBinding) binding).setImgItem(args.getString("img"));
                 Log.d("Trav. 1", "onCreateView: ");
+                displayImg = args.getString("img");
             } else {
                 binding = (DetailCtPostBinding) DataBindingUtil.inflate(inflater, R.layout.detail_ct_post, container, false);
 

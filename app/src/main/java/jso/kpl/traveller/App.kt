@@ -9,7 +9,11 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import com.facebook.AccessToken
 import com.facebook.Profile
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.InstanceIdResult
 import java.security.MessageDigest
 import jso.kpl.traveller.thirdpartyapi.kakao.KakaoSDKAdapter
 import com.kakao.auth.KakaoSDK
