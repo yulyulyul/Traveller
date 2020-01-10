@@ -11,22 +11,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.Map;
-
 import jso.kpl.traveller.R;
-import jso.kpl.traveller.ui.EditingMsg;
-import jso.kpl.traveller.ui.MainTab;
-import jso.kpl.traveller.ui.StartScreen;
+import jso.kpl.traveller.model.Message;
+import jso.kpl.traveller.ui.MsgList;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -41,6 +33,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "메시지: " + remoteMessage.getData());
+
+            Message message = new Message();
+
+            message.setM_sender(remoteMessage.getData().get("m_sender"));
+            message.setM_sender_img(remoteMessage.getData().get("sender_profile"));
+            message.setM_card_img(remoteMessage.getData().get("card_img"));
+            message.setM_msg(remoteMessage.getData().get("msg"));
+            message.setM_msg(remoteMessage.getData().get("msg"));
+
+            Intent intent = new Intent("com.example.limky.broadcastreceiver.gogo");
+            intent.putExtra("msg", message);
+            sendBroadcast(intent);
+
+
         }
 
         if (remoteMessage.getNotification() != null) {
@@ -55,7 +61,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage) {
 
         Log.d(TAG, "sendNotification");
-        Intent intent = new Intent(this, EditingMsg.class);
+        Intent intent = new Intent(this, MsgList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -74,7 +80,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel
                     (remoteMessage.getData().get("channel_id"), "채널", NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -107,7 +113,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         sendTokenToServer(s);
     }
 
-    private void sendTokenToServer(String token){
+    private void sendTokenToServer(String token) {
 
         Log.d(TAG, "sendTokenToServer: ");
 

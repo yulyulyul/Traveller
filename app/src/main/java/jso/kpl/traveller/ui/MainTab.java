@@ -23,10 +23,16 @@ import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MainTabBinding;
 import jso.kpl.traveller.model.MyPageItem;
+import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
+import jso.kpl.traveller.network.MsgAPI;
+import jso.kpl.traveller.network.MsgWebService;
 import jso.kpl.traveller.ui.Fragment.AllRouteList;
 import jso.kpl.traveller.ui.Fragment.MyPage;
 import jso.kpl.traveller.viewmodel.MainTabViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainTab extends AppCompatActivity {
 
@@ -69,6 +75,19 @@ public class MainTab extends AppCompatActivity {
 
         //binding.mainDrawerLayout.openDrawer(Gravity.RIGHT);
         binding.mainDrawerLayout.closeDrawer(Gravity.RIGHT);
+
+        MsgWebService.INSTANCE.getClient().create(MsgAPI.class)
+                .sendBackPush(App.Companion.getUser().getU_userid()).enqueue(new Callback<ResponseResult<Integer>>() {
+            @Override
+            public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
+
+            }
+        });
     }
 
     public void transitedContainer(final FrameLayout layout) {

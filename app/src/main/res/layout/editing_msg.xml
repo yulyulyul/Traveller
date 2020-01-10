@@ -52,7 +52,7 @@
                 android:textColor="@{editingMsgVm.isSendLD ? @color/white:@color/non_clicked}"
                 android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
-                android:onClick="@{()->editingMsgVm.onSendClicked()}"/>
+                OnClickListener="@{editingMsgVm.onSendClickListener}"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -85,7 +85,7 @@
                     android:layout_marginHorizontal="5dp"
                     android:background="@android:color/transparent"
                     android:gravity="top"
-                    android:hint="쪽지를 작성하세요."
+                    android:hint="쪽지를 작성하세요.(10글자 이상)"
                     android:lineSpacingExtra="5dp"
                     android:lines="5"
                     android:maxLength="300"

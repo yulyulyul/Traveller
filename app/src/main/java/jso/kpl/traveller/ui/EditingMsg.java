@@ -2,6 +2,7 @@ package jso.kpl.traveller.ui;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -10,12 +11,19 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
+import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.EditingMsgBinding;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.network.MsgAPI;
+import jso.kpl.traveller.network.MsgWebService;
 import jso.kpl.traveller.ui.Fragment.ImageSideItem;
 import jso.kpl.traveller.ui.adapters.ImageSideVpAdapter;
 import jso.kpl.traveller.util.JavaUtil;
 import jso.kpl.traveller.viewmodel.EditingMsgViewModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditingMsg extends AppCompatActivity {
 
@@ -86,6 +94,31 @@ public class EditingMsg extends AppCompatActivity {
 
             }
         });
+
+
+        binding.getEditingMsgVm().onSendClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MsgWebService.INSTANCE.getClient().create(MsgAPI.class)
+                        .sendMsg(App.Companion.getUser().getU_userid(), App.Companion.getUser().getU_nick_name(), binding.getEditingMsgVm().receiverLD.getValue(), binding.getEditingMsgVm().contentLD.getValue(), binding.getEditingMsgVm().cardImg)
+                        .enqueue(new Callback<ResponseResult<Integer>>() {
+                            @Override
+                            public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
+                                if (response.body() != null) {
+
+                                    overridePendingTransition(0, 0);
+                                    Log.d("Trav", "성공 완료");
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
+                                App.Companion.sendToast("전송 실패");
+                            }
+                        });
+            }
+        };
     }
 
     @Override

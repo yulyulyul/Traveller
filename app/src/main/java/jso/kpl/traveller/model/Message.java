@@ -14,6 +14,7 @@ public class Message implements Serializable {
 
     boolean m_is_receive;
     boolean m_is_delete;
+    boolean m_is_reply;
 
     public int getM_no() {
         return m_no;
@@ -85,5 +86,28 @@ public class Message implements Serializable {
 
     public void setM_is_delete(boolean m_is_delete) {
         this.m_is_delete = m_is_delete;
+    }
+
+    public boolean isM_is_reply() {
+        return m_is_reply;
+    }
+
+    public void setM_is_reply(boolean m_is_reply) {
+        this.m_is_reply = m_is_reply;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "m_no=" + m_no +
+                ", m_sender='" + m_sender + '\'' +
+                ", m_receiver='" + m_receiver + '\'' +
+                ", m_msg='" + m_msg + '\'' +
+                ", m_date='" + m_date + '\'' +
+                ", m_card_img='" + m_card_img + '\'' +
+                ", m_sender_img='" + m_sender_img + '\'' +
+                ", m_is_receive=" + m_is_receive +
+                ", m_is_delete=" + m_is_delete +
+                '}';
     }
 }

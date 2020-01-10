@@ -1,6 +1,7 @@
 package jso.kpl.traveller.viewmodel;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,6 +24,7 @@ public class EditingMsgViewModel extends ViewModel {
     public MutableLiveData<Boolean> isSendLD = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> isClickLD = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isSuccessLD = new MutableLiveData<>();
 
     public String cardImg = "dummy_travel_img1";
 
@@ -38,28 +40,30 @@ public class EditingMsgViewModel extends ViewModel {
     }
 
     public EditingMsgViewModel() {
+        isSuccessLD.setValue(true);
         isClickLD.setValue(true);
         isSendLD.setValue(false);
         limitCharLD.setValue("0/300");
     }
 
-    public void onSendClicked() {
-        MsgWebService.INSTANCE.getClient().create(MsgAPI.class)
-                .sendMsg(App.Companion.getUser().getU_userid(), App.Companion.getUser().getU_nick_name(), receiverLD.getValue(), contentLD.getValue(), cardImg)
-                .enqueue(new Callback<ResponseResult<Integer>>() {
-                    @Override
-                    public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
-                        if (response.body() != null) {
-
-                            Log.d("Trav", "성공 완료");
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
-
-                    }
-                });
-    }
+    public View.OnClickListener onSendClickListener;
+//    public void onSendClicked() {
+//        MsgWebService.INSTANCE.getClient().create(MsgAPI.class)
+//                .sendMsg(App.Companion.getUser().getU_userid(), App.Companion.getUser().getU_nick_name(), receiverLD.getValue(), contentLD.getValue(), cardImg)
+//                .enqueue(new Callback<ResponseResult<Integer>>() {
+//                    @Override
+//                    public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
+//                        if (response.body() != null) {
+//
+//                            Log.d("Trav", "성공 완료");
+//                            isSuccessLD.setValue(true);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
+//                        isSuccessLD.setValue(false);
+//                    }
+//                });
+//    }
 }
