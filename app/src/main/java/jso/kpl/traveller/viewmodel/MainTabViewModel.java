@@ -81,7 +81,6 @@ public class MainTabViewModel extends ViewModel {
 
     public void onMsgBoxClicked(){
         Intent intent = new Intent(App.INSTANCE, MsgList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         App.INSTANCE.startActivity(intent);
     }

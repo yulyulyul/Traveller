@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="isClick"
@@ -18,37 +19,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="1dp"
-        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="20dp">
+        android:elevation="1dp"
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
-            app:cardElevation="5dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:cardElevation="5dp">
 
             <RelativeLayout
                 android:id="@+id/card_front_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="225dp">
 
                 <ImageView
+                    setFitCenterImg="@{item.m_card_img}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:cropToPadding="true"
-                    android:scaleType="fitXY"
-                    android:background="@drawable/dummy_travel_img1"/>
+                    android:scaleType="fitXY" />
 
                 <ImageView
+                    setCircleImg="@{item.m_sender_img}"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:padding="10dp"
                     android:scaleType="fitCenter" />
+
+                <ImageView
+                    android:id="@+id/is_receive"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:background="@{item.m_is_receive ? @drawable/open_mail:@drawable/close_mail}"
+                    android:backgroundTint="@color/white" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -59,21 +69,21 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="10dp"
-                        android:gravity="center_vertical">
+                        android:padding="10dp">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:layout_marginRight="5dp"
                             android:background="@drawable/clock"
-                            android:backgroundTint="@color/white"
-                            android:layout_marginRight="5dp" />
+                            android:backgroundTint="@color/white" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="17시간 전"
+                            android:text="@{item.m_date}"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
 
@@ -83,49 +93,111 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:orientation="horizontal"
                         android:padding="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="전송인   Khyun"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"/>
+                            android:text="전송인   "
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{item.m_sender}"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/card_back_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="225dp"
+                android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/fromWho"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="asle1221@naver.com님으로부터 온 메시지"/>
-
-                <TextView
-                    android:layout_below="@+id/fromWho"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@android:color/transparent"
-                    android:text="aaa\na\\n\nddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" />
-
                 <LinearLayout
-                    android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="right"
-                    android:layout_margin="10dp">
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:background="@color/clicked"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/clicked"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{item.m_sender}"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="님이 보낸 쪽지입니다."
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/s_round_border_blue"
+                        android:backgroundTint="@color/white">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/fromWho"
+                            android:padding="10dp"
+                            android:text="@{item.m_msg}" />
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
-            </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/clicked"
+                    android:gravity="right|center_vertical">
+
+                    <ImageView
+                        android:id="@+id/delete"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/i_garbage_icon"
+                        android:backgroundTint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/reply"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/reply"
+                        android:backgroundTint="@color/white" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
