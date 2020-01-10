@@ -33,7 +33,7 @@ object WebService
 //                .followSslRedirects(true)
 //                .retryOnConnectionFailure(true)
                 .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .cache(null)
                 .build()
