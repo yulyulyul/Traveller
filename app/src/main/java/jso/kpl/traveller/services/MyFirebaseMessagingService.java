@@ -48,6 +48,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             m.setM_is_delete(Boolean.parseBoolean(remoteMessage.getData().get("m_is_delete")));
 
             Intent intent = new Intent("com.example.limky.broadcastreceiver.gogo");
+            intent.putExtra("isPush", true);
             intent.putExtra("msg", m);
             sendBroadcast(intent);
 

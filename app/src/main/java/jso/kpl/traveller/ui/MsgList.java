@@ -75,13 +75,11 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
             @Override
             public void onReceive(Context context, final Intent intent) {
 
-
                 Message m = (Message) intent.getSerializableExtra("msg");
-
                 binding.getMsgListVm().adapter.addItem(m);
-
                 binding.getMsgListVm().adapter.notifyItemInserted(0);
 
+                binding.rv.smoothScrollToPosition(0);
             }
         };
 

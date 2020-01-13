@@ -2,7 +2,6 @@ package jso.kpl.traveller.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.os.StrictMode
 import android.util.Log
 import android.view.View
@@ -22,7 +21,6 @@ import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.util.GMailSender
 import jso.kpl.traveller.util.RegexMethod
 import jso.kpl.traveller.viewmodel.LoginViewModel
-import kotlinx.android.synthetic.main.rod_category_item.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,8 +31,6 @@ class Login : AppCompatActivity() {
 
     var BindingLogin: LoginBinding? = null
     var viewmodel: LoginViewModel? = null
-
-    var loadingScreen :LoadingScreen = LoadingScreen()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,18 +110,17 @@ class Login : AppCompatActivity() {
         BindingLogin?.viewmodel?.waiting?.observe(this,
             Observer<Boolean> {
 
-                if(it){
-                    var intent:Intent = Intent(Login.INSTANCE, LoadingScreen::class.java)
+                if (it) {
+                    var intent: Intent = Intent(Login.INSTANCE, LoadingScreen::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-
                 } else {
-                   // loadingScreen.dismiss()
+                    // loadingScreen.dismiss()
                 }
             })
-}
+    }
 
-    private fun onAutoLogin(){
+    private fun onAutoLogin() {
 
         BindingLogin?.viewmodel?.isLogin?.observe(this, Observer { it ->
             if (it) {
@@ -136,7 +131,10 @@ class Login : AppCompatActivity() {
                     Log.d(LoginViewModel.TAG, "토큰 발행: " + task.result!!.token)
 
                     WebService.client.create(UserAPI::class.java)
-                        .uploadToken(BindingLogin?.viewmodel?.receiveUser!!.u_userid, task.result!!.token)
+                        .uploadToken(
+                            BindingLogin?.viewmodel?.receiveUser!!.u_userid,
+                            task.result!!.token
+                        )
                         .enqueue(object : Callback<ResponseResult<Int>> {
                             override fun onResponse(
                                 call: Call<ResponseResult<Int>>,
