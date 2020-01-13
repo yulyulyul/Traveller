@@ -15,6 +15,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.yongbeom.aircalendar.core.AirCalendarIntent;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +34,7 @@ import jso.kpl.traveller.model.CartListItem;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.SmallPost;
 import jso.kpl.traveller.model.Timeline;
+import jso.kpl.traveller.network.AirlineAPI;
 import jso.kpl.traveller.network.CartlistAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.Fragment.WritePostType;
@@ -119,6 +123,26 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
     public MutableLiveData<Boolean> isClick = new MutableLiveData<>();
 
     //----------------------------------------------------------------------------------------------
+    //항공권 리스트
+    public MutableLiveData<JsonObject> airlineItem = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isAirlineOk = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isAirline = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isSearching = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isAirlineResult = new MutableLiveData<>();
+
+    public interface airlineSearchClickListener {
+        ArrayList<String> onClick();
+        void onSearching();
+        void onResetClick();
+    }
+
+    public airlineSearchClickListener onAirlineSearchClickListener;
+
+    public void setOnAirlineSearchClickListener(airlineSearchClickListener airlineSearchClickListener) {
+        this.onAirlineSearchClickListener = airlineSearchClickListener;
+    }
+
+    //----------------------------------------------------------------------------------------------
     //하단바-----------------------------------------------------------------------------------------
     //포스트 공개 비공개 여부
     public MutableLiveData<Boolean> isOpen = new MutableLiveData<>();
@@ -161,6 +185,11 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         isTag.setValue(false);
 
         photoList.setValue(new ArrayList<Uri>());
+
+        isAirlineOk.setValue(false);
+        isAirline.setValue(false);
+        isSearching.setValue(false);
+        isAirlineResult.setValue(false);
 
         //------------------------------------------------------------------------------------------
         isCartlist.setValue(false);
@@ -225,7 +254,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
         intent.setActiveMonth(24);
 
         //현재 연도를 받아온 다음 앞 뒤 (2018/해당 월일) ~ ((2021 - 1) 해당 월일)
-        intent.setStartYear(2018);
+        intent.setStartYear(2020);
         intent.setMaxYear(2021);
 
         return intent;
@@ -428,6 +457,65 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                             //cartlistWidth.setValue(200);
                         }
                     });
+        }
+    }
+
+    public void onAirlineCancel() {
+        isAirlineOk.setValue(false);
+        isAirline.setValue(false);
+        isAirlineResult.setValue(false);
+        isSearching.setValue(false);
+        onAirlineSearchClickListener.onResetClick();
+    }
+
+    public void onAirlineClick() {
+        isAirline.setValue(!isAirline.getValue());
+        if (isAirlineOk.getValue()) {
+            isAirlineOk.setValue(false);
+        }
+    }
+
+    public void onAirlineSearchClick() {
+        if (!isAirlineResult.getValue()) {
+            ArrayList<String> searchData = onAirlineSearchClickListener.onClick();
+            if (searchData.size() != 0) {
+                onAirlineSearchClickListener.onSearching();
+                WebService.INSTANCE.getClient().create(AirlineAPI.class).airlineTicketList(searchData.get(0), searchData.get(1), searchData.get(2), searchData.get(3)).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        Log.d(TAG + "통신 성공", "성공적으로 전송");
+                        ResponseResult airlineSearchRes = ((ResponseResult) response.body());
+                        if (airlineSearchRes.getRes_type() == 1) {
+                            JsonParser jsonParse = new JsonParser();
+                            JsonArray json = (JsonArray) jsonParse.parse(airlineSearchRes.getRes_obj().toString());
+                            airlineItem.setValue((JsonObject) json.get(0));
+                            isAirlineResult.setValue(true);
+                            onAirlineSearchClickListener.onResetClick();
+                            isSearching.setValue(false);
+                        } else if (airlineSearchRes.getRes_type() == 0) {
+                            App.Companion.sendToast("해당 기간의 항공권이 없습니다.");
+                            isAirlineResult.setValue(false);
+                            onAirlineSearchClickListener.onResetClick();
+                            isSearching.setValue(false);
+                        } else {
+                            App.Companion.sendToast("서버와 통신에 실패하였습니다. 잠시 후 다시 시도해주세요.");
+                            isAirlineResult.setValue(false);
+                            onAirlineSearchClickListener.onResetClick();
+                            isSearching.setValue(false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        Toast.makeText(App.INSTANCE, "통신 불량" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG + "통신 실패", "틀린 이유: " + t.getMessage());
+                        t.printStackTrace();
+                    }
+                });
+            }
+        } else {
+            isAirlineResult.setValue(false);
+            onAirlineSearchClickListener.onResetClick();
         }
     }
 

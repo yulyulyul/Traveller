@@ -379,6 +379,565 @@
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginVertical="5dp"
+                                                android:orientation="vertical"
+                                                android:visibility="@{editingPostVm.isAirlineOk || editingPostVm.isAirline?View.VISIBLE:View.GONE}">
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="horizontal"
+                                                    android:paddingHorizontal="20dp"
+                                                    android:paddingVertical="10dp"
+                                                    android:visibility="@{editingPostVm.isAirline?View.GONE:View.VISIBLE}">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_gravity="center_vertical"
+                                                        android:layout_marginStart="15dp"
+                                                        android:drawableEnd="@drawable/i_right_btn_16px_blue"
+                                                        android:drawablePadding="5dp"
+                                                        android:onClick="@{()->editingPostVm.onAirlineClick()}"
+                                                        android:text="해당 기간의 항공권을 조회해 보시겠습니까?"
+                                                        android:textColor="@color/clicked"
+                                                        android:textSize="@dimen/middle_text_size"
+                                                        android:textStyle="bold" />
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginLeft="20dp"
+                                                        android:drawableEnd="@drawable/i_cancel_24px_blue"
+                                                        android:onClick="@{()->editingPostVm.onAirlineCancel()}"
+                                                        android:enabled="@{!editingPostVm.isSearching}"
+                                                        android:padding="5dp"
+                                                        android:textColor="@color/clicked"
+                                                        android:textSize="@dimen/middle_text_size"
+                                                        android:textStyle="bold" />
+
+                                                </LinearLayout>
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginHorizontal="15dp"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:background="@drawable/s_round_border_blue"
+                                                    android:backgroundTint="#E6ffffff"
+                                                    android:orientation="vertical"
+                                                    android:visibility="@{editingPostVm.isAirline?View.VISIBLE:View.GONE}">
+
+                                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content">
+
+                                                        <TextView
+                                                            android:id="@+id/textView3"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:layout_marginStart="15dp"
+                                                            android:padding="10dp"
+                                                            android:text="최저가 항공권 조회"
+                                                            android:textColor="@color/black"
+                                                            android:textSize="@dimen/middle_text_size"
+                                                            android:textStyle="bold"
+                                                            app:layout_constraintStart_toStartOf="parent"
+                                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                                        <TextView
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:layout_marginEnd="10dp"
+                                                            android:drawableEnd="@{editingPostVm.isSearching ? @drawable/i_cancel_24px_gray : @drawable/i_cancel_24px_blue}"
+                                                            android:enabled="@{!editingPostVm.isSearching}"
+                                                            android:onClick="@{()->editingPostVm.onAirlineCancel()}"
+                                                            android:textColor="@color/clicked"
+                                                            android:textSize="@dimen/subtitle_text_size"
+                                                            app:layout_constraintBottom_toBottomOf="parent"
+                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content">
+
+                                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                                            android:id="@+id/constraintLayout3"
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="wrap_content"
+                                                            android:padding="10dp"
+                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                            app:layout_constraintStart_toStartOf="parent"
+                                                            app:layout_constraintTop_toTopOf="parent">
+
+                                                            <androidx.constraintlayout.widget.ConstraintLayout
+                                                                android:id="@+id/constraintLayout"
+                                                                android:layout_width="match_parent"
+                                                                android:layout_height="wrap_content"
+                                                                android:layout_marginStart="15dp"
+                                                                android:layout_marginEnd="15dp"
+                                                                android:visibility="@{editingPostVm.isAirlineResult?View.GONE:View.VISIBLE}"
+                                                                app:layout_constraintEnd_toEndOf="parent"
+                                                                app:layout_constraintStart_toStartOf="parent"
+                                                                app:layout_constraintTop_toTopOf="parent">
+
+                                                                <TextView
+                                                                    android:id="@+id/departure_airport_txt"
+                                                                    android:layout_width="wrap_content"
+                                                                    android:layout_height="wrap_content"
+                                                                    android:padding="10dp"
+                                                                    android:text="출발 공항"
+                                                                    android:textColor="@color/black"
+                                                                    android:textSize="@dimen/middle_text_size"
+                                                                    android:textStyle="bold"
+                                                                    app:layout_constraintStart_toStartOf="parent"
+                                                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                                                <EditText
+                                                                    android:id="@+id/departure_airport"
+                                                                    android:layout_width="80dp"
+                                                                    android:layout_height="wrap_content"
+                                                                    android:layout_marginStart="10dp"
+                                                                    android:enabled="@{!editingPostVm.isSearching}"
+                                                                    app:layout_constraintBottom_toBottomOf="@id/departure_airport_txt"
+                                                                    app:layout_constraintStart_toEndOf="@id/departure_airport_txt"
+                                                                    app:layout_constraintTop_toTopOf="@id/departure_airport_txt" />
+
+                                                                <TextView
+                                                                    android:id="@+id/entrance_airport_txt"
+                                                                    android:layout_width="wrap_content"
+                                                                    android:layout_height="wrap_content"
+                                                                    android:padding="10dp"
+                                                                    android:text="도착 공항"
+                                                                    android:textColor="@color/black"
+                                                                    android:textSize="@dimen/middle_text_size"
+                                                                    android:textStyle="bold"
+                                                                    app:layout_constraintBottom_toBottomOf="@id/departure_airport_txt"
+                                                                    app:layout_constraintEnd_toStartOf="@id/entrance_airport"
+                                                                    app:layout_constraintTop_toTopOf="@id/departure_airport_txt" />
+
+                                                                <EditText
+                                                                    android:id="@+id/entrance_airport"
+                                                                    android:layout_width="80dp"
+                                                                    android:layout_height="wrap_content"
+                                                                    android:layout_marginEnd="10dp"
+                                                                    android:enabled="@{!editingPostVm.isSearching}"
+                                                                    app:layout_constraintBottom_toBottomOf="@id/entrance_airport_txt"
+                                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                                    app:layout_constraintTop_toTopOf="@id/entrance_airport_txt" />
+
+                                                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                            <androidx.constraintlayout.widget.ConstraintLayout
+                                                                android:id="@+id/constraintLayout2"
+                                                                android:layout_width="match_parent"
+                                                                android:layout_height="wrap_content"
+                                                                android:visibility="@{editingPostVm.isAirlineResult?View.VISIBLE:View.GONE}"
+                                                                app:layout_constraintEnd_toEndOf="parent"
+                                                                app:layout_constraintStart_toStartOf="parent"
+                                                                app:layout_constraintTop_toTopOf="parent">
+
+                                                                <androidx.constraintlayout.widget.ConstraintLayout
+                                                                    android:id="@+id/departure"
+                                                                    android:layout_width="match_parent"
+                                                                    android:layout_height="wrap_content"
+                                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                                    app:layout_constraintStart_toStartOf="parent"
+                                                                    app:layout_constraintTop_toTopOf="parent">
+
+                                                                    <TextView
+                                                                        android:id="@+id/departure_txt"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginStart="15dp"
+                                                                        android:text="출국"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/departure_airline"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:layout_marginTop="10dp"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toBottomOf="@id/departure_txt" />
+
+                                                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                                                        android:id="@+id/departure_start"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:layout_marginTop="10dp"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toBottomOf="@id/departure_airline">
+
+                                                                        <TextView
+                                                                            android:id="@+id/departure_start_airport"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                                                        <TextView
+                                                                            android:id="@+id/departure_start_time"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toBottomOf="@id/departure_start_airport" />
+
+                                                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                                    <TextView
+                                                                        android:id="@+id/i_airplane"
+                                                                        android:layout_width="40dp"
+                                                                        android:layout_height="40dp"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:background="@drawable/i_airplane_50px"
+                                                                        android:textColor="@color/clicked"
+                                                                        android:textSize="@dimen/subtitle_text_size"
+                                                                        app:layout_constraintBottom_toBottomOf="@id/departure_start"
+                                                                        app:layout_constraintStart_toEndOf="@id/departure_start"
+                                                                        app:layout_constraintTop_toTopOf="@id/departure_start" />
+
+                                                                    <View
+                                                                        android:id="@+id/divider5"
+                                                                        android:layout_width="0dp"
+                                                                        android:layout_height="2dp"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:layout_marginEnd="10dp"
+                                                                        android:background="@color/clicked"
+                                                                        app:layout_constraintBottom_toBottomOf="@id/departure_start"
+                                                                        app:layout_constraintEnd_toStartOf="@id/i_marker"
+                                                                        app:layout_constraintStart_toEndOf="@id/i_airplane"
+                                                                        app:layout_constraintTop_toTopOf="@id/departure_start" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/departure_duration"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintEnd_toStartOf="@id/departure_via"
+                                                                        app:layout_constraintStart_toEndOf="@id/i_airplane"
+                                                                        app:layout_constraintTop_toBottomOf="@id/divider5" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/departure_via"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintEnd_toStartOf="@id/i_marker"
+                                                                        app:layout_constraintStart_toEndOf="@id/departure_duration"
+                                                                        app:layout_constraintTop_toBottomOf="@id/divider5" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/i_marker"
+                                                                        android:layout_width="40dp"
+                                                                        android:layout_height="40dp"
+                                                                        android:background="@drawable/i_marker_50px"
+                                                                        android:textColor="@color/clicked"
+                                                                        android:textSize="@dimen/subtitle_text_size"
+                                                                        app:layout_constraintBottom_toBottomOf="@id/departure_arrive"
+                                                                        app:layout_constraintEnd_toStartOf="@id/departure_arrive"
+                                                                        app:layout_constraintTop_toTopOf="@id/departure_arrive" />
+
+                                                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                                                        android:id="@+id/departure_arrive"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginTop="10dp"
+                                                                        android:layout_marginEnd="10dp"
+                                                                        app:layout_constraintEnd_toEndOf="parent"
+                                                                        app:layout_constraintTop_toBottomOf="@id/departure_airline">
+
+                                                                        <TextView
+                                                                            android:id="@+id/departure_arrive_airport"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                                                        <TextView
+                                                                            android:id="@+id/departure_arrive_time"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toBottomOf="@id/departure_arrive_airport" />
+
+                                                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                                <androidx.constraintlayout.widget.ConstraintLayout
+                                                                    android:id="@+id/entrance"
+                                                                    android:layout_width="match_parent"
+                                                                    android:layout_height="wrap_content"
+                                                                    android:layout_marginTop="10dp"
+                                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                                    app:layout_constraintStart_toStartOf="parent"
+                                                                    app:layout_constraintTop_toBottomOf="@id/departure">
+
+                                                                    <TextView
+                                                                        android:id="@+id/entrance_txt"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginStart="15dp"
+                                                                        android:text="입국"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/entrance_airline"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:layout_marginTop="10dp"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toBottomOf="@id/entrance_txt" />
+
+                                                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                                                        android:id="@+id/entrance_start"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:layout_marginTop="10dp"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toBottomOf="@id/entrance_airline">
+
+                                                                        <TextView
+                                                                            android:id="@+id/entrance_start_airport"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                                                        <TextView
+                                                                            android:id="@+id/entrance_start_time"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toBottomOf="@id/entrance_start_airport" />
+
+                                                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                                    <TextView
+                                                                        android:id="@+id/i_airplane2"
+                                                                        android:layout_width="40dp"
+                                                                        android:layout_height="40dp"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:background="@drawable/i_airplane_50px"
+                                                                        android:textColor="@color/clicked"
+                                                                        android:textSize="@dimen/subtitle_text_size"
+                                                                        app:layout_constraintBottom_toBottomOf="@id/entrance_start"
+                                                                        app:layout_constraintStart_toEndOf="@id/entrance_start"
+                                                                        app:layout_constraintTop_toTopOf="@id/entrance_start" />
+
+                                                                    <View
+                                                                        android:id="@+id/divider6"
+                                                                        android:layout_width="0dp"
+                                                                        android:layout_height="2dp"
+                                                                        android:layout_marginStart="10dp"
+                                                                        android:layout_marginEnd="10dp"
+                                                                        android:background="@color/clicked"
+                                                                        app:layout_constraintBottom_toBottomOf="@id/entrance_start"
+                                                                        app:layout_constraintEnd_toStartOf="@id/i_marker2"
+                                                                        app:layout_constraintStart_toEndOf="@id/i_airplane2"
+                                                                        app:layout_constraintTop_toTopOf="@id/entrance_start" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/entrance_duration"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintEnd_toStartOf="@id/entrance_via"
+                                                                        app:layout_constraintStart_toEndOf="@id/i_airplane2"
+                                                                        app:layout_constraintTop_toBottomOf="@id/divider6" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/entrance_via"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintEnd_toStartOf="@id/i_marker2"
+                                                                        app:layout_constraintStart_toEndOf="@id/entrance_duration"
+                                                                        app:layout_constraintTop_toBottomOf="@id/divider6" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/i_marker2"
+                                                                        android:layout_width="40dp"
+                                                                        android:layout_height="40dp"
+                                                                        android:background="@drawable/i_marker_50px"
+                                                                        android:textColor="@color/clicked"
+                                                                        android:textSize="@dimen/subtitle_text_size"
+                                                                        app:layout_constraintBottom_toBottomOf="@id/entrance_arrive"
+                                                                        app:layout_constraintEnd_toStartOf="@id/entrance_arrive"
+                                                                        app:layout_constraintTop_toTopOf="@id/entrance_arrive" />
+
+                                                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                                                        android:id="@+id/entrance_arrive"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:layout_marginTop="10dp"
+                                                                        android:layout_marginEnd="10dp"
+                                                                        app:layout_constraintEnd_toEndOf="parent"
+                                                                        app:layout_constraintTop_toBottomOf="@id/entrance_airline">
+
+                                                                        <TextView
+                                                                            android:id="@+id/entrance_arrive_airport"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                                                        <TextView
+                                                                            android:id="@+id/entrance_arrive_time"
+                                                                            android:layout_width="wrap_content"
+                                                                            android:layout_height="wrap_content"
+                                                                            android:textColor="@color/black"
+                                                                            android:textSize="@dimen/middle_text_size"
+                                                                            android:textStyle="bold"
+                                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                                            app:layout_constraintStart_toStartOf="parent"
+                                                                            app:layout_constraintTop_toBottomOf="@id/entrance_arrive_airport" />
+
+                                                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                                <androidx.constraintlayout.widget.ConstraintLayout
+                                                                    android:layout_width="wrap_content"
+                                                                    android:layout_height="wrap_content"
+                                                                    android:layout_marginTop="10dp"
+                                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                                    app:layout_constraintStart_toStartOf="parent"
+                                                                    app:layout_constraintTop_toBottomOf="@id/entrance">
+
+                                                                    <TextView
+                                                                        android:id="@+id/price_txt"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:text="왕복 항공권 비용 : "
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintBottom_toBottomOf="parent"
+                                                                        app:layout_constraintEnd_toStartOf="@id/price"
+                                                                        app:layout_constraintStart_toStartOf="parent"
+                                                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                                                    <TextView
+                                                                        android:id="@+id/price"
+                                                                        android:layout_width="wrap_content"
+                                                                        android:layout_height="wrap_content"
+                                                                        android:textColor="@color/black"
+                                                                        android:textSize="@dimen/middle_text_size"
+                                                                        android:textStyle="bold"
+                                                                        app:layout_constraintBottom_toBottomOf="parent"
+                                                                        app:layout_constraintEnd_toEndOf="parent"
+                                                                        app:layout_constraintStart_toEndOf="@id/price_txt"
+                                                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                        <ProgressBar
+                                                            android:id="@+id/pbLoading"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:layout_marginEnd="10dp"
+                                                            android:visibility="@{editingPostVm.isSearching?View.VISIBLE:View.GONE}"
+                                                            app:layout_constraintBottom_toBottomOf="@id/airline_btn"
+                                                            app:layout_constraintEnd_toStartOf="@id/airline_btn"
+                                                            app:layout_constraintTop_toTopOf="@id/airline_btn" />
+
+                                                        <Button
+                                                            android:id="@+id/airline_btn"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="40dp"
+                                                            android:layout_gravity="center"
+                                                            android:layout_marginStart="10dp"
+                                                            android:layout_marginBottom="10dp"
+                                                            android:background="@drawable/s_border_round_square"
+                                                            android:backgroundTint="@{editingPostVm.isSearching?@color/txt_medium_gray:@color/clicked}"
+                                                            android:clickable="@{editingPostVm.isSearching?false:true}"
+                                                            android:onClick="@{()->editingPostVm.onAirlineSearchClick()}"
+                                                            android:text="검색"
+                                                            android:textColor="@color/colorWhite"
+                                                            android:textSize="@dimen/middle_text_size"
+                                                            app:layout_constraintBottom_toBottomOf="parent"
+                                                            app:layout_constraintEnd_toEndOf="parent"
+                                                            app:layout_constraintStart_toStartOf="parent"
+                                                            app:layout_constraintTop_toBottomOf="@id/constraintLayout3" />
+
+                                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                </LinearLayout>
+
+                                                <View
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="1dp"
+                                                    android:layout_marginVertical="5dp"
+                                                    android:background="#80808080" />
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginVertical="5dp"
                                                 android:orientation="vertical">
 
                                                 <LinearLayout

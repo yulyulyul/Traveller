@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
 import com.yongbeom.aircalendar.AirCalendarDatePickerActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,7 @@ import jso.kpl.traveller.ui.Fragment.WritePostType;
 import jso.kpl.traveller.ui.adapters.RouteNodeAdapter;
 import jso.kpl.traveller.util.CurrencyChange;
 import jso.kpl.traveller.util.JavaUtil;
+import jso.kpl.traveller.viewmodel.DetailCountryInfoViewModel;
 import jso.kpl.traveller.viewmodel.EditingPostViewModel;
 import me.jerryhanks.timelineview.IndicatorAdapter;
 import me.jerryhanks.timelineview.model.Status;
@@ -260,6 +262,7 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
                     binding.postSave.setTextColor(getColor(R.color.non_clicked));
                 }
 
+                binding.getEditingPostVm().isAirlineOk.setValue(true);
             }
         });
 
@@ -325,6 +328,73 @@ public class EditingPost extends AppCompatActivity implements WritePostType.OnDe
             public void onClick(View view) {
                 DrawerLayout drawer = binding.drawer;
                 drawer.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        binding.getEditingPostVm().setOnAirlineSearchClickListener(new EditingPostViewModel.airlineSearchClickListener() {
+            @Override
+            public ArrayList<String> onClick() {
+                ArrayList<String> arr = new ArrayList<>();
+                if (binding.departureAirport.getText().toString().equals("")) {
+                    App.Companion.sendToast("출발 공항을 입력하세요.");
+                } else if (binding.entranceAirport.getText().toString().equals("")) {
+                    App.Companion.sendToast("도착 공항을 입력하세요.");
+                } else if (binding.textCalendar.getText().toString().equals("")) {
+                    App.Companion.sendToast("여행 날짜를 입력하세요.");
+                } else {
+                    arr.add(binding.departureAirport.getText().toString().toUpperCase());
+                    arr.add(binding.entranceAirport.getText().toString().toUpperCase());
+                    arr.add(binding.textCalendar.getText().toString().split("~")[0].trim());
+                    arr.add(binding.textCalendar.getText().toString().split("~")[1].trim());
+                }
+
+                return arr;
+            }
+
+            @Override
+            public void onSearching() {
+                binding.airlineBtn.setText("검색 중");
+                binding.getEditingPostVm().isSearching.setValue(true);
+            }
+
+            @Override
+            public void onResetClick() {
+                if (binding.getEditingPostVm().isAirlineResult.getValue()) {
+                    binding.airlineBtn.setText("돌아가기");
+                } else {
+                    binding.airlineBtn.setText("검색");
+                }
+            }
+        });
+
+        binding.getEditingPostVm().airlineItem.observe(this, new Observer<JsonObject>() {
+            @Override
+            public void onChanged(JsonObject jsonObject) {
+                if (jsonObject.size() != 0) {
+                    JsonObject departure = (JsonObject) jsonObject.get("departure");
+                    binding.departureAirline.setText(departure.get("airline").getAsString());
+                    JsonObject d_start = (JsonObject) departure.get("start");
+                    binding.departureStartAirport.setText(d_start.get("airport").getAsString());
+                    binding.departureStartTime.setText(d_start.get("time").getAsString());
+                    JsonObject d_arrive = (JsonObject) departure.get("arrive");
+                    binding.departureArriveAirport.setText(d_arrive.get("airport").getAsString());
+                    binding.departureArriveTime.setText(d_arrive.get("time").getAsString());
+                    binding.departureDuration.setText(departure.get("duration").getAsString());
+                    binding.departureVia.setText(departure.get("via").getAsString());
+
+                    JsonObject entrance = (JsonObject) jsonObject.get("entrance");
+                    binding.entranceAirline.setText(entrance.get("airline").getAsString());
+                    JsonObject e_start = (JsonObject) entrance.get("start");
+                    binding.entranceStartAirport.setText(e_start.get("airport").getAsString());
+                    binding.entranceStartTime.setText(e_start.get("time").getAsString());
+                    JsonObject e_arrive = (JsonObject) entrance.get("arrive");
+                    binding.entranceArriveAirport.setText(e_arrive.get("airport").getAsString());
+                    binding.entranceArriveTime.setText(e_arrive.get("time").getAsString());
+                    binding.entranceDuration.setText(entrance.get("duration").getAsString());
+                    binding.entranceVia.setText(entrance.get("via").getAsString());
+
+                    binding.price.setText(jsonObject.get("price").getAsString() + "원");
+                }
             }
         });
     }

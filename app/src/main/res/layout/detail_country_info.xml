@@ -330,6 +330,7 @@
                                         android:layout_width="80dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="10dp"
+                                        android:enabled="@{!fvInfoVm.isSearching}"
                                         app:layout_constraintBottom_toBottomOf="@id/departure_airport_txt"
                                         app:layout_constraintStart_toEndOf="@id/departure_airport_txt"
                                         app:layout_constraintTop_toTopOf="@id/departure_airport_txt" />
@@ -352,6 +353,7 @@
                                         android:layout_width="80dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginEnd="10dp"
+                                        android:enabled="@{!fvInfoVm.isSearching}"
                                         app:layout_constraintBottom_toBottomOf="@id/entrance_airport_txt"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintTop_toTopOf="@id/entrance_airport_txt" />
@@ -771,6 +773,16 @@
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pbLoading"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:visibility="@{fvInfoVm.isSearching?View.VISIBLE:View.GONE}"
+                                app:layout_constraintBottom_toBottomOf="@id/airline_btn"
+                                app:layout_constraintEnd_toStartOf="@id/airline_btn"
+                                app:layout_constraintTop_toTopOf="@id/airline_btn" />
 
                             <Button
                                 android:id="@+id/airline_btn"
