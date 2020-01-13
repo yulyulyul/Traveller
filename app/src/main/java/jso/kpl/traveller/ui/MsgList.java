@@ -1,10 +1,5 @@
 package jso.kpl.traveller.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.MutableLiveData;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.google.firebase.messaging.FirebaseMessaging;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MsgListBinding;
 import jso.kpl.traveller.interfaces.DialogYNInterface;
@@ -23,7 +20,6 @@ import jso.kpl.traveller.model.Message;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.network.MsgAPI;
 import jso.kpl.traveller.network.WebService;
-import jso.kpl.traveller.services.MyFirebaseMessagingService;
 import jso.kpl.traveller.ui.adapters.MsgListAdapter;
 import jso.kpl.traveller.viewmodel.MsgListViewModel;
 import retrofit2.Call;
@@ -39,6 +35,8 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
 
     BroadcastReceiver broadcastReceiver = null;
 
+    LoadingScreen loadingScreen = new LoadingScreen();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +47,7 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
         binding.setMsgListVm(msgListVm);
         binding.setLifecycleOwner(this);
 
+        binding.rv.setItemAnimator(null);
         binding.topActionBar.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,24 +66,26 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
 
         binding.getMsgListVm().adapter.setOnDeleteClickListener(this);
 
-        if(broadcastReceiver != null) return;
+        if (broadcastReceiver != null) return;
 
         final IntentFilter filter = new IntentFilter();
         filter.addAction("com.example.limky.broadcastreceiver.gogo");
 
-        broadcastReceiver = new BroadcastReceiver() {
+        BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, final Intent intent) {
+
+
                 Message m = (Message) intent.getSerializableExtra("msg");
-                if(intent.getAction().equals("com.example.limky.broadcastreceiver.gogo")) {
 
-                    Log.d(TAG, "onReceive: " + m.toString());
+                binding.getMsgListVm().adapter.addItem(m);
 
-                }
+                binding.getMsgListVm().adapter.notifyItemInserted(0);
 
             }
         };
 
+        registerReceiver(receiver, new IntentFilter("com.example.limky.broadcastreceiver.gogo"));
 
     }
 
@@ -110,13 +111,15 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
                             @Override
                             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
 
-                                if(response.body() != null){
+                                if (response.body() != null) {
 
-                                    if(response.body().getRes_type() == 1){
+                                    if (response.body().getRes_type() == 1) {
                                         msgListVm.msgList.remove(pos);
                                         msgListVm.adapter.removeItem(pos);
 
                                         msgListVm.adapter.notifyItemRemoved(pos);
+
+                                        customDialog.dismiss();
                                     }
                                 }
 

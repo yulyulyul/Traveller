@@ -1,6 +1,9 @@
 package jso.kpl.traveller.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -80,14 +83,28 @@ public class MainTab extends AppCompatActivity {
                 .sendBackPush(App.Companion.getUser().getU_userid()).enqueue(new Callback<ResponseResult<Integer>>() {
             @Override
             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
-
+                Log.d(TAG, "밀린 푸시 Go");
             }
 
             @Override
             public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
+
+        binding.getMainTabVm().isMenuLD.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(!aBoolean)
+                    binding.mainDrawerLayout.closeDrawer(Gravity.RIGHT);
+            }
+        });
+
+        if(getIntent().getBooleanExtra("isPush", false)){
+            Intent intent = new Intent(App.INSTANCE, MsgList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            App.INSTANCE.startActivity(intent);
+        }
     }
 
     public void transitedContainer(final FrameLayout layout) {

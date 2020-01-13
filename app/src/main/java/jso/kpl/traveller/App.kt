@@ -1,16 +1,26 @@
 package jso.kpl.traveller
 
 import android.app.Application
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.Nullable
+import androidx.databinding.DataBindingUtil
 import com.facebook.AccessToken
 import com.facebook.Profile
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
@@ -18,8 +28,13 @@ import java.security.MessageDigest
 import jso.kpl.traveller.thirdpartyapi.kakao.KakaoSDKAdapter
 import com.kakao.auth.KakaoSDK
 import com.kakao.auth.Session
+import jso.kpl.traveller.databinding.CustomToastMsgBinding
+import jso.kpl.traveller.model.Message
 import jso.kpl.traveller.model.User
+import jso.kpl.traveller.ui.MsgList
 import jso.kpl.traveller.viewmodel.LoginSelectViewModel
+import java.time.Duration
+import kotlin.math.log
 
 
 /**
@@ -39,6 +54,31 @@ class App : Application()
 
         fun sendToast(msg:String){
             Toast.makeText(App.INSTANCE, msg, Toast.LENGTH_SHORT).show();
+        }
+
+        fun floatingUpperSnackBAr(context : Context, msg : String, isClick : Boolean){
+
+            val inflater = LayoutInflater.from(context)
+
+            var binding : CustomToastMsgBinding = DataBindingUtil.inflate(inflater, R.layout.custom_toast_msg, null, false)
+
+            binding.msg = msg
+
+            var t : Toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+
+            t.setGravity(Gravity.CENTER or Gravity.TOP, 0, 50)
+            t.view = binding.root
+            t.show()
+
+            if(isClick){
+                binding.onToastClickListener = View.OnClickListener {
+                    var intent : Intent = Intent(context, MsgList::class.java);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                    t.cancel()
+                }
+            }
+
         }
 
         fun getGoogleAuth() : FirebaseAuth
@@ -94,6 +134,20 @@ class App : Application()
         Log.d(TAG, "Google Login , photoUrl : " + currentUser?.photoUrl)
         Log.d(TAG, "Google Login , providerId : " + currentUser?.providerId)
         Log.d(TAG, "Google Login , uid : " + currentUser?.uid)
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+
+                val m = intent.getSerializableExtra("msg") as Message
+
+                var msg : String = m.m_sender + "님께 쪽지가 도착했습니다."
+
+                floatingUpperSnackBAr(App.INSTANCE, msg, true)
+
+            }
+        }
+
+        registerReceiver(receiver, IntentFilter("com.example.limky.broadcastreceiver.gogo"))
     }
 
     /*

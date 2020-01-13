@@ -22,7 +22,6 @@ import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.network.MsgAPI;
 import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.EditingMsg;
-import jso.kpl.traveller.ui.MsgList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,6 +56,9 @@ public class MsgListAdapter extends RecyclerView.Adapter<MsgListAdapter.MsgListV
     public void onBindViewHolder(@NonNull final MsgListViewHolder holder, final int position) {
 
         final Message msg = msgList.get(position);
+
+        Log.d("Trav.Msg", "쪽지 순서: " + position);
+        Log.d("Trav.Msg", "쪽지 번호: " + msg.getM_no());
 
         holder.onBind(msg);
 
@@ -105,16 +107,6 @@ public class MsgListAdapter extends RecyclerView.Adapter<MsgListAdapter.MsgListV
         return msgList.size();
     }
 
-    public void addItem(Message message) {
-
-        if (msgList == null)
-            msgList = new ArrayList<>();
-
-        msgList.add(message);
-
-        notifyDataSetChanged();
-    }
-
     public void removeItem(int pos) {
 
         if (msgList != null)
@@ -123,13 +115,18 @@ public class MsgListAdapter extends RecyclerView.Adapter<MsgListAdapter.MsgListV
         notifyItemRemoved(pos);
     }
 
+    public void addItems(List<Message> list) {
+        msgList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(Message m) {
+        msgList.add(0, m);
+        notifyItemInserted(0);
+    }
+
     public void removeItems() {
-
-        if (msgList != null)
-            msgList.clear();
-        else
-            msgList = new ArrayList<>();
-
+        msgList.clear();
         notifyDataSetChanged();
     }
 
@@ -142,7 +139,6 @@ public class MsgListAdapter extends RecyclerView.Adapter<MsgListAdapter.MsgListV
             super(binding.getRoot());
 
             this.msgItemBinding = binding;
-            this.msgItemBinding.setLifecycleOwner(new MsgList());
 
             isCheck.setValue(true);
         }

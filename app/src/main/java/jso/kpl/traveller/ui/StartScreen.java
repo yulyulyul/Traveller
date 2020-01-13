@@ -20,10 +20,22 @@ import retrofit2.Response;
 
 public class StartScreen extends AppCompatActivity {
 
+    boolean isPush = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_screen);
+
+        Bundle bundle = new Bundle();
+
+        bundle = getIntent().getExtras();
+
+        if(bundle != null)
+            isPush = true;
+        else
+            isPush = false;
+
 
         Handler handler = new Handler();
 
@@ -33,6 +45,8 @@ public class StartScreen extends AppCompatActivity {
                 autoLogin();
             }
         }, 500);
+
+
     }
 
     public void autoLogin() {
@@ -59,6 +73,7 @@ public class StartScreen extends AppCompatActivity {
 
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+                                    intent.putExtra("isPush", isPush);
                                     intent.putExtra("user", receiveUser);
 
                                     startActivity(intent);

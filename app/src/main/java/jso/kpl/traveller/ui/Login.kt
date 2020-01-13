@@ -2,6 +2,7 @@ package jso.kpl.traveller.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.StrictMode
 import android.util.Log
 import android.view.View
@@ -21,6 +22,7 @@ import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.util.GMailSender
 import jso.kpl.traveller.util.RegexMethod
 import jso.kpl.traveller.viewmodel.LoginViewModel
+import kotlinx.android.synthetic.main.rod_category_item.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +33,8 @@ class Login : AppCompatActivity() {
 
     var BindingLogin: LoginBinding? = null
     var viewmodel: LoginViewModel? = null
+
+    var loadingScreen :LoadingScreen = LoadingScreen()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +110,20 @@ class Login : AppCompatActivity() {
         }))
 
         onAutoLogin()
-    }
+
+        BindingLogin?.viewmodel?.waiting?.observe(this,
+            Observer<Boolean> {
+
+                if(it){
+                    var intent:Intent = Intent(Login.INSTANCE, LoadingScreen::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+
+                } else {
+                   // loadingScreen.dismiss()
+                }
+            })
+}
 
     private fun onAutoLogin(){
 
@@ -137,10 +154,10 @@ class Login : AppCompatActivity() {
 
                                 BindingLogin?.viewmodel?.onCleared()
                                 finish()
+
                             }
 
                             override fun onFailure(call: Call<ResponseResult<Int>>, t: Throwable) {
-
                             }
                         })
                 }

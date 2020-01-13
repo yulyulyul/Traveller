@@ -17,6 +17,7 @@ import jso.kpl.traveller.model.User
 import jso.kpl.traveller.network.MsgWebService
 import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
+import jso.kpl.traveller.ui.LoadingScreen
 import jso.kpl.traveller.ui.MainTab
 import jso.kpl.traveller.util.JavaUtil
 import jso.kpl.traveller.util.RegexMethod
@@ -47,12 +48,17 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     //통신으로 받은 유저 객체
     var receiveUser: User? = null
 
+    var waiting : MutableLiveData<Boolean> = MutableLiveData()
+
     init {
+
         btnSelected = ObservableBoolean(false)
         email = ObservableField("")
         password = ObservableField("")
         muUser = MutableLiveData<User>()
         progressDialog = SingleLiveEvent<Boolean>()
+
+        waiting.value = false
 
         isLogin = MutableLiveData<Boolean>()
         isFindPwd = MutableLiveData<Boolean>()
@@ -88,7 +94,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     // 직접 로그인시 서버에 email과 password를 보내 검증하는 부분.
     fun login() {
         progressDialog?.value = true
-
+        waiting.value = true
         SHAPassword = JavaUtil.returnSHA256(password?.get()!!)
 
         WebService.client.create(UserAPI::class.java)
@@ -163,6 +169,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
                 progressDialog?.value = false
 
+                waiting.value = false
+
             } else {
                 App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
             }
@@ -177,6 +185,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         App.sendToast("로그인에 실패하셨습니다.")
 
         progressDialog?.value = false
+
+        waiting.value = false
     }
 
     //로그인 SharedPreferences

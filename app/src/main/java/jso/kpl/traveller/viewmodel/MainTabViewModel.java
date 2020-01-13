@@ -26,11 +26,13 @@ import retrofit2.Response;
 
 public class MainTabViewModel extends ViewModel {
 
+    public MutableLiveData<Boolean> isMenuLD = new MutableLiveData<>();
     public MutableLiveData<Integer> TAP_POS = new MutableLiveData<>();
     public TabLayout.OnTabSelectedListener listener;
 
     public MainTabViewModel() {
 
+        isMenuLD.setValue(true);
         TAP_POS.setValue(0);
 
     }
@@ -80,12 +82,16 @@ public class MainTabViewModel extends ViewModel {
     }
 
     public void onMsgBoxClicked(){
+
+        isMenuLD.setValue(false);
+
         Intent intent = new Intent(App.INSTANCE, MsgList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         App.INSTANCE.startActivity(intent);
     }
 
     public void onLogoutClicked() {
+
         SharedPreferences sp = App.INSTANCE.getSharedPreferences("auto_login", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 

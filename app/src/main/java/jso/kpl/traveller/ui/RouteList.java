@@ -2,6 +2,7 @@ package jso.kpl.traveller.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -48,7 +49,6 @@ public class RouteList extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.route_list);
         binding.setMainListVm(routeListVm);
         binding.setLifecycleOwner(this);
-
 
         if (getIntent() != null) {
             item = (MyPageItem) getIntent().getSerializableExtra("req");

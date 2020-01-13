@@ -20,12 +20,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.MsgList">
-            <intent-filter>
-                <action android:name=".MsgList"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+        <activity
+            android:name=".ui.LoadingScreen"
+            android:theme="@style/Transparent" />
+        <activity android:name=".ui.MsgList"></activity>
         <activity
             android:name=".ui.EditingMsg"
             android:theme="@style/Transparent" />
@@ -54,8 +52,9 @@
         <activity android:name=".ui.CountryList" />
         <activity android:name=".ui.DetailCountryInfo" />
         <activity android:name=".ui.DetailPost" />
-        <activity android:name=".ui.CustomDialog"
-            android:theme="@style/Transparent"/>
+        <activity
+            android:name=".ui.CustomDialog"
+            android:theme="@style/Transparent" />
         <activity
             android:name=".ui.LoginSelect"
             android:theme="@style/AppTheme.NoActionBar"

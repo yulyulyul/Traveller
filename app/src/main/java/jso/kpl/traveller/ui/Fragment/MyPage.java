@@ -94,6 +94,7 @@ public class MyPage extends Fragment implements FlagRvAdapter.OnFlagClickListene
 
         myPageVM = new MyPageViewModel();
 
+
         //Editing Post로 이동 후 결과를 반환하는 클릭 이벤트 버튼
         myPageVM.setOnEditingPostClickListener(new View.OnClickListener() {
             @Override

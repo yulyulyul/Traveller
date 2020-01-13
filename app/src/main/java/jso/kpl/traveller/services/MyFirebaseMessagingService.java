@@ -26,36 +26,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public MyFirebaseMessagingService() {
         Log.d(TAG, "서비스 실행");
+
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "메시지: " + remoteMessage.getData());
 
-            Message message = new Message();
+            Message m = new Message();
 
-            message.setM_sender(remoteMessage.getData().get("m_sender"));
-            message.setM_sender_img(remoteMessage.getData().get("sender_profile"));
-            message.setM_card_img(remoteMessage.getData().get("card_img"));
-            message.setM_msg(remoteMessage.getData().get("msg"));
-            message.setM_msg(remoteMessage.getData().get("msg"));
+            if(remoteMessage.getData().get("m_no") != null)
+                m.setM_no(Integer.parseInt(remoteMessage.getData().get("m_no")));
+
+            m.setM_sender(remoteMessage.getData().get("m_sender"));
+            m.setM_sender_img(remoteMessage.getData().get("m_sender_img"));
+            m.setM_card_img(remoteMessage.getData().get("m_card_img"));
+            m.setM_msg(remoteMessage.getData().get("m_msg"));
+            m.setM_date(remoteMessage.getData().get("m_date"));
+            m.setM_is_receive(Boolean.parseBoolean(remoteMessage.getData().get("m_is_receive")));
+            m.setM_is_delete(Boolean.parseBoolean(remoteMessage.getData().get("m_is_delete")));
 
             Intent intent = new Intent("com.example.limky.broadcastreceiver.gogo");
-            intent.putExtra("msg", message);
+            intent.putExtra("msg", m);
             sendBroadcast(intent);
 
-
-        }
-
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "메시지 노티" +
-                    remoteMessage.getNotification().getBody());
+            Log.d(TAG, "onMessageReceived: " + remoteMessage.getData().toString());
         }
 
         sendNotification(remoteMessage);
-
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {

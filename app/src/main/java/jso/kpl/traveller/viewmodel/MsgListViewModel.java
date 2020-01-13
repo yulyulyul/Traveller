@@ -30,31 +30,30 @@ public class MsgListViewModel extends ViewModel {
 
     public MsgListViewModel() {
 
+        adapter.setHasStableIds(true);
         isRefreshLD.setValue(false);
 
         msgCall();
     }
 
-    public void msgCall(){
+    public void msgCall() {
+        isRefreshLD.setValue(true);
         WebService.INSTANCE.getClient().create(MsgAPI.class).loadMsgList(App.Companion.getUser().getU_userid())
                 .enqueue(new Callback<ResponseResult<List<Message>>>() {
                     @Override
                     public void onResponse(Call<ResponseResult<List<Message>>> call, Response<ResponseResult<List<Message>>> response) {
 
-                        if(response.body() != null){
-                            if(response.body().getRes_type() == 1){
+                        if (response.body() != null) {
+                            if (response.body().getRes_type() == 1) {
 
                                 Log.d("Trav.msgVm", "onResponse: ");
                                 msgList = response.body().getRes_obj();
 
-                                for(int i = 0 ; i < msgList.size(); i++){
-                                    adapter.addItem(msgList.get(i));
-                                    Log.d("Trav.MsgListVm", "아이템: " + msgList.get(i).toString());
-                                }
-
-                                adapter.notifyDataSetChanged();
+                                adapter.addItems(msgList);
 
                                 isRefreshLD.setValue(false);
+
+                                adapter.notifyDataSetChanged();
                             }
                         }
 
