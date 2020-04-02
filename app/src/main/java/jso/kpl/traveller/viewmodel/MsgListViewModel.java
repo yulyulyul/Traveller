@@ -22,7 +22,6 @@ import retrofit2.Response;
 public class MsgListViewModel extends ViewModel {
 
     public List<Message> msgList = new ArrayList<>();
-
     public MsgListAdapter adapter = new MsgListAdapter();
 
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener;
@@ -43,16 +42,14 @@ public class MsgListViewModel extends ViewModel {
                     @Override
                     public void onResponse(Call<ResponseResult<List<Message>>> call, Response<ResponseResult<List<Message>>> response) {
 
+                        isRefreshLD.setValue(false);
+
                         if (response.body() != null) {
                             if (response.body().getRes_type() == 1) {
 
                                 Log.d("Trav.msgVm", "onResponse: ");
                                 msgList = response.body().getRes_obj();
-
                                 adapter.addItems(msgList);
-
-                                isRefreshLD.setValue(false);
-
                                 adapter.notifyDataSetChanged();
                             }
                         }

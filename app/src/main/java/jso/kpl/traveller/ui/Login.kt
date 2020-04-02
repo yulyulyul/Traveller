@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -29,36 +30,36 @@ import javax.mail.SendFailedException
 
 class Login : AppCompatActivity() {
 
-    var BindingLogin: LoginBinding? = null
-    var viewmodel: LoginViewModel? = null
+    var loginBinding: LoginBinding? = null
+    var loginVm: LoginViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         INSTANCE = this
-        BindingLogin = DataBindingUtil.setContentView(this, R.layout.login)
-        viewmodel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-        BindingLogin?.viewmodel = viewmodel
-        BindingLogin?.linear?.setOnClickListener(({
+        loginBinding = DataBindingUtil.setContentView(this, R.layout.login)
+        loginVm = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        loginBinding?.loginVm = loginVm
+        loginBinding?.linear?.setOnClickListener(({
             var imm = getSystemService(INPUT_METHOD_SERVICE)
             if (imm is InputMethodManager) {
-                imm.hideSoftInputFromWindow(BindingLogin?.inputEmail?.windowToken, 0)
+                imm.hideSoftInputFromWindow(loginBinding?.inputEmail?.windowToken, 0)
             }
         }))
-        BindingLogin?.findPwd?.setOnClickListener(({
+        loginBinding?.findPwd?.setOnClickListener(({
             onFindPwdBtn()
         }))
-        BindingLogin?.backBtn?.setOnClickListener(({
+        loginBinding?.backBtn?.setOnClickListener(({
             onFindPwdBtn()
         }))
-        BindingLogin?.findPwdBtn?.setOnClickListener(({
-            BindingLogin?.findPwdError?.visibility = View.GONE
-            var emailTxt = BindingLogin?.findPwdInputEmail?.text?.trim().toString()
+        loginBinding?.findPwdBtn?.setOnClickListener(({
+            loginBinding?.findPwdError?.visibility = View.GONE
+            var emailTxt = loginBinding?.findPwdInputEmail?.text?.trim().toString()
             if (!emailTxt.equals("")) {
                 if (RegexMethod.isEmailValid(emailTxt)) {
-                    BindingLogin?.findPwdBtn?.isClickable = false
-                    BindingLogin?.findPwdBtn?.text = "확인 중"
-                    BindingLogin?.viewmodel?.findPwd(emailTxt) {
+                    loginBinding?.findPwdBtn?.isClickable = false
+                    loginBinding?.findPwdBtn?.text = "확인 중"
+                    loginBinding?.loginVm?.findPwd(emailTxt) {
                         if (it) {
                             StrictMode.setThreadPolicy(
                                 StrictMode.ThreadPolicy.Builder()
@@ -67,64 +68,54 @@ class Login : AppCompatActivity() {
                                     .permitNetwork().build()
                             )
                             try {
-                                var gMailSender: GMailSender =
-                                    GMailSender("traveller.sup@gmail.com", "1a2s3d4f!@")
+                                var gMailSender = GMailSender()
                                 var tempPwd: String = gMailSender.emailCode
                                 gMailSender.sendMail(
                                     "Traveller 임시 비밀번호 발급",
                                     "임시 비밀번호 : " + tempPwd,
                                     emailTxt
                                 )
-                                BindingLogin?.viewmodel?.updatePwdTemp(emailTxt, tempPwd)
+                                loginBinding?.loginVm?.updatePwdTemp(emailTxt, tempPwd)
                                 App.sendToast("해당 이메일로 임시 비밀번호가 발급되었습니다.")
                                 onFindPwdBtn()
                             } catch (e: SendFailedException) {
                                 App.sendToast("이메일 형식이 잘못되었습니다.")
+                                Log.d(TAG, e.message.toString())
                             } catch (e: MessagingException) {
                                 App.sendToast("인터넷 연결을 확인 후 다시 시도해주세요.")
+                                Log.d(TAG, e.message.toString())
                             } catch (e: Exception) {
                                 e.printStackTrace()
+                                Log.d(TAG, e.message.toString())
                             }
                         } else {
-                            BindingLogin?.findPwdBtn?.isClickable = true
-                            BindingLogin?.findPwdBtn?.text = "확인"
-                            BindingLogin?.findPwdError?.text =
-                                BindingLogin?.viewmodel?.findPwdInputError?.get(2)
-                            BindingLogin?.findPwdError?.visibility = View.VISIBLE
+                            loginBinding?.findPwdBtn?.isClickable = true
+                            loginBinding?.findPwdBtn?.text = "확인"
+                            loginBinding?.findPwdError?.text =
+                                loginBinding?.loginVm?.findPwdInputError?.get(2)
+                            loginBinding?.findPwdError?.visibility = View.VISIBLE
                         }
                     }
                 } else {
-                    BindingLogin?.findPwdError?.text =
-                        BindingLogin?.viewmodel?.findPwdInputError?.get(1)
-                    BindingLogin?.findPwdError?.visibility = View.VISIBLE
+                    loginBinding?.findPwdError?.text =
+                        loginBinding?.loginVm?.findPwdInputError?.get(1)
+                    loginBinding?.findPwdError?.visibility = View.VISIBLE
                 }
             } else {
-                BindingLogin?.findPwdError?.text =
-                    BindingLogin?.viewmodel?.findPwdInputError?.get(0)
-                BindingLogin?.findPwdError?.visibility = View.VISIBLE
+                loginBinding?.findPwdError?.text =
+                    loginBinding?.loginVm?.findPwdInputError?.get(0)
+                loginBinding?.findPwdError?.visibility = View.VISIBLE
             }
         }))
 
         onAutoLogin()
-
-        BindingLogin?.viewmodel?.waiting?.observe(this,
-            Observer<Boolean> {
-
-                if (it) {
-                    var intent: Intent = Intent(Login.INSTANCE, LoadingScreen::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                } else {
-                    // loadingScreen.dismiss()
-                }
-            })
     }
 
     private fun onAutoLogin() {
 
-        BindingLogin?.viewmodel?.isLogin?.observe(this, Observer { it ->
+        loginBinding?.loginVm?.isLogin?.observe(this, Observer { it ->
             if (it) {
-                BindingLogin?.viewmodel?.autoSaveLogin(this)
+                loginBinding?.loginVm?.autoSaveLogin(this)
 
                 FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
 
@@ -132,7 +123,7 @@ class Login : AppCompatActivity() {
 
                     WebService.client.create(UserAPI::class.java)
                         .uploadToken(
-                            BindingLogin?.viewmodel?.receiveUser!!.u_userid,
+                            loginBinding?.loginVm?.receiveUser!!.u_userid,
                             task.result!!.token
                         )
                         .enqueue(object : Callback<ResponseResult<Int>> {
@@ -140,19 +131,17 @@ class Login : AppCompatActivity() {
                                 call: Call<ResponseResult<Int>>,
                                 response: Response<ResponseResult<Int>>
                             ) {
-
                                 val ls_goLogin = Intent(getApplication(), MainTab::class.java)
 
                                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-                                ls_goLogin.putExtra("user", BindingLogin?.viewmodel?.receiveUser);
+                                ls_goLogin.putExtra("user", loginBinding?.loginVm?.receiveUser);
 
                                 ContextCompat.startActivity(getApplication(), ls_goLogin, null)
 
-                                BindingLogin?.viewmodel?.onCleared()
+                                loginBinding?.loginVm?.onCleared()
                                 finish()
-
                             }
 
                             override fun onFailure(call: Call<ResponseResult<Int>>, t: Throwable) {
@@ -161,32 +150,21 @@ class Login : AppCompatActivity() {
                 }
             }
         })
-
-
     }
 
     fun onFindPwdBtn() {
-        viewmodel?.isFindPwd?.value = !(viewmodel?.isFindPwd?.value!!)
-        if (viewmodel?.isFindPwd?.value!!) {
-            BindingLogin?.scroll?.visibility = View.GONE
-            BindingLogin?.constraintLayout?.visibility = View.VISIBLE
+        loginVm?.isFindPwd?.value = !(loginVm?.isFindPwd?.value!!)
+        if (loginVm?.isFindPwd?.value!!) {
+            loginBinding?.scroll?.visibility = View.GONE
+            loginBinding?.constraintLayout?.visibility = View.VISIBLE
         } else {
-            BindingLogin?.scroll?.visibility = View.VISIBLE
-            BindingLogin?.constraintLayout?.visibility = View.GONE
-            BindingLogin?.findPwdBtn?.isClickable = true
-            BindingLogin?.findPwdInputEmail?.setText("")
-            BindingLogin?.findPwdBtn?.text = "확인"
-            BindingLogin?.findPwdError?.visibility = View.GONE
+            loginBinding?.scroll?.visibility = View.VISIBLE
+            loginBinding?.constraintLayout?.visibility = View.GONE
+            loginBinding?.findPwdBtn?.isClickable = true
+            loginBinding?.findPwdInputEmail?.setText("")
+            loginBinding?.findPwdBtn?.text = "확인"
+            loginBinding?.findPwdError?.visibility = View.GONE
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     companion object {

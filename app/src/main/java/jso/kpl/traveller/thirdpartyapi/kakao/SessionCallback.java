@@ -14,7 +14,14 @@ import com.kakao.util.exception.KakaoException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jso.kpl.traveller.App;
+import jso.kpl.traveller.model.ResponseResult;
+import jso.kpl.traveller.network.UserAPI;
+import jso.kpl.traveller.network.WebService;
 import jso.kpl.traveller.ui.SignUp;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SessionCallback implements ISessionCallback {
 
@@ -71,13 +78,34 @@ public class SessionCallback implements ISessionCallback {
             @Override
             public void onSuccess(final MeV2Response result) {
 
-                Log.e(TAG, "카카오 아이디: " + result.getKakaoAccount().getEmail());
+                Call<ResponseResult<Integer>> authCall = WebService.INSTANCE.getClient().create(UserAPI.class).authEmail(result.getKakaoAccount().getEmail());
+                authCall.enqueue(new Callback<ResponseResult<Integer>>() {
+                    @Override
+                    public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
 
-                Intent intent = new Intent(context, SignUp.class);
-                intent.putExtra("email", result.getKakaoAccount().getEmail());
-                intent.putExtra("auth", true);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                        ResponseResult<Integer> responseResult = response.body();
+
+                        if (responseResult.getRes_obj() == 0) {
+                            App.Companion.sendToast("이미 가입된 이메일이 있습니다..");
+                        } else if (responseResult.getRes_obj() == 1) {
+                            Log.e(TAG, "카카오 아이디: " + result.getKakaoAccount().getEmail());
+
+                            Intent intent = new Intent(context, SignUp.class);
+                            intent.putExtra("email", result.getKakaoAccount().getEmail());
+                            intent.putExtra("auth", true);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
+                        t.printStackTrace();
+                        App.Companion.sendToast("서버 에러");
+                    }
+                });
+
+
 
             }
         });

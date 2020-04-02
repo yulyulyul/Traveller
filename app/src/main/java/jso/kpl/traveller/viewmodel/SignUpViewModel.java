@@ -65,8 +65,8 @@ public class SignUpViewModel extends BaseObservable implements Callback {
     UserAPI userAPI= WebService.INSTANCE.getClient().create(UserAPI.class);
 
     //회원가입 Call
-    Call<ResponseResult<User>> su_call;
-    Call<ResponseResult<Integer>> auth_call;
+    Call<ResponseResult<User>> suCall;
+    Call<ResponseResult<Integer>> authCall;
 
     //프로필 이미지 업로드RequestBody
     MultipartBody.Part imgBody;
@@ -115,9 +115,9 @@ public class SignUpViewModel extends BaseObservable implements Callback {
                 @Override
                 public void positiveBtn() {
 
-                    auth_call = userAPI.authEmail(emailLD.getValue());
+                    authCall = userAPI.authEmail(emailLD.getValue());
 
-                    auth_call.enqueue(new Callback<ResponseResult<Integer>>() {
+                    authCall.enqueue(new Callback<ResponseResult<Integer>>() {
                         @Override
                         public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
 
@@ -213,15 +213,15 @@ public class SignUpViewModel extends BaseObservable implements Callback {
              */
 
             //1. 객체 + 이미지
-            // su_call = con.signupAPI.goSignUp(user, imgBody);
+            // suCall = con.signupAPI.goSignUp(user, imgBody);
 
             //2. 각 변수(이메일, 패스워드(해시) + 닉네임 + 디바이스 번호) + 이미지
             // String으로 데이터 보내면 DB에 ""가 포함되어 들어감
 
 
-            su_call = userAPI.goSignUp(user, imgBody);
+            suCall = userAPI.goSignUp(user, imgBody);
 
-            su_call.enqueue(this);
+            suCall.enqueue(this);
         }
     }
 

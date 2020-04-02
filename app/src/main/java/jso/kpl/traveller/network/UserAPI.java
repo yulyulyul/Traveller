@@ -47,7 +47,8 @@ public interface UserAPI {
     @FormUrlEncoded
     @POST("/update_temp_pwd")
     Call<ResponseResult<Integer>> updateUserTempPwd(@Field("u_email") String u_email,
-                                                @Field("update_pwd") String u_pwd);
+                                                    @Field("update_pwd") String u_pwd);
+
     @FormUrlEncoded
     @POST("/upload_token")
     Call<ResponseResult<Integer>> uploadToken(@Field("u_userid") int u_userid, @Field("u_token") String u_token);

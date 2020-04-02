@@ -20,6 +20,7 @@ import retrofit2.Response;
 
 public class StartScreen extends AppCompatActivity {
 
+    String TAG = "Trav.StartScreen";
     boolean isPush = false;
 
     @Override
@@ -27,28 +28,27 @@ public class StartScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_screen);
 
-        Bundle bundle = new Bundle();
-
-        bundle = getIntent().getExtras();
-
-        if(bundle != null)
-            isPush = true;
-        else
-            isPush = false;
-
+//        Bundle bundle = getIntent().getExtras();
+//
+//        if (bundle != null){
+//            isPush = true;
+//            Log.d(TAG, "미 확인 푸시가 있습니다.");
+//        } else{
+//            isPush = false;
+//            Log.d(TAG, "미 확인 푸시가 없습니다.");
+//        }
 
         Handler handler = new Handler();
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 autoLogin();
             }
         }, 500);
-
-
     }
 
+    // 자동 로그인 SharedPreferences에 자동 로그인 상태가 저장되어있다면 MainTab 화면으로 이동한다.
+    // 아닐 시 LoginSelect 화면으로 이동한다.
     public void autoLogin() {
         SharedPreferences sp = getSharedPreferences("auto_login", MODE_PRIVATE);
 
@@ -61,21 +61,16 @@ public class StartScreen extends AppCompatActivity {
                     .enqueue(new Callback<ResponseResult<User>>() {
                         @Override
                         public void onResponse(Call<ResponseResult<User>> call, Response<ResponseResult<User>> response) {
-
                             int res_type = response.body().getRes_type();
 
                             if (res_type == 1) {
                                 User receiveUser = response.body().getRes_obj();
 
                                 if (receiveUser != null) {
-
                                     Intent intent = new Intent(getApplication(), MainTab.class);
-
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                                    intent.putExtra("isPush", isPush);
+                              //      intent.putExtra("isPush", isPush);
                                     intent.putExtra("user", receiveUser);
-
                                     startActivity(intent);
 
                                     overridePendingTransition(R.anim.enter_fade_in, R.anim.exit_fade_out);
@@ -88,8 +83,7 @@ public class StartScreen extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ResponseResult<User>> call, Throwable t) {
                             finish();
-                            Log.d("Trav.Start", "onFailure: " + t.getMessage());
-
+                            Log.d(TAG, "onFailure: " + t.getMessage());
                         }
 
                     });
@@ -98,7 +92,6 @@ public class StartScreen extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             overridePendingTransition(R.anim.enter_fade_in, R.anim.exit_fade_out);
-
             finish();
         }
     }

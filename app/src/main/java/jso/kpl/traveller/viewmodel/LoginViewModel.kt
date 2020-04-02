@@ -2,26 +2,18 @@ package jso.kpl.traveller.viewmodel
 
 import android.app.Activity
 import android.app.Application
-import android.content.Intent
 import android.util.Log
-import androidx.core.content.ContextCompat
-import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.iid.FirebaseInstanceId
 import jso.kpl.traveller.App
 import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
-import jso.kpl.traveller.network.MsgWebService
 import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
-import jso.kpl.traveller.ui.LoadingScreen
-import jso.kpl.traveller.ui.MainTab
 import jso.kpl.traveller.util.JavaUtil
 import jso.kpl.traveller.util.RegexMethod
-import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,11 +25,10 @@ import java.util.*
 class LoginViewModel(application: Application) : AndroidViewModel(application),
     Callback<ResponseResult<User>> {
     //버튼 활성화(이메일 형식이 아닐시, 비밀번호가 8글자 이상이 아닐시 로그인 버튼을 비활성화 시켜줌.
-    var btnSelected: ObservableBoolean? = null
+//    var btnSelected: ObservableBoolean? = null
     var email: ObservableField<String>? = null
     var password: ObservableField<String>? = null
     var muUser: MutableLiveData<User>? = null
-    var progressDialog: SingleLiveEvent<Boolean>? = null
 
     var isLogin: MutableLiveData<Boolean>? = null
     var isFindPwd: MutableLiveData<Boolean>? = null
@@ -48,17 +39,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     //통신으로 받은 유저 객체
     var receiveUser: User? = null
 
-    var waiting : MutableLiveData<Boolean> = MutableLiveData()
-
     init {
-
-        btnSelected = ObservableBoolean(false)
         email = ObservableField("")
         password = ObservableField("")
         muUser = MutableLiveData<User>()
-        progressDialog = SingleLiveEvent<Boolean>()
-
-        waiting.value = false
 
         isLogin = MutableLiveData<Boolean>()
         isFindPwd = MutableLiveData<Boolean>()
@@ -77,29 +61,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
         val TAG: String = "Trav.LoginVm"
     }
 
-    // '이메일' EditText의 입력의 변화를 감지하는 부분
-    fun onEmailChanged(s: CharSequence, start: Int, befor: Int, count: Int) {
-        btnSelected?.set(
-            RegexMethod.isEmailValid(s.toString()) && RegexMethod.isPasswordValid(
-                password?.get()!!
-            )
-        )
-    }
-
-    // 'Password' EditText의 입력의 변화를 감지하는 부분
-    fun onPasswordChanged(s: CharSequence, start: Int, befor: Int, count: Int) {
-        btnSelected?.set(RegexMethod.isEmailValid(email?.get()!!) && RegexMethod.isPasswordValid(s.toString()!!))
-    }
-
     // 직접 로그인시 서버에 email과 password를 보내 검증하는 부분.
-    fun login() {
-        progressDialog?.value = true
-        waiting.value = true
-        SHAPassword = JavaUtil.returnSHA256(password?.get()!!)
+    fun onLoginclicked() {
 
-        WebService.client.create(UserAPI::class.java)
-            .goLogin(LoginUser(email?.get()!!, SHAPassword!!))
-            .enqueue(this)
+        if(RegexMethod.isEmailValid(email?.get().toString()) && RegexMethod.isPasswordValid(password?.get()!!)){
+            //   progressDialog?.value = true
+            SHAPassword = JavaUtil.returnSHA256(password?.get()!!)
+
+            WebService.client.create(UserAPI::class.java)
+                .goLogin(LoginUser(email?.get()!!, SHAPassword!!))
+                .enqueue(this)
+        } else {
+            App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
+        }
     }
 
     fun findPwd(email: String, callback: ((Boolean) -> Unit)) {
@@ -150,10 +124,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
     }
 
     // 로그인 요청시 Retrofit 결과 리턴받는 곳.
-    override fun onResponse(
-        call: Call<ResponseResult<User>>?,
-        response: Response<ResponseResult<User>>?
-    ) {
+    override fun onResponse(call: Call<ResponseResult<User>>?, response: Response<ResponseResult<User>>?) {
         var res_type: Int? = response?.body()?.res_type
 
         if (res_type == 1) {
@@ -167,10 +138,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
                 //로그인 확인 저장 용
                 isLogin?.value = true
 
-                progressDialog?.value = false
-
-                waiting.value = false
-
             } else {
                 App.sendToast("이메일 또는 비밀번호가 틀렸습니다.")
             }
@@ -181,12 +148,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application),
 
     //로그인 요청시 Retrofit 통신 실패시 호출..
     override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
-
         App.sendToast("로그인에 실패하셨습니다.")
-
-        progressDialog?.value = false
-
-        waiting.value = false
     }
 
     //로그인 SharedPreferences

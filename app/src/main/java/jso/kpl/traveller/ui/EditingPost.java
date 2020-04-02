@@ -55,7 +55,6 @@ import retrofit2.Response;
 
 public class EditingPost extends AppCompatActivity implements WritePostType.OnDetachFragmentClickListener, RouteNodeAdapter.OnNodeClickListener, RouteNodeAdapter.OnNodeLongClickListener {
 
-
     String TAG = "Trav.EditingPost.";
 
     List<SmallPost> smallList = new ArrayList<>();

@@ -35,8 +35,6 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
 
     BroadcastReceiver broadcastReceiver = null;
 
-    LoadingScreen loadingScreen = new LoadingScreen();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +57,6 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
             @Override
             public void onRefresh() {
                 binding.getMsgListVm().adapter.removeItems();
-
                 binding.getMsgListVm().msgCall();
             }
         };
@@ -114,26 +111,21 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
                                     if (response.body().getRes_type() == 1) {
                                         msgListVm.msgList.remove(pos);
                                         msgListVm.adapter.removeItem(pos);
-
                                         msgListVm.adapter.notifyItemRemoved(pos);
-
                                         customDialog.dismiss();
                                     }
                                 }
-
                             }
 
                             @Override
                             public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
-
+                                Log.d(TAG, t.getMessage());
                             }
                         });
-
             }
 
             @Override
             public void negativeBtn() {
-
                 customDialog.dismiss();
             }
         });

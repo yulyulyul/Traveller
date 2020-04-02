@@ -1,6 +1,5 @@
 package jso.kpl.traveller.viewmodel
 
-import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.util.Log
@@ -21,24 +20,24 @@ import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.UnLinkResponseCallback
 import jso.kpl.traveller.App
 import jso.kpl.traveller.R
-import jso.kpl.traveller.model.LoginUser
 import jso.kpl.traveller.model.ResponseResult
 import jso.kpl.traveller.model.User
 import jso.kpl.traveller.network.UserAPI
 import jso.kpl.traveller.network.WebService
 import jso.kpl.traveller.thirdpartyapi.facebook.LoginCallback
 import jso.kpl.traveller.thirdpartyapi.kakao.SessionCallback
+import jso.kpl.traveller.ui.Login
 import jso.kpl.traveller.ui.LoginSelect
 import jso.kpl.traveller.ui.LoginSelect.Companion.getInstance
-import jso.kpl.traveller.ui.MainTab
 import jso.kpl.traveller.ui.SignUp
 import jso.kpl.traveller.util.JavaUtil
 import mvvm.f4wzy.com.samplelogin.util.SingleLiveEvent
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class LoginSelectViewModel(application: Application) : AndroidViewModel(application){
+class LoginSelectViewModel(application: Application) : AndroidViewModel(application) {
 
     // 카카오로 시작하기 버튼을 눌렀을때 view(Login.kt)에 변화를 알려주는 객체
     var iskakaoLogin: MutableLiveData<Boolean>? = null
@@ -61,15 +60,13 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
     //통신으로 받은 유저 객체
     var receiveUser: User? = null
 
-    var callback : retrofit2.Callback<ResponseResult<User>> ?= null
+    var callback: retrofit2.Callback<ResponseResult<User>>? = null
 
     init {
-
         progressDialog = SingleLiveEvent<Boolean>()
 
         //카카오
         iskakaoLogin = MutableLiveData<Boolean>()
-
 
         //페이스북
         isFacebookLogin = MutableLiveData<Boolean>()
@@ -80,10 +77,9 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun gotoLogin() {
-
-        val ls_goLogin = Intent(getApplication(), jso.kpl.traveller.ui.Login::class.java)
-        ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ContextCompat.startActivity(getApplication(), ls_goLogin, null)
+        val intent = Intent(getApplication(), Login::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        ContextCompat.startActivity(getApplication(), intent, null)
     }
 
     fun googleLogin() {
@@ -93,10 +89,10 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
             .build()
 
         var googleSignInClient: GoogleSignInClient =
-            GoogleSignIn.getClient(LoginSelect.getInstance(), gso)
+            GoogleSignIn.getClient(getInstance(), gso)
 
         val signInIntent = googleSignInClient.signInIntent
-        LoginSelect.getInstance().startActivityForResult(signInIntent, LoginSelect.RC_SIGN_IN)
+        getInstance().startActivityForResult(signInIntent, LoginSelect.RC_SIGN_IN)
     }
 
     //구글 로그인 버튼
@@ -115,10 +111,8 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
                 Log.d(TAG, "Google Login , uid : " + user?.uid)
 
                 goToSignUp(user?.email)
-//                successLogin()
             } else {
                 Log.d(TAG, "signInWithCredential:failure", task.exception)
-//            Snackbar.make(getInstance().view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show() }
             }
         }
     }
@@ -170,8 +164,6 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
         //카카오로 로그인하여 생기는 결과가 리턴하는 곳.
         kakao_session_callback = SessionCallback(getApplication())
         Session.getCurrentSession().addCallback(kakao_session_callback)
-
-
     }
 
     fun kakaoLogout() {
@@ -212,72 +204,39 @@ class LoginSelectViewModel(application: Application) : AndroidViewModel(applicat
 
     fun goToSignUp(email: String?) {
 
-        val su_intent = Intent(getApplication(), SignUp::class.java)
+        var authCall: Call<ResponseResult<Int>> = WebService.client.create(UserAPI::class.java).authEmail(email)
 
-        su_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        authCall.enqueue(object : Callback<ResponseResult<Int>> {
+            override fun onResponse(
+                call: Call<ResponseResult<Int>>,
+                response: Response<ResponseResult<Int>>
+            ) {
+                Log.d(TAG, "들어온 이메일 값: " + email)
 
-        if (email != null) {
-            su_intent.putExtra("email", email)
-            su_intent.putExtra("auth", true)
-        } else {
-            su_intent.putExtra("auth", false)
-        }
+                val responseResult = response.body()
 
-        ContextCompat.startActivity(getApplication(), su_intent, null)
+                if (responseResult!!.res_obj == 0) {
+                    App.sendToast("가입된 이메일이 있습니다.")
+                } else if (responseResult.res_obj == 1) {
+                    val su_intent = Intent(getApplication(), SignUp::class.java)
+                    su_intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
+                    if (email != null) {
+                        su_intent.putExtra("email", email)
+                        su_intent.putExtra("auth", true)
+                    } else
+                        su_intent.putExtra("auth", false)
+
+                    ContextCompat.startActivity(getApplication(), su_intent, null)
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseResult<Int>>, t: Throwable) {
+                t.printStackTrace()
+                App.sendToast("서버 에러")
+            }
+        })
     }
-
-//    fun autoLogin(act:Activity){
-//        val sp = act.getSharedPreferences("auto_login", Activity.MODE_PRIVATE)
-//
-//        val email = sp.getString("u_email", "")
-//        val pwd = sp.getString("u_pwd", "")
-//
-//        if(!email.equals("") && !pwd.equals("")){
-//            WebService.client.create(UserAPI::class.java)
-//                .goLogin(LoginUser(email, pwd))
-//                .enqueue(object : retrofit2.Callback<ResponseResult<User>> {
-//                    // 로그인 요청시 Retrofit 결과 리턴받는 곳.
-//                    override fun onResponse(call: Call<ResponseResult<User>>?,
-//                                            response: Response<ResponseResult<User>>?
-//                    ) {
-//                        progressDialog?.value = false
-//
-//                        var res_type:Int? = response?.body()?.res_type
-//
-//                        if(res_type == 1){
-//                            receiveUser = response?.body()?.res_obj
-//                            Log.d(LoginViewModel.TAG + "응답 객체 : ", receiveUser?.toString())
-//
-//                            if (receiveUser != null) {
-//
-//                                val ls_goLogin = Intent(getApplication(), MainTab::class.java)
-//
-//                                ls_goLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//
-//                                ls_goLogin.putExtra("user", receiveUser);
-//
-//                                ContextCompat.startActivity(getApplication(), ls_goLogin, null)
-//
-//                                act.overridePendingTransition(R.anim.enter_fade_in, R.anim.exit_fade_out)
-//
-//                               act.finish()
-//                            }
-//                        }
-//                    }
-//
-//                    //로그인 요청시 Retrofit 통신 실패시 호출..
-//                    override fun onFailure(call: Call<ResponseResult<User>>?, t: Throwable?) {
-//                        progressDialog?.value = false
-//                        act.finish()
-//                    }
-//                })
-//
-//
-//        }
-//    }
-
-
 
     companion object {
         val TAG: String = "Trav.LoginSelectVm"

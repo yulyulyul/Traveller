@@ -16,6 +16,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import jso.kpl.traveller.App;
+import jso.kpl.traveller.R;
+
 public class GMailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
     private String user;
@@ -27,9 +30,10 @@ public class GMailSender extends javax.mail.Authenticator {
         Security.addProvider(new JSSEProvider());
     }
 
-    public GMailSender(String user, String password) {
-        this.user = user;
-        this.password = password;
+    public GMailSender() {
+        user = App.INSTANCE.getResources().getString(R.string.smpt_email);
+        password = App.INSTANCE.getResources().getString(R.string.smpt_pwd);
+
         emailCode = createEmailCode();
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");

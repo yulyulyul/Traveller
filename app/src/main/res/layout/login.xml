@@ -3,11 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
-            name="viewmodel"
+            name="loginVm"
             type="jso.kpl.traveller.viewmodel.LoginViewModel" />
     </data>
 
@@ -40,7 +38,6 @@
                     android:textColor="@color/white"
                     android:textSize="50dp" />
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -62,8 +59,7 @@
                             android:focusableInTouchMode="true"
                             android:hint="이메일"
                             android:inputType="textEmailAddress"
-                            android:onTextChanged="@{viewmodel::onEmailChanged}"
-                            android:text="@={viewmodel.email}"
+                            android:text="@={loginVm.email}"
                             android:textColor="@color/colorWhite">
 
                             <requestFocus />
@@ -84,8 +80,8 @@
                             android:layout_height="wrap_content"
                             android:hint="패스워드"
                             android:inputType="textPassword"
-                            android:onTextChanged="@{viewmodel::onPasswordChanged}"
-                            android:text="@={viewmodel.password}"
+
+                            android:text="@={loginVm.password}"
                             android:textColor="@color/colorWhite" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,9 +89,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/s_round_border_blue"
-                        android:enabled="@{viewmodel.btnSelected}"
                         android:gravity="center"
-                        android:onClick="@{()->viewmodel.login()}"
+                        android:onClick="@{()->loginVm.onLoginclicked()}"
                         android:orientation="vertical">
 
                         <TextView
@@ -210,7 +205,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="25dp"
                 android:textColor="@color/design_default_color_error"
-                android:textSize="@dimen/subtitle_text_size"
+                android:textSize="@dimen/middle_text_size"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

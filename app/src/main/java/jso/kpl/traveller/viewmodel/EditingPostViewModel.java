@@ -2,11 +2,13 @@ package jso.kpl.traveller.viewmodel;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
@@ -362,7 +364,7 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
             Log.d(TAG, "카트리스트 없음");
         } else {
             noCartlist.setValue(false);
-            List<CartListItem> cartListItem = cartlistRes.getRes_obj();
+            final List<CartListItem> cartListItem = cartlistRes.getRes_obj();
             for (CartListItem idx : cartListItem) {
                 if (idx.getP_category() != null) {
                     if (idx.getP_category().split(", ").length > 4) {
@@ -408,6 +410,13 @@ public class EditingPostViewModel extends ViewModel implements View.OnClickListe
                                                 String category = categoryList.toString();
                                                 cartlistTimeline.get(i).setSp_category(category.substring(1, category.length() - 1).concat(" ..."));
                                             }
+                                        }
+
+                                        if(cartlistTimeline.get(i).getSp_expenses() != null){
+
+                                            Long lngMoney = Long.parseLong((cartlistTimeline.get(i).getSp_expenses()));
+                                            String cc = CurrencyChange.moneyFormatToWon(lngMoney);
+                                            cartlistTimeline.get(i).setSp_expenses(cc);
                                         }
                                     }
                                     timelineItem.getValue().clear();

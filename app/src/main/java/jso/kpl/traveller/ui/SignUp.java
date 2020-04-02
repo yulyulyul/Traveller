@@ -55,8 +55,7 @@ public class SignUp extends AppCompatActivity {
         svm = signUpBinding.getSignUpVM();
 
         if(getIntent() != null){
-
-            svm.isAuth.setValue((boolean) getIntent().getBooleanExtra("auth", false));
+            svm.isAuth.setValue(getIntent().getBooleanExtra("auth", false));
 
             if(svm.isAuth.getValue()){
                 email = (String) getIntent().getStringExtra("email");
@@ -85,7 +84,6 @@ public class SignUp extends AppCompatActivity {
         signUpBinding.getSignUpVM().buttonClickResult.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer integer) {
-
                 if (integer == 0) {
                     Intent albumIntent = new Intent(Intent.ACTION_PICK);
                     albumIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
@@ -97,14 +95,12 @@ public class SignUp extends AppCompatActivity {
                     File pFile = createDir();
 
                     if (pFile != null) {
-
                         if (Build.VERSION.SDK_INT >= 24) {
                             Uri providerPath = FileProvider.getUriForFile
                                     (getApplicationContext(), App.INSTANCE.getPackageName() + ".file_provider", pFile);
                             uriPath = providerPath;
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriPath);
                             startActivityForResult(cameraIntent, 1);
-
                         } else {
                             uriPath = Uri.fromFile(pFile);
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriPath);
@@ -154,7 +150,6 @@ public class SignUp extends AppCompatActivity {
 
     // 디렉토리 생성
     public File createDir() {
-
         //저장될 파일의 이름
         String imgName = "t_" + System.currentTimeMillis() + ".jpg";
 
@@ -177,8 +172,6 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
 
         switch (requestCode) {
             case 0:

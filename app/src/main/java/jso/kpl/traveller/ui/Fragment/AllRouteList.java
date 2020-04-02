@@ -38,7 +38,6 @@ public class AllRouteList extends Fragment {
     RouteListViewModel routeListVm = new RouteListViewModel();
 
     public Fragment newInstance(MyPageItem item) {
-
         AllRouteList allRouteList = new AllRouteList();
 
         Bundle args = new Bundle();
@@ -61,17 +60,14 @@ public class AllRouteList extends Fragment {
         binding.setMainListVm(routeListVm);
         binding.setLifecycleOwner(this);
 
-        Log.d(TAG, "2");
         if (getArguments() != null) {
             item = (MyPageItem) getArguments().getSerializable("req");
            binding.getMainListVm().setItem(item);
             binding.getMainListVm().searchByCondition(item);
-            Log.d(TAG, "3");
         }
 
-        Log.d(TAG, "4");
         binding.getMainListVm().addCategoryLayout(getActivity(), binding.categoryLayout);
-        Log.d(TAG, "5");
+
         binding.getMainListVm().onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -136,7 +132,6 @@ public class AllRouteList extends Fragment {
         binding.getMainListVm().POST_ID.observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                Log.d(TAG, "8");
                 Log.d(TAG, "루트 리스트 포스트 아이디: " + integer);
                 Intent intent = new Intent(App.INSTANCE, DetailPost.class);
                 intent.putExtra("p_id", integer);

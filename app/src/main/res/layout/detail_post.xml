@@ -241,7 +241,8 @@
                             android:layout_height="30dp"
                             android:layout_marginRight="10dp"
                             android:layout_toRightOf="@id/cart_btn"
-                            android:background="@drawable/i_comment_icon" />
+                            android:background="@drawable/i_comment_icon"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
 
