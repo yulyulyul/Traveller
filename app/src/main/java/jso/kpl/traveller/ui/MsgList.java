@@ -71,7 +71,6 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, final Intent intent) {
-
                 Message m = (Message) intent.getSerializableExtra("msg");
                 binding.getMsgListVm().adapter.addItem(m);
                 binding.getMsgListVm().adapter.notifyItemInserted(0);
@@ -81,7 +80,6 @@ public class MsgList extends AppCompatActivity implements MsgListAdapter.OnDelet
         };
 
         registerReceiver(receiver, new IntentFilter("com.example.limky.broadcastreceiver.gogo"));
-
     }
 
     @Override

@@ -46,7 +46,6 @@ public class MsgListViewModel extends ViewModel {
 
                         if (response.body() != null) {
                             if (response.body().getRes_type() == 1) {
-
                                 Log.d("Trav.msgVm", "onResponse: ");
                                 msgList = response.body().getRes_obj();
                                 adapter.addItems(msgList);

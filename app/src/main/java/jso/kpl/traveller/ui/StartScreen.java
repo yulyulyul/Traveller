@@ -28,15 +28,15 @@ public class StartScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_screen);
 
-//        Bundle bundle = getIntent().getExtras();
-//
-//        if (bundle != null){
-//            isPush = true;
-//            Log.d(TAG, "미 확인 푸시가 있습니다.");
-//        } else{
-//            isPush = false;
-//            Log.d(TAG, "미 확인 푸시가 없습니다.");
-//        }
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null){
+            isPush = true;
+            Log.d(TAG, "미 확인 푸시가 있습니다.");
+        } else{
+            isPush = false;
+            Log.d(TAG, "미 확인 푸시가 없습니다.");
+        }
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -69,7 +69,7 @@ public class StartScreen extends AppCompatActivity {
                                 if (receiveUser != null) {
                                     Intent intent = new Intent(getApplication(), MainTab.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                              //      intent.putExtra("isPush", isPush);
+                                    intent.putExtra("isPush", isPush);
                                     intent.putExtra("user", receiveUser);
                                     startActivity(intent);
 

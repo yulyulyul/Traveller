@@ -105,7 +105,6 @@ public class EditingMsg extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
                                 if (response.body() != null) {
-
                                     overridePendingTransition(0, 0);
                                     Log.d("Trav", "성공 완료");
                                     finish();
@@ -114,7 +113,8 @@ public class EditingMsg extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<ResponseResult<Integer>> call, Throwable t) {
-                                App.Companion.sendToast("전송 실패");
+                                finish();
+                                //App.Companion.sendToast("전송 실패");
                             }
                         });
             }

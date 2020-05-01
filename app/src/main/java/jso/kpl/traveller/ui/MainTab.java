@@ -25,6 +25,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import jso.kpl.traveller.App;
 import jso.kpl.traveller.R;
 import jso.kpl.traveller.databinding.MainTabBinding;
+import jso.kpl.traveller.model.Message;
 import jso.kpl.traveller.model.MyPageItem;
 import jso.kpl.traveller.model.ResponseResult;
 import jso.kpl.traveller.model.User;
@@ -81,7 +82,16 @@ public class MainTab extends AppCompatActivity {
                 .sendBackPush(App.Companion.getUser().getU_userid()).enqueue(new Callback<ResponseResult<Integer>>() {
             @Override
             public void onResponse(Call<ResponseResult<Integer>> call, Response<ResponseResult<Integer>> response) {
-                Log.d(TAG, "밀린 푸시 Go");
+
+                if(response.body().getRes_type() == 1){
+
+
+                    Log.d(TAG, "밀린 푸시 Go");
+//                    Intent intent = new Intent(MainTab.this, MsgList.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+                }
+
             }
 
             @Override
